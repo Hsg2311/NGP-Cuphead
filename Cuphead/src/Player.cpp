@@ -2,7 +2,6 @@
 #include "struct.hpp"
 #include "Timer.hpp"
 #include "InputDeviceHandler.hpp"
-#include "Texture.hpp"
 #include "ResourceHandler.hpp"
 #include "Projectile.hpp"
 #include "func.hpp"
