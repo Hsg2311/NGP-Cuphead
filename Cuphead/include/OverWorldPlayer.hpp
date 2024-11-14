@@ -14,7 +14,6 @@ public:
 	virtual void update() override;
 	virtual void render(HDC hdc) override;
 
-	void CreateProjectile();
 
 	virtual void OnCollision(Object* other) override;
 	virtual void OnCollisionEntry(Object* other) override;
