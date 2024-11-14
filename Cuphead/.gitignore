@@ -1,0 +1,14 @@
+
+*.ipch
+*.pch
+*.db
+.vs/Cuphead/v17/DocumentLayout.json
+.vs/Cuphead/v17/Browse.VC.opendb
+.vs/Cuphead/v17/Browse.VC.db-wal
+.vs/Cuphead/v17/Browse.VC.db-shm
+.vs/Cuphead/v17/Browse.VC.db
+.vs/Cuphead/v17/.suo
+.vs/Cuphead/FileContentIndex/e78ce82a-0891-46a9-ba5b-31f3c2efd5c0.vsidx
+.vs/Cuphead/FileContentIndex/97aa1386-b422-496d-91b5-e78f9a554235.vsidx
+.vs/Cuphead/FileContentIndex/79eecd1b-972e-4102-80bd-31b41585a914.vsidx
+.vs/Cuphead/FileContentIndex/58596679-7196-488a-98a8-daf4a6f5f71e.vsidx

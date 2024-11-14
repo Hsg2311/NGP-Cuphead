@@ -12,9 +12,8 @@ Player::Player( ) {
 	getCollider( )->setScale( Vec2{ 100.f, 100.f } );
 
 	auto tex = ResourceHandler::GetInst( ).LoadTexture( L"Player_Texture", L"/texture/idle/cuphead_idle.png" );
-	CreateAnimator( );
-	getAnimator( )->createAnimation( L"Player_Idle", tex, Vec2{ 0.f, 0.f },
-									Vec2{ 100.f, 155.f }, Vec2{ 100.f, 0.f }, 0.065f, 9 );
+	CreateAnimator( ); 
+	getAnimator( )->createAnimation( L"Player_Idle", tex, Vec2{ 0.f, 0.f }, Vec2{ 100.f, 155.f }, Vec2{ 100.f, 0.f }, 0.065f, 9 );
 	getAnimator( )->play( L"Player_Idle" );
 }
 

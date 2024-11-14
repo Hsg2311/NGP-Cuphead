@@ -17,7 +17,7 @@ enum class InputData {
 	RIGHT,
 	UP,
 	DOWN,
-
+	
 	Q,
 	W,
 	E,

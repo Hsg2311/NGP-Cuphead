@@ -17,8 +17,10 @@ void Start_Scene::update( ) {
 	Scene::update( );
 
 	if ( KEY_TAP( InputData::Q ) ) {
-		ChangeScene( SCENE_TYPE::TOOL_SCENE );
+		ChangeScene( SCENE_TYPE::SQUARE_SCENE);
 	}
+
+
 }
 
 void Start_Scene::Entry( ) {
@@ -66,7 +68,4 @@ void Start_Scene::Exit( ) {
 //	Scene::update( );
 //}
 //
-//void Start_Scene::render( HDC hdc )
-//{
-//	Scene::render( hdc );
-//}
+

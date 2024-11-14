@@ -39,7 +39,7 @@ enum class SCENE_TYPE {
 	START_SCENE,
 	TUTORIAL_SCENE,
 	TOOL_SCENE,
-
+	SQUARE_SCENE, // »õ·Î¿î
 	EOE
 };
 

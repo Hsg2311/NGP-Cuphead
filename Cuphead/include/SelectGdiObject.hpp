@@ -12,6 +12,7 @@ public:
 		, hDefaultBrush_{ static_cast<HBRUSH>( SelectObject( hdc_, Core::GetInst( ).getBrush( brush ) ) ) } 
 	{}
 
+
 	~SelectGdiObject( ) {
 		SelectObject( hdc_, hDefaultPen_ );
 		SelectObject( hdc_, hDefaultBrush_ );

@@ -15,7 +15,7 @@ public:
 	virtual void Entry( ) override;
 	virtual void Exit( ) override;
 
-	//virtual void render( HDC hdc ) override;
+	//irtual void render( HDC hdc ) override;
 };
 
 #endif // __START_SCENE_HPP
