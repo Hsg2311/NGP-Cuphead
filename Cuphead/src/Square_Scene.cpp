@@ -1,6 +1,6 @@
 #include "Square_Scene.hpp"
 #include "Object.hpp"
-#include "Player.hpp"
+#include "OverWorldPlayer.hpp"
 #include "Monster.hpp"
 #include "Core.hpp"
 #include "CollisionHandler.hpp"
@@ -29,9 +29,12 @@ void Square_Scene::update()
 
 void Square_Scene::Entry()
 {
-	Object* obj = new Player{};
+	Object* obj = new OverWorldPlayer{};
 	obj->getObjPos();
-
+	obj->setObjName(L"OverWorldPlayer");
+	obj->setObjPos(Vec2{ 640.f, 384.f });
+	obj->setObjScale(Vec2{ 50.f, 50.f });
+	addObject(GROUP_TYPE::PLAYER, obj);
 	
 }
 
@@ -42,7 +45,7 @@ void Square_Scene::Exit()
 
 void Square_Scene::render(HDC hdc)
 {
-	_background->Draw(hdc, 0, 0, 1240, 1884, 0, 0, 1240, 1884);
+	//_background->Draw(hdc, 0, 0, 1240, 1884, 0, 0, 1240, 1884);
 	
 	
 	Scene::render(hdc);
