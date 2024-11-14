@@ -70,6 +70,18 @@ namespace network {
 		std::string present_;
 		std::uint32_t addr_;
 	};
+
+	class Port {
+	public:
+		Port( std::uint16_t hostPort = 0 ) NET_NOEXCEPT : port_( htons( hostPort ) ) {}	
+
+		std::uint16_t get( ) const NET_NOEXCEPT {
+			return port_;
+		}
+
+	private:
+		std::uint16_t port_;
+	};
 }
 
 #endif // NETWORK_HPP
