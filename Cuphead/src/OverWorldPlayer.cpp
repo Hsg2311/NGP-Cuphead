@@ -8,12 +8,12 @@
 
 OverWorldPlayer::OverWorldPlayer() {
 	CreateCollider();
-	getCollider()->setScale(Vec2{ 100.f, 100.f });
+	getCollider()->setScale(Vec2{ 50.f, 50.f });
 
-	//auto player = ResourceHandler::GetInst().LoadTexture(L"OverWorldPlayer_Texture", L"/texture/idle/cuphead_idle.png");
-	auto player = ResourceHandler::GetInst().LoadTexture(L"OverWorldPlayer_Texture", L"texture/overworld/Cuphead.png");
+	auto player = ResourceHandler::GetInst().LoadTexture(L"OverWorldPlayer_Texture", L"/texture/overworld/Cuphead.png");
+	
 	CreateAnimator();
-	getAnimator()->createAnimation(L"OverWorldPlayer", player, Vec2{ 0.f, 440.f }, Vec2{ 100.f, 110.f }, Vec2{ 100.f, 0.f }, 1.f, 9);
+	getAnimator()->createAnimation(L"OverWorldPlayer", player, Vec2{ 0.f, 550.f }, Vec2{ 100.f, 110.f }, Vec2{ 100.f, 0.f }, 0.1f, 9);
 	getAnimator()->play(L"OverWorldPlayer");
 }
 
