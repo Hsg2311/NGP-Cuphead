@@ -82,6 +82,46 @@ namespace network {
 	private:
 		std::uint16_t port_;
 	};
+
+	class SockAddr {
+	private:
+		union UAddr {
+			sockaddr addr;
+			sockaddr_in addr_in;
+
+			UAddr( const Ipv4Addr& ip, Port port ) NET_NOEXCEPT
+				: addr_in{
+					.sin_family = static_cast<decltype( sockaddr_in::sin_family )>( AF_INET ),
+					.sin_port = static_cast<decltype( sockaddr_in::sin_port )>( port.get( ) )
+				} {
+				addr_in.sin_addr.s_addr = ip.get( );
+			}
+
+			UAddr( const sockaddr& addr ) NET_NOEXCEPT
+				: addr( addr ) {}
+		} uAddr_;
+
+	public:
+		SockAddr( ) NET_NOEXCEPT = default;
+
+		SockAddr( const Ipv4Addr& ip, Port port ) NET_NOEXCEPT
+			: uAddr_( ip, port ) {}
+
+		SockAddr( const sockaddr& addr ) NET_NOEXCEPT
+			: uAddr_( addr ) {}
+
+		UAddr& get( ) NET_NOEXCEPT {
+			return uAddr_;
+		}
+
+		const UAddr& get( ) const NET_NOEXCEPT {
+			return uAddr_;
+		}
+
+		std::size_t size( ) const NET_NOEXCEPT {
+			return sizeof( uAddr_.addr );
+		}
+	};
 }
 
 #endif // NETWORK_HPP
