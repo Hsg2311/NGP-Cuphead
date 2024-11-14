@@ -122,6 +122,26 @@ namespace network {
 			return sizeof( uAddr_.addr );
 		}
 	};
+	
+	class TcpSocket {
+	public:
+		TcpSocket( )
+			: sock_( createNativeSocket( ) ), open_( true ) {}
+
+		
+
+	private:
+		static SOCKET createNativeSocket( ) {
+			auto ret = socket( AF_INET, SOCK_STREAM, 0 );
+			if ( ret == INVALID_SOCKET ) {
+				throw NET_LAST_EXCEPT( "Failed to create TCP socket"sv );
+			}
+			return ret;
+		}
+
+		SOCKET sock_;
+		bool open_;
+	};
 }
 
 #endif // NETWORK_HPP
