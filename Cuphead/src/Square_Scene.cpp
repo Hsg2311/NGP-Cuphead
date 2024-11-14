@@ -13,8 +13,9 @@
 Square_Scene::Square_Scene()
 {
 	/*auto tex = ResourceHandler::GetInst().LoadTexture(L"Player_Texture", L"/texture/idle/cuphead_idle.png");*/
-	map1 = ResourceHandler::GetInst().LoadTexture(L"Map", L"/texture/overworld/Large Island/Left/Main/world1_large_island_main_01.png");
+	_background = ResourceHandler::GetInst().LoadTexture(L"Map", L"/texture/overworld/Large Island/Left/Main/world1_large_island_main_01.png");
 	
+
 }
 
 Square_Scene::~Square_Scene()
@@ -30,6 +31,7 @@ void Square_Scene::Entry()
 {
 	Object* obj = new Player{};
 	obj->getObjPos();
+
 	
 }
 
@@ -40,7 +42,7 @@ void Square_Scene::Exit()
 
 void Square_Scene::render(HDC hdc)
 {
-	map1->Draw(hdc, 0, 0, 1240, 1884, 0, 0, 1240, 1884);
+	_background->Draw(hdc, 0, 0, 1240, 1884, 0, 0, 1240, 1884);
 	
 	
 	Scene::render(hdc);

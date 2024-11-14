@@ -17,7 +17,7 @@ public:
 
 	virtual void render( HDC hdc ) override;
 
-	Texture* map1;
+	Texture* _background;
 };
 
 #endif // __Square_SCENE_HPP
