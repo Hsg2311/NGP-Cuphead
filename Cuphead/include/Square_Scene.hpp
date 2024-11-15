@@ -15,9 +15,8 @@ public:
 	virtual void Entry() override;
 	virtual void Exit() override;
 
-	virtual void render( HDC hdc ) override;
+	//void render( HDC hdc );
 
-	Texture* _background;
 	
 };
 

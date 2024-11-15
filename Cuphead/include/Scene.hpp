@@ -24,7 +24,7 @@ public:
 public:
 	virtual void update( );
 	void componentUpdate( );
-	virtual void render( HDC hdc );
+	void render( HDC hdc );
 
 public:
 	virtual void Entry( ) = 0;
