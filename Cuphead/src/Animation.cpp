@@ -14,6 +14,8 @@ void Animation::update( ) {
 }
 
 void Animation::render( HDC hdc, const Vec2& objPos ) {
+
+
 	tex_->Draw( hdc,
 		static_cast<int>( objPos.x - animFrames_[ currFrame_ ].sliceSize.x / 2.f ),
 		static_cast<int>( objPos.y - animFrames_[ currFrame_ ].sliceSize.y / 2.f ),

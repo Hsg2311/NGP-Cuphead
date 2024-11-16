@@ -6,6 +6,8 @@
 #include "Animator.hpp"
 #include <string>
 
+
+
 class Object {
 public:
 	Object( )
@@ -136,6 +138,8 @@ private:
 	bool alive_;
 	
 	friend class EventHandler;
+
+
 };
 
 #endif // __OBJECT_HPP

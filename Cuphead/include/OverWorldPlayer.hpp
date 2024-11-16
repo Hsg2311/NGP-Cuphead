@@ -20,6 +20,8 @@ public:
 	virtual void OnCollisionExit(Object* other) override;
 
 	virtual OverWorldPlayer* clone() override { return new OverWorldPlayer{ *this }; }
+
+	
 };
 
 #endif // __OVERWORLDPLAYER_HPP

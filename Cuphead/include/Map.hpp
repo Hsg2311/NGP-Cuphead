@@ -18,7 +18,10 @@ public:
 
 
 public:
+	Vec2 _player;
+	Vec2 _camera;
 	Texture* _background;
+	
 };
 
 #endif // __Map_HPP

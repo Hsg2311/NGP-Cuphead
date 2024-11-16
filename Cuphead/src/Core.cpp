@@ -5,7 +5,8 @@
 #include "SceneHandler.hpp"
 #include "CollisionHandler.hpp"
 #include "EventHandler.hpp"
-#include <ranges>
+
+
 #include <algorithm>
 
 Core::Core( )
@@ -67,8 +68,17 @@ void Core::progress( ) {
 	// Rendering (Double buffering)
 	Rectangle( hMemDC_, -1, -1, resolution_.x + 1, resolution_.y + 1 );
 	SceneHandler::GetInst( ).render( hMemDC_ );
-	BitBlt( hdc_, 0, 0, resolution_.x, resolution_.y, hMemDC_, 0, 0, SRCCOPY );
 
+	BitBlt( hdc_, 
+		0,
+		0,
+		resolution_.x, 
+		resolution_.y, 
+		hMemDC_, 
+		0, 
+		0, 
+		SRCCOPY );
+	
 	Timer::GetInst( ).render( );
 
 	// Event 지연 처리

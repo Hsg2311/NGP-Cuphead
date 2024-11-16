@@ -25,6 +25,7 @@ void Player::update( ) {
 	Vec2 objPos = getObjPos( );
 
 	if ( KEY_HOLD( InputData::LEFT ) ) {
+		float a = 200.f * fDT;
 		objPos.x -= 200.f * fDT;
 	}
 	if ( KEY_HOLD( InputData::RIGHT ) ) {

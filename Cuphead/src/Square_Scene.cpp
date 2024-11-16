@@ -10,6 +10,9 @@
 #include "Texture.hpp"
 #include "ResourceHandler.hpp"
 
+
+
+
 Square_Scene::Square_Scene()
 {
 
@@ -23,6 +26,7 @@ Square_Scene::~Square_Scene()
 
 void Square_Scene::update()
 {
+
 	Scene::update();
 }
 
@@ -41,7 +45,7 @@ void Square_Scene::Entry()
 	obj->setObjScale(Vec2{ 50.f, 50.f });
 	addObject(GROUP_TYPE::PLAYER, obj);
 
-	
+
 
 }
 

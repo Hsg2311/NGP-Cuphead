@@ -13,6 +13,8 @@ public:
 	void progress( );
 	void CreatePenBrush( );
 
+	HDC GetHDC() { return hMemDC_; }
+
 	HWND getHwnd( ) const { return hWnd_; }
 	POINT getResolution( ) const { return resolution_; }
 	HPEN getPen( PEN_TYPE type ) const { return hPen_[ static_cast<UINT>( type ) ]; }
