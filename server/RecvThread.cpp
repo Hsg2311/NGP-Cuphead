@@ -11,7 +11,7 @@ void processPacket(int id, char* packet)
 {
 	InputPacket* pk = reinterpret_cast<InputPacket*>(packet);
 
-	players[pk->entityId];
+	players[pk->entityId].x
 	
 
 }

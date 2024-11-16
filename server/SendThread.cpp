@@ -12,7 +12,6 @@ DWORD WINAPI sendThread(LPARAM lparam)
 
     switch (packetType) {
     case ServerPacketType::ClientStatePacket: {
-      
         ClientStatePacket playerPacket{ ServerPacketType::ClientStatePacket, 100, 100, 100};
         memcpy(buf, &playerPacket, sizeof(playerPacket)); 
         break;

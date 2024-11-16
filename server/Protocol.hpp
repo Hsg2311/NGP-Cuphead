@@ -3,6 +3,12 @@
 
 #include <iostream>
 
+struct Player {
+	int x, y;
+	int hp;
+	int entityId;
+};
+
 enum class LogSystem : unsigned char {
 	SignUp,
 	LogIn,

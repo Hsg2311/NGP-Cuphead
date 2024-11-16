@@ -9,6 +9,8 @@
 #include <string_view>
 #include <cstdint>
 
+#include <queue>
+
 #include "MyException.hpp"
 
 using namespace std::literals;
@@ -141,7 +143,10 @@ namespace network {
 
 		SOCKET sock_;
 		bool open_;
+
 	};
 }
+
+
 
 #endif // NETWORK_HPP
