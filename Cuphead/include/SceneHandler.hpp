@@ -36,6 +36,12 @@ private:
 private:
 	std::array<Scene*, static_cast<UINT>( SCENE_TYPE::EOE )> sceneList_;
 	Scene* currScene_;
+
+public:
+	Vec2 GetCameraPos() { return _cameraPos; }
+	void SetCameraPos(Vec2 pos) { _cameraPos = pos; }
+private:
+	Vec2 _cameraPos = { 0,0 };
 };
 
 #endif // __SCENE_HANDLER_HPP

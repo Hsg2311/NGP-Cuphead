@@ -23,7 +23,8 @@ void Map::update() {
 }
 
 void Map::render(HDC hdc) {
-	_background->Draw(hdc, 0, 0, 2048, 1847, 0, 0, 1280, 768);
-	componentRender(hdc);
+	
+	_background->Draw(hdc, 0, 0, 1280, 768, 100, 700, 1280, 768); // 1280, 768 / 1847, 2048
+	
 }
 

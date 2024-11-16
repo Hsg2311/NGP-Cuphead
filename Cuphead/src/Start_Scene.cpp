@@ -30,10 +30,10 @@ void Start_Scene::Entry( ) {
 	obj->setObjScale( Vec2{ 100.f, 100.f } );
 	addObject( GROUP_TYPE::PLAYER, obj );
 
-	/*Object* obj2 = obj->clone( );
-	obj2->setObjName( L"Player" );
-	obj2->setObjPos( Vec2{ 640.f, 500.f } );
-	addObject( GROUP_TYPE::PLAYER, obj2 );*/
+	//Object* obj2 = obj->clone( );
+	//obj2->setObjName( L"Player" );
+	//obj2->setObjPos( Vec2{ 640.f, 500.f } );
+	//addObject( GROUP_TYPE::PLAYER, obj2 );
 
 	const auto monCount = 16;
 	const auto monScale = 50.f;
