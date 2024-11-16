@@ -27,7 +27,7 @@ private:
 		currScene_->Exit( );
 
 		currScene_ = sceneList_[ static_cast<UINT>( sceneType ) ];
-
+		
 		currScene_->Entry( );
 	}
 

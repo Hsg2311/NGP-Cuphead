@@ -4,6 +4,8 @@
 #include "SelectGdiObject.hpp"
 #include "struct.hpp"
 
+//#include "SceneHandler.hpp"
+
 class Collider {
 public:
 	Collider( ) 
@@ -44,6 +46,7 @@ public:
 			pen = PEN_TYPE::RED;
 
 		SelectGdiObject gdiObject{ hdc, pen, BRUSH_TYPE::HOLLOW };
+		
 
 		Rectangle( hdc
 			, static_cast<int>( finalPos_.x - scale_.x / 2.f )
