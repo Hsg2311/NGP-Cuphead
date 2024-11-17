@@ -6,9 +6,9 @@
 
 char buf[1024];
 
-DWORD WINAPI sendThread(LPARAM lparam)
+DWORD WINAPI sendThread(LPARAM sendSoket)
 {
-    ServerPacketType packetType = *reinterpret_cast<ServerPacketType*>(lparam);
+    ServerPacketType packetType = *reinterpret_cast<ServerPacketType*>(sendSoket);
 
     switch (packetType) {
     case ServerPacketType::ClientStatePacket: {
@@ -40,7 +40,7 @@ DWORD WINAPI sendThread(LPARAM lparam)
     }
 
     // 소켓을 통해 패킷 전송
-    int retval = send(sock_, buf, sizeof(buf), 0);
+    int retval = send(sendSoket, buf, sizeof(buf), 0);
     if (retval == SOCKET_ERROR) {
         std::cerr << "Error sending packet." << std::endl;
     }

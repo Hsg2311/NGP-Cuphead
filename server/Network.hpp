@@ -12,8 +12,11 @@
 #include <queue>
 
 #include "MyException.hpp"
+#include "Protocol.hpp"
 
 using namespace std::literals;
+
+std::queue<Object> recvQueue;
 
 #define NET_NOEXCEPT noexcept
 #define NET_EXCEPT(error, desc) network::Exception(__LINE__, __FILE__, error, desc)

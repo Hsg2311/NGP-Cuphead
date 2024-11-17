@@ -3,7 +3,18 @@
 
 #include <iostream>
 
-struct Player {
+struct Object {
+	int x, y;
+	int hp;
+	int entityId;
+};
+
+struct Player: public Object {
+	int x, y;
+	int hp;
+	int entityId;
+};
+struct Boss : public Object {
 	int x, y;
 	int hp;
 	int entityId;
@@ -26,7 +37,7 @@ enum class LogSystem : unsigned char {
 };
 
 enum class ClientPacketType : unsigned char {
-	Input
+	Input = 3 //¿”¿«∑Œ...
 };
 
 enum class ServerPacketType : unsigned char {
