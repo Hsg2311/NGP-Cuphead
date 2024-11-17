@@ -22,9 +22,16 @@ Player::~Player( )
 
 void Player::update( ) {
 	Vec2 objPos = getObjPos( );
-
+	char dir;
 	if ( KEY_HOLD( InputData::LEFT ) ) {
 		objPos.x -= 200.f * fDT;
+		dir = 'Left';
+
+		InputPacket p;
+		p.dir = dir;
+		p.type = ClientPacketType::Input;
+		//bool inputFlag = true;
+		//sendInput(p);
 	}
 	if ( KEY_HOLD( InputData::RIGHT ) ) {
 		objPos.x += 200.f * fDT;

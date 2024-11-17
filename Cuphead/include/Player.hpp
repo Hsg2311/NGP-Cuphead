@@ -1,7 +1,10 @@
 #ifndef __PLAYER_HPP
 #define __PLAYER_HPP
 
+#include "Protocol.hpp"
 #include "Object.hpp"
+
+
 #include <Windows.h>
 
 class Texture;
@@ -21,6 +24,8 @@ public:
 	virtual void OnCollisionExit( Object* other ) override;
 
 	virtual Player* clone( ) override { return new Player{ *this }; }
+
+	void sendInput(InputPacket packet);
 };
 
 #endif // __PLAYER_HPP
