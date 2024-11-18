@@ -17,11 +17,15 @@ public:
 		currScene_->update( );
 		currScene_->componentUpdate( );
 	}
-	void render( HDC hdc ) { currScene_->render( hdc ); }
+	void render( HDC hdc ) { 
+		currScene_->render( hdc ); 
+		scenename = currScene_->getSceneName();
+	}
 
 public:
+	std::wstring scenename{};
 	Scene* getCurrScene( ) const { return currScene_; }
-
+	std::wstring checkSceneName() { return scenename; }
 private:
 	void changeScene( SCENE_TYPE sceneType ) {
 		currScene_->Exit( );
@@ -40,6 +44,8 @@ private:
 public:
 	Vec2 GetCameraPos() { return _cameraPos; }
 	void SetCameraPos(Vec2 pos) { _cameraPos = pos; }
+
+
 private:
 	Vec2 _cameraPos = { 0,0 };
 };

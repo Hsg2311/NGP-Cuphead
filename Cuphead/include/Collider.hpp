@@ -4,8 +4,6 @@
 #include "SelectGdiObject.hpp"
 #include "struct.hpp"
 
-//#include "SceneHandler.hpp"
-
 class Collider {
 public:
 	Collider( ) 

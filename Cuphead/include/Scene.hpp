@@ -50,7 +50,7 @@ public:
 			.eventType = EVENT_TYPE::CHANGE_SCENE,
 			.wParam = static_cast<DWORD_PTR>( sceneType )
 		};
-
+	
 		EventHandler::GetInst( ).addEvent( event );
 	}
 

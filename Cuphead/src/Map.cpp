@@ -11,16 +11,16 @@
 #define Height 768
 
 Map::Map() {
-	CreateCollider();
-	getCollider()->setScale(Vec2{ 50.f, 50.f });
+	
+	name = SceneHandler::GetInst().checkSceneName();
 
+	if(name == L"Boss1 Scene"){
 	_background = ResourceHandler::GetInst().LoadTexture(L"Map", L"/texture/overworld/map.png");
-
-
+	}
 }
 
-Map::~Map()
-{}
+Map::~Map(){
+}
 
 void Map::update() {
 	
@@ -34,7 +34,6 @@ void Map::render(HDC hdc) {
 	_camera.x = _player.x - (Width / 2);
 	_camera.y = _player.y - (Height / 2);
 	
-
 	_background->Draw(hdc, 0, 0, 1280, 768, _camera.x, _camera.y, 1280, 768); // 1280, 768 / 2560, 2839
 
 	

@@ -1,6 +1,7 @@
 #ifndef __MAP_HPP
 #define __MAP_HPP
 
+#include "Scene.hpp"
 #include "Object.hpp"
 #include <Windows.h>
 
@@ -21,7 +22,7 @@ public:
 	Vec2 _player;
 	Vec2 _camera;
 	Texture* _background;
-	
+	std::wstring name;
 };
 
 #endif // __Map_HPP

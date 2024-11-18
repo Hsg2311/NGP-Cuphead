@@ -19,8 +19,8 @@ void Animation::render( HDC hdc, const Vec2& objPos ) {
 	Vec2 camera = SceneHandler::GetInst().GetCameraPos();
 
 	tex_->Draw( hdc,
-		static_cast<int>( objPos.x - animFrames_[ currFrame_ ].sliceSize.x / 2.f - camera.x +640),
-		static_cast<int>( objPos.y - animFrames_[ currFrame_ ].sliceSize.y / 2.f - camera.y +384),
+		static_cast<int>( objPos.x - animFrames_[ currFrame_ ].sliceSize.x / 2.f ),
+		static_cast<int>( objPos.y - animFrames_[ currFrame_ ].sliceSize.y / 2.f ),
 		static_cast<int>( animFrames_[ currFrame_ ].sliceSize.x ),
 		static_cast<int>( animFrames_[ currFrame_ ].sliceSize.y ),
 		static_cast<int>( animFrames_[ currFrame_ ].LT.x ),
