@@ -3,18 +3,13 @@
 
 #include <iostream>
 
-struct Object {
+struct Player {
 	int x, y;
 	int hp;
 	int entityId;
 };
 
-struct Player: public Object {
-	int x, y;
-	int hp;
-	int entityId;
-};
-struct Boss : public Object {
+struct Boss {
 	int x, y;
 	int hp;
 	int entityId;

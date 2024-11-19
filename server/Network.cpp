@@ -1,7 +1,6 @@
 #include "Network.hpp"
 
 
-
 namespace network {
 
 	void network::initNet( ) {

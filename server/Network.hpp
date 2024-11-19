@@ -133,7 +133,6 @@ namespace network {
 		TcpSocket( )
 			: sock_( createNativeSocket( ) ), open_( true ) {}
 
-		
 
 	private:
 		static SOCKET createNativeSocket( ) {

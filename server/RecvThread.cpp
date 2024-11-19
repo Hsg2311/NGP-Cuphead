@@ -10,8 +10,11 @@ Player players[2];
 void processPacket(char* buf)
 {
 	unsigned char packetType = static_cast<unsigned char>(buf[0]);
+	
+	//if문으로 바꾸기
 
 	switch (packetType) {
+
 	case static_cast<unsigned char>(ClientPacketType::Input): {
 		InputPacket* pk = reinterpret_cast<InputPacket*>(buf);
 
@@ -51,10 +54,9 @@ void processPacket(char* buf)
 DWORD WINAPI recvThread(LPARAM sock_)
 {
 	while (true) {
-		int retval = recv(sock_, buf, sizeof(buf), 0);
+		int retval = recv(sock_, buf, sizeof(buf), 0); //논블로킹일 때는 buf[0]이 패킷타입이 아닐 수도 있다.
 
 		processPacket(buf);
 	}
-
 
 }

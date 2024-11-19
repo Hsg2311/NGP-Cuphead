@@ -25,7 +25,7 @@ void Player::update( ) {
 	char dir;
 	if ( KEY_HOLD( InputData::LEFT ) ) {
 		objPos.x -= 200.f * fDT;
-		dir = 'Left';
+		dir = 1;
 
 		InputPacket p;
 		p.dir = dir;
