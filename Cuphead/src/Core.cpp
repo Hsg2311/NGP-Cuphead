@@ -5,6 +5,8 @@
 #include "SceneHandler.hpp"
 #include "CollisionHandler.hpp"
 #include "EventHandler.hpp"
+#include "Camera.hpp"
+
 #include <ranges>
 #include <algorithm>
 
@@ -45,37 +47,39 @@ int Core::init( HWND hWnd, POINT resolution ) {
 	HBITMAP defaultBmp = (HBITMAP)SelectObject( hMemDC_, hBitmap_ );
 	DeleteObject( defaultBmp );
 
-	CreatePenBrush( );
+	createPenBrush( );
 
 	// Handler 초기화
-	PathHandler::GetInst( ).init( );
-	Timer::GetInst( ).init( );
-	InputDeviceHandler::GetInst( ).init( );
-	SceneHandler::GetInst( ).init( );
+	PathHandler::getInst( ).init( );
+	Timer::getInst( ).init( );
+	InputDeviceHandler::getInst( ).init( );
+	SceneHandler::getInst( ).init( );
+	Camera::getInst( ).init( );
 
 	return S_OK;
 }
 
 void Core::progress( ) {
 	// Handler update
-	Timer::GetInst( ).update( );
-	InputDeviceHandler::GetInst( ).update( );
+	Timer::getInst( ).update( );
+	InputDeviceHandler::getInst( ).update( );
 
-	SceneHandler::GetInst( ).update( );
-	CollisionHandler::GetInst( ).update( );
+	SceneHandler::getInst( ).update( );
+	CollisionHandler::getInst( ).update( );
+	Camera::getInst( ).update( );
 
 	// Rendering (Double buffering)
 	Rectangle( hMemDC_, -1, -1, resolution_.x + 1, resolution_.y + 1 );
-	SceneHandler::GetInst( ).render( hMemDC_ );
+	SceneHandler::getInst( ).render( hMemDC_ );
 	BitBlt( hdc_, 0, 0, resolution_.x, resolution_.y, hMemDC_, 0, 0, SRCCOPY );
 
-	Timer::GetInst( ).render( );
+	Timer::getInst( ).render( );
 
 	// Event 지연 처리
-	EventHandler::GetInst( ).update( );
+	EventHandler::getInst( ).update( );
 }
 
-void Core::CreatePenBrush( ) {
+void Core::createPenBrush( ) {
 	hPen_[ static_cast<UINT>( PEN_TYPE::RED ) ] = CreatePen( PS_SOLID, 1, RGB( 255, 0, 0 ) );
 	hPen_[ static_cast<UINT>( PEN_TYPE::GREEN ) ] = CreatePen( PS_SOLID, 1, RGB( 0, 255, 0 ) );
 	hPen_[ static_cast<UINT>( PEN_TYPE::BLUE ) ] = CreatePen( PS_SOLID, 1, RGB( 0, 0, 255 ) );

@@ -11,7 +11,7 @@ class Core {
 public:
 	int init( HWND hWnd, POINT resolution );
 	void progress( );
-	void CreatePenBrush( );
+	void createPenBrush( );
 
 	HWND getHwnd( ) const { return hWnd_; }
 	POINT getResolution( ) const { return resolution_; }
