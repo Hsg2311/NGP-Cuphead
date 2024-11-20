@@ -4,5 +4,8 @@
 
 int main()
 {
+	network::initNet();
+
+	network::TcpSocket sock;
 
 }

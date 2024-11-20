@@ -54,6 +54,7 @@ struct LogOutPacket {
 };
 
 struct InputPacket {
+	unsigned char size;
 	ClientPacketType type;
 	unsigned char entityId;
 	unsigned char dir;
