@@ -2,7 +2,7 @@
 #include "Object.hpp"
 #include "Player.hpp"
 #include "Map.hpp"
-#include "Monster.hpp"
+#include "Boss1.hpp"
 #include "Core.hpp"
 #include "CollisionHandler.hpp"
 #include "InputDeviceHandler.hpp"
@@ -33,6 +33,12 @@ void Boss1_Scene::Entry() {
 	map->setObjScale(Vec2{ 1.f, 1.f });
 	addObject(GROUP_TYPE::MAP, map);
 
+	Object* boss = new Boss1{};
+	boss->setObjName(L"Boss1");
+	boss->setObjPos(Vec2{ 1000.f, 384.f });
+	boss->setObjScale(Vec2{ 1.f, 1.f });
+	addObject(GROUP_TYPE::ENEMY, boss);
+
 	Object* obj = new Player{ };
 	obj->setObjName(L"Player");
 	obj->setObjPos(Vec2{ 640.f, 384.f });
@@ -40,21 +46,6 @@ void Boss1_Scene::Entry() {
 	addObject(GROUP_TYPE::PLAYER, obj);
 
 
-	const auto monCount = 16;
-	const auto monScale = 50.f;
-	const auto moveDist = 25.f;
-	const auto step = (Core::GetInst().getResolution().x - (2 * moveDist + monScale)) / (monCount - 1);
-
-	for (auto i = 0; i < monCount; ++i) {
-		Monster* mon = new Monster{ };
-		mon->setObjName(L"Monster");
-		mon->setObjPos(Vec2{ (moveDist + monScale / 2.f) + step * i, 50.f });
-		mon->setCenterPos(mon->getObjPos());
-		mon->setObjScale(Vec2{ monScale, monScale });
-		mon->setMaxDistance(moveDist);
-		mon->setSpeed(200.f);
-		addObject(GROUP_TYPE::ENEMY, mon);
-	}
 
 	// 충돌 지정
 	// 그룹 간의 충돌을 검사한다.

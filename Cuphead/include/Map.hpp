@@ -21,7 +21,9 @@ public:
 public:
 	Vec2 _player;
 	Vec2 _camera;
-	Texture* _background;
+	Texture* _background1;
+	Texture* _background2;
+	Texture* _background3;
 	std::wstring name;
 };
 

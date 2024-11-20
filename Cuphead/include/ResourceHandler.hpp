@@ -9,7 +9,7 @@ class Res;
 class Texture;
 
 class ResourceHandler {
-	SINGLETON( ResourceHandler );
+ 	SINGLETON( ResourceHandler );
 
 public:
 	Texture* LoadTexture( const std::wstring& resKey, const std::wstring& relativePath );
