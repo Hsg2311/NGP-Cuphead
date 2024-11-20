@@ -19,13 +19,14 @@ public:
 	}
 	void render( HDC hdc ) { 
 		currScene_->render( hdc ); 
-		scenename = currScene_->getSceneName();
+		
 	}
 
 public:
 	std::wstring scenename{};
 	Scene* getCurrScene( ) const { return currScene_; }
 	std::wstring checkSceneName() { return scenename; }
+	void setSceneName(std::wstring name) { scenename = name; }
 private:
 	void changeScene( SCENE_TYPE sceneType ) {
 		currScene_->Exit( );

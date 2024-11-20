@@ -1,11 +1,13 @@
 #include "Boss1_Scene.hpp"
 #include "Object.hpp"
 #include "Player.hpp"
+#include "Map.hpp"
 #include "Monster.hpp"
 #include "Core.hpp"
 #include "CollisionHandler.hpp"
 #include "InputDeviceHandler.hpp"
 #include "func.hpp"
+#include "SceneHandler.hpp"
 
 Boss1_Scene::Boss1_Scene()
 {}
@@ -18,13 +20,18 @@ void Boss1_Scene::update() {
 
 	if (KEY_TAP(InputData::Q)) {
 		ChangeScene(SCENE_TYPE::SQUARE_SCENE);
+		SceneHandler::GetInst().setSceneName(L"Square Scene");
 	}
-
-
 }
 
 void Boss1_Scene::Entry() {
 
+	SceneHandler::GetInst().setSceneName(L"Boss1 Scene");
+	Object* map = new Map{};
+	map->setObjName(L"Map");
+	map->setObjPos(Vec2{ 0.f, 0.f });
+	map->setObjScale(Vec2{ 1.f, 1.f });
+	addObject(GROUP_TYPE::MAP, map);
 
 	Object* obj = new Player{ };
 	obj->setObjName(L"Player");

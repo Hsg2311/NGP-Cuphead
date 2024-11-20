@@ -33,7 +33,7 @@ void SceneHandler::init( ) {
 	// 현재 Scene 설정
 	currScene_ = sceneList_[ static_cast<UINT>( SCENE_TYPE::BOSS1_SCENE) ];
 	currScene_->Entry( );
-
+	
 
 }
 	

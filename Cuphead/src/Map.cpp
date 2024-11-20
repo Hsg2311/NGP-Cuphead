@@ -15,7 +15,8 @@ Map::Map() {
 	name = SceneHandler::GetInst().checkSceneName();
 
 	if(name == L"Boss1 Scene"){
-	_background = ResourceHandler::GetInst().LoadTexture(L"Map", L"/texture/overworld/map.png");
+	//_background = ResourceHandler::GetInst().LoadTexture(L"Map", L"/texture/overworld/map.png");
+	_background = ResourceHandler::GetInst().LoadTexture(L"Map", L"/texture/boss1/flower_bg_main.png");
 	}
 }
 
@@ -29,12 +30,12 @@ void Map::update() {
 
 void Map::render(HDC hdc) {
 	
-	_player = SceneHandler::GetInst().GetCameraPos();
+	//_player = SceneHandler::GetInst().GetCameraPos();
+	//
+	//_camera.x = _player.x - (Width / 2);
+	//_camera.y = _player.y - (Height / 2);
 	
-	_camera.x = _player.x - (Width / 2);
-	_camera.y = _player.y - (Height / 2);
-	
-	_background->Draw(hdc, 0, 0, 1280, 768, _camera.x, _camera.y, 1280, 768); // 1280, 768 / 2560, 2839
+	_background->Draw(hdc, 0, 0, 1280, 727, 0, 0, 1280, 727); // 1280, 768 / 2560, 2839
 
 	
 

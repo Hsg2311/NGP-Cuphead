@@ -32,6 +32,8 @@ void Square_Scene::update()
 
 void Square_Scene::Entry()
 {
+
+
 	Object* map = new Map{};
 	map->setObjName(L"Map");
 	map->setObjPos(Vec2{ 0.f, 0.f });
