@@ -16,6 +16,8 @@ Player::Player( ) {
 	CreateAnimator( ); 
 	getAnimator( )->createAnimation( L"Player_Idle", tex, Vec2{ 0.f, 0.f }, Vec2{ 100.f, 155.f }, Vec2{ 100.f, 0.f }, 0.065f, 9 );
 	getAnimator( )->play( L"Player_Idle" );
+
+
 }
 
 Player::~Player( )

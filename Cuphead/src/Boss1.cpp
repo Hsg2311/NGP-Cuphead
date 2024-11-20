@@ -2,6 +2,7 @@
 #include "Timer.hpp"
 #include "func.hpp"
 #include "ResourceHandler.hpp"
+#include "InputDeviceHandler.hpp"
 #include <cmath>
 
 Boss1::Boss1()
@@ -11,10 +12,12 @@ Boss1::Boss1()
 
 	
 
-	auto tex = ResourceHandler::GetInst().LoadTexture(L"Boss1_Intro", L"/texture/boss1/boss/Intro.png");
+	auto intro = ResourceHandler::GetInst().LoadTexture(L"Boss1_Intro", L"/texture/boss1/boss/Intro.png");
+	auto idle = ResourceHandler::GetInst().LoadTexture(L"Boss1_Idle", L"/texture/boss1/boss/Idle.png");
 
 	CreateAnimator();
-	getAnimator()->createAnimation(L"Boss1_Intro", tex, Vec2{ 0.f, 0.f }, Vec2{ 815.f, 721.f }, Vec2{ 815.f, 0.f }, 0.07f, 20); // 815, 721
+	getAnimator()->createAnimation(L"Boss1_Intro", intro, Vec2{ 0.f, 0.f }, Vec2{ 815.f, 721.f }, Vec2{ 815.f, 0.f }, 0.07f, 20); // 815, 721
+	getAnimator()->createAnimation(L"Boss1_Idle", idle, Vec2{ 0.f, 0.f }, Vec2{ 815.f, 721.f }, Vec2{ 815.f, 0.f }, 0.05f, 20); // 815, 721
 	getAnimator()->play(L"Boss1_Intro");
 
 }
@@ -25,7 +28,10 @@ Boss1::~Boss1()
 
 void Boss1::update() {
 	auto objPos = getObjPos();
-
+	if (KEY_TAP(InputData::E)) {
+		
+		getAnimator()->play(L"Boss1_Idle");
+	}
 
 
 	setObjPos(objPos);
