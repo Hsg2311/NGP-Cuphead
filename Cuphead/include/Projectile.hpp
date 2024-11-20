@@ -14,7 +14,7 @@ public:
 	void setDirection( float theta ) { theta_ = theta; }
 	void setDirection( const Vec2& direction ) { 
 		direction_ = direction;
-		direction_.Normalize( );
+		direction_.normalize( );
 	}
 
 public:
@@ -22,9 +22,9 @@ public:
 	virtual void render( HDC hdc ) override;
 
 public:
-	//virtual void OnCollision( Object* other ) override;
-	virtual void OnCollisionEntry( Object* other ) override;
-	//virtual void OnCollisionExit( Object* other ) override;
+	//virtual void onCollision( Object* other ) override;
+	virtual void onCollisionEntry( Object* other ) override;
+	//virtual void onCollisionExit( Object* other ) override;
 
 public:
 	virtual Projectile* clone( ) override { return new Projectile{ *this }; }

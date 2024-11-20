@@ -40,7 +40,7 @@
 
 template<class T>
 	requires std::is_pointer_v< std::remove_cvref_t<T> >
-void Safe_Delete_Vector( std::vector<T>& vec ) {
+void safeDeleteVector( std::vector<T>& vec ) {
 	std::ranges::for_each( vec, []( auto elem ) {
 		delete elem;
 	} );
@@ -50,7 +50,7 @@ void Safe_Delete_Vector( std::vector<T>& vec ) {
 
 template<class T1, class T2>
 	requires std::is_pointer_v< std::remove_cvref_t<T2> >
-void Safe_Delete_Map( std::map<T1, T2>& map ) {
+void safeDeleteMap( std::map<T1, T2>& map ) {
 	std::ranges::for_each( map, []( auto& elem ) {
 		delete elem.second;
 	} );

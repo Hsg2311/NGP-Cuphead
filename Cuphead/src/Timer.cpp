@@ -37,7 +37,7 @@ void Timer::render( ) {
 		wchar_t buffer[ 255 ];
 		swprintf_s( buffer, L"FPS: %d, DT: %lf", fps_, deltaTime_ );
 
-		SetWindowText( Core::GetInst( ).getHwnd( ), buffer );
+		SetWindowText( Core::getInst( ).getHwnd( ), buffer );
 
 		accTime_ = 0.;
 		fps_ = 0;

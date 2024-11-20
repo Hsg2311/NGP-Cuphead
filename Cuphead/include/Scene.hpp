@@ -27,8 +27,8 @@ public:
 	void render( HDC hdc );
 
 public:
-	virtual void Entry( ) = 0;
-	virtual void Exit( ) = 0;
+	virtual void entry( ) = 0;
+	virtual void exit( ) = 0;
 
 public:
 	void addObject( GROUP_TYPE groupType, Object* obj ) {
@@ -41,17 +41,17 @@ public:
 
 	void destroyObjGroupList( ) {
 		std::ranges::for_each( objGroupList_, []( auto& group ) {
-			Safe_Delete_Vector( group );
+			safeDeleteVector( group );
 		} );
 	}
 
-	void ChangeScene( SCENE_TYPE sceneType ) {
+	void changeScene( SCENE_TYPE sceneType ) {
 		auto event = Event{
 			.eventType = EVENT_TYPE::CHANGE_SCENE,
 			.wParam = static_cast<DWORD_PTR>( sceneType )
 		};
 
-		EventHandler::GetInst( ).addEvent( event );
+		EventHandler::getInst( ).addEvent( event );
 	}
 
 private:

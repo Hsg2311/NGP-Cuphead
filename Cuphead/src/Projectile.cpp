@@ -8,7 +8,7 @@ Projectile::Projectile( )
 	: theta_{ 0.f }
 	, direction_{ }
 {
-	CreateCollider( );
+	createCollider( );
 	getCollider( )->setScale( Vec2{ 20.f, 20.f } );
 }
 
@@ -39,10 +39,10 @@ void Projectile::render( HDC hdc ) {
 	componentRender( hdc );
 }
 
-void Projectile::OnCollisionEntry( Object* other ) {
+void Projectile::onCollisionEntry( Object* other ) {
 	getCollider( )->addCollisionCount( );
 
 	if ( other->getObjName( ) == L"Monster" ) {
-		DestroyObject( this );
+		destroyObject( this );
 	}
 }

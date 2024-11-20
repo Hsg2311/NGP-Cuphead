@@ -21,7 +21,7 @@ void Scene::update( ) {
 	// Scene에 등록된 Object들을 update
 	std::ranges::for_each( objGroupList_, []( auto& objs ) {
 		std::ranges::for_each( objs, []( auto obj ) {
-			if( obj->IsAlive( ) )
+			if( obj->isAlive( ) )
 				obj->update( );
 		} );
 	} );
@@ -40,7 +40,7 @@ void Scene::render( HDC hdc ) {
 	// Scene에 등록된 Object들을 render
 	for ( auto& group : objGroupList_ ) {
 		for ( auto iter = group.begin( ); iter != group.end( ); ) {
-			if ( ( *iter )->IsAlive( ) ) {
+			if ( ( *iter )->isAlive( ) ) {
 				( *iter )->render( hdc );
 				++iter;
 			}

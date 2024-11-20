@@ -8,8 +8,8 @@ class SelectGdiObject {
 public:
 	SelectGdiObject( HDC hdc, PEN_TYPE pen, BRUSH_TYPE brush ) 
 		: hdc_{ hdc }
-		, hDefaultPen_{ static_cast<HPEN>( SelectObject( hdc_, Core::GetInst( ).getPen( pen ) ) ) }
-		, hDefaultBrush_{ static_cast<HBRUSH>( SelectObject( hdc_, Core::GetInst( ).getBrush( brush ) ) ) } 
+		, hDefaultPen_{ static_cast<HPEN>( SelectObject( hdc_, Core::getInst( ).getPen( pen ) ) ) }
+		, hDefaultBrush_{ static_cast<HBRUSH>( SelectObject( hdc_, Core::getInst( ).getBrush( brush ) ) ) } 
 	{}
 
 	~SelectGdiObject( ) {

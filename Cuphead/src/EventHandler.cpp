@@ -34,7 +34,7 @@ void EventHandler::excute( const Event& event ) {
 		auto groupType = static_cast<GROUP_TYPE>( event.wParam );
 		auto obj = reinterpret_cast<Object*>( event.lParam );
 
-		SceneHandler::GetInst( ).getCurrScene( )->addObject( groupType, obj );
+		SceneHandler::getInst( ).getCurrScene( )->addObject( groupType, obj );
 	}
 		break;
 
@@ -47,7 +47,7 @@ void EventHandler::excute( const Event& event ) {
 		break;
 
 	case EVENT_TYPE::CHANGE_SCENE:
-		SceneHandler::GetInst( ).changeScene( static_cast<SCENE_TYPE>( event.wParam ) );
+		SceneHandler::getInst( ).changeScene( static_cast<SCENE_TYPE>( event.wParam ) );
 		break;
 	}
 }

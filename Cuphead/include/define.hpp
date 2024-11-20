@@ -7,7 +7,7 @@
 							type( type&& ) = delete;\
 							type& operator=( type&& ) = delete;\
 							\
-							static type& GetInst()\
+							static type& getInst()\
 							{\
 								static type instance;\
 								return instance;\
@@ -16,29 +16,34 @@
 							type( );\
 							~type( )
 
-#define fDT Timer::GetInst().getFDT()
-#define DT Timer::GetInst().getDT()
+#define fDT Timer::getInst().getFDT()
+#define DT Timer::getInst().getDT()
 
-#define KEY_CHECK( key, state ) InputDeviceHandler::GetInst().getKeyState(key) == state
+#define KEY_CHECK( key, state ) InputDeviceHandler::getInst().getKeyState(key) == state
 #define KEY_TAP( key ) KEY_CHECK( key, KEY_STATE::TAP )
 #define KEY_HOLD( key ) KEY_CHECK( key, KEY_STATE::HOLD )
 #define KEY_AWAY( key ) KEY_CHECK( key, KEY_STATE::AWAY )
 #define KEY_NONE( key ) KEY_CHECK( key, KEY_STATE::NONE )
+#define MOUSE_POS InputDeviceHandler::getInst().getMousePos()
 
 enum class GROUP_TYPE {
 	DEFAULT,
+	BACKGROUND,
+	BACKGROUND_ENTITY,
 	PLAYER,
 	ENEMY,
 	PLAYER_PROJECTILE,
 	ENEMY_PROJECTILE,
+	UI,
 
 	EOE
 };
 
 enum class SCENE_TYPE {
-	START_SCENE,
+	TITLE_SCENE,
+	MENU_SCENE,
 	TUTORIAL_SCENE,
-	TOOL_SCENE,
+	WORLD_SCENE,
 
 	EOE
 };

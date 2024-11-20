@@ -12,7 +12,7 @@ class Texture;
 class Animator {
 public:
 	Animator( ) : animations_{ }, currAnim_{ nullptr } {}
-	~Animator( ) { Safe_Delete_Map( animations_ ); }
+	~Animator( ) { safeDeleteMap( animations_ ); }
 
 	void createAnimation( const std::wstring& animName, Texture* tex, Vec2 LT, 
 		Vec2 sliceSize, Vec2 step, float duration, UINT frameCount, Vec2 offset = { 0.f, 0.f } );

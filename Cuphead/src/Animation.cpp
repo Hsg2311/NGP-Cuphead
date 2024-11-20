@@ -1,6 +1,7 @@
 #include "Animation.hpp"
 #include "Texture.hpp"
 #include "Timer.hpp"
+#include "Camera.hpp"
 
 void Animation::update( ) {
 	accTime_ += fDT;
@@ -13,8 +14,9 @@ void Animation::update( ) {
 
 void Animation::render( HDC hdc, const Vec2& objPos ) {
 	auto finalPos = objPos + animFrames_[ currFrame_ ].offset;
+	finalPos = Camera::getInst( ).getRenderPos( finalPos );	// 카메라 위치에 따라 렌더링 위치 조정
 
-	tex_->Draw( hdc,
+	tex_->draw( hdc,
 		static_cast<int>( finalPos.x - animFrames_[ currFrame_ ].sliceSize.x / 2.f ),
 		static_cast<int>( finalPos.y - animFrames_[ currFrame_ ].sliceSize.y / 2.f ),
 		static_cast<int>( animFrames_[ currFrame_ ].sliceSize.x ),
