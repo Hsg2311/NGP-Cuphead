@@ -7,6 +7,13 @@
 #include "struct.hpp"
 #include <Windows.h>
 
+enum patturn {
+	Intro,
+	Idle,
+	Attack1,
+	Attack2
+};
+
 class Boss1 : public Object {
 public:
 	Boss1();
@@ -15,6 +22,9 @@ public:
 public:
 
 	void setCenterPos(const Vec2& centerPos) { centerPos_ = centerPos; }
+	void PaturnUpdate();
+
+	void TimeCheck();
 
 public:
 	virtual void update() override;
@@ -25,6 +35,7 @@ public:
 	virtual void OnCollisionEntry(Object* other) override;
 	virtual void OnCollisionExit(Object* other) override;
 
+
 public:
 	virtual Boss1* clone() override { return new Boss1{ *this }; }
 
@@ -34,6 +45,10 @@ private:
 	float maxDistance_;
 	int dir_;
 	int hp_;
+
+	float firstTime{};
+	float secondTime{};
+	patturn firstPatturn;
 };
 
 #endif // __BOSS1_HPP
