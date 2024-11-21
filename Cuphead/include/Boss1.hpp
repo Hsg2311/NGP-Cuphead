@@ -46,9 +46,13 @@ private:
 	int dir_;
 	int hp_;
 
+	Vec2 objPos{};
+	float moveDist{};
+
 	float firstTime{};
 	float secondTime{};
 	patturn firstPatturn;
+
 };
 
 #endif // __BOSS1_HPP
