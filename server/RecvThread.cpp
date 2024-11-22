@@ -4,42 +4,49 @@
 #include "Network.hpp"
 #include "Protocol.hpp"
 
-std::vector<char> recvBuf;
+char buf[512];
 Player players[2];
 
-void processPacket(char* buf)
+void processPacket(char* buf, int bufSize)
 {
-	InputPacket* packet = reinterpret_cast<InputPacket*>(buf);
+    unsigned char type = buf[0]; // 패킷의 첫 바이트를 타입으로 간주
 
+    if (bufSize >= sizeof(InputPacket)) { 
+        InputPacket* inputPacket = reinterpret_cast<InputPacket*>(buf);
+        recvQueue.push(inputPacket);
+    }
+    else { // LogSystem 처리
+        LogSystem logType = static_cast<LogSystem>(type);
 
+        if (logType == LogSystem::SignUp) {
+            std::cout << "SignUp Packet received\n";
+           
+        }
+        else if (logType == LogSystem::LogIn) {
+            std::cout << "LogIn Packet received\n";
+          
+        }
+        else if (logType == LogSystem::LogOut) {
+            std::cout << "LogOut Packet received\n";
+           
+        }
+    }
 }
 
 DWORD WINAPI recvThread(LPARAM sock_)
 {
-	char tempBuf[1024];
+    SOCKET sock = static_cast<SOCKET>(sock_);
 
-	while (true) {
-		int retval = recv(sock_, tempBuf, sizeof(tempBuf), 0);
-		if (retval > 0) {
-			recvBuf.insert(recvBuf.end(), tempBuf, tempBuf + retval);
-
-			while (recvBuf.size() >= sizeof(InputPacket)) {
-				processPacket(recvBuf.data());
-				recvBuf.erase(recvBuf.begin(), recvBuf.begin() + sizeof(InputPacket));
-			}
-		}
-		else if (retval == 0) {
-			std::cout << "Connection closed" << std::endl;
-			break;
-		}
-		else {
-			int err = WSAGetLastError();
-			if (err == WSAEWOULDBLOCK) {
-				continue;
-			}
-			std::cerr << "recv error: " << err << std::endl;
-			break;
-		}
+	int fileSize;
+	int retval = recv(sock_, (char*)&fileSize, sizeof(fileSize), 0);
+	if (retval == SOCKET_ERROR) {
+		std::cerr << "size_recv_error " << WSAGetLastError() << std::endl;
 	}
+
+	int retval = recv(sock_, buf, fileSize, 0);
+	if (retval == SOCKET_ERROR) {
+		std::cerr << "packet_recv_error " << WSAGetLastError() << std::endl;
+	}
+	processPacket(buf, fileSize);
 	return 0;
 }
