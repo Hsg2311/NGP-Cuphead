@@ -71,11 +71,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (retval == 0) {
         // Recv스레드 생성
         std::thread recvThread(&ServerCL::clientRecv,sock); // 스레드 생성
-        recvThread.join();
+        recvThread.detach();
 
         // Send스레드 생성
         std::thread sendThread(&ServerCL::clientSend,sock); // 스레드 생성
-        sendThread.join();
+        sendThread.detach();
     }
     else {
         err_quit("connect()");
