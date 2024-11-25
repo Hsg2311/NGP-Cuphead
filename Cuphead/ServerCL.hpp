@@ -1,7 +1,8 @@
 #ifndef SERVERCL_HPP
 #define SERVERCL_HPP
 
-#include <Core.hpp>
+#include "framework.h"
+
 #include <thread>
 class ServerCL
 {
@@ -9,9 +10,9 @@ public:
 	ServerCL();
 	~ServerCL();
 
-	static void clientRecv();
+	static void clientRecv(SOCKET sock);
 
-	static void clientSend();
+	static void clientSend(SOCKET sock);
 
 	void clientProcessPacket();
 

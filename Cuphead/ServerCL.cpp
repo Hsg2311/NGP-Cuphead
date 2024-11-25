@@ -10,12 +10,22 @@ ServerCL::~ServerCL()
 
 
 
-void ServerCL::clientRecv()
+void ServerCL::clientRecv(SOCKET sock)
 {
+	int retval;
+
+	while (1) {
+
+
+	}
 }
 
-void ServerCL::clientSend()
+void ServerCL::clientSend(SOCKET sock)
 {
+	int retval;
+
+	while (1) {
+	}
 }
 
 

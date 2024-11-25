@@ -56,11 +56,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     retval = connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
     if (retval == 0) {
         // Recv스레드 생성
-        std::thread recvThread(&ServerCL::clientRecv); // 스레드 생성
+        std::thread recvThread(&ServerCL::clientRecv,sock); // 스레드 생성
         recvThread.join();
 
         // Send스레드 생성
-        std::thread sendThread(&ServerCL::clientSend); // 스레드 생성
+        std::thread sendThread(&ServerCL::clientSend,sock); // 스레드 생성
         sendThread.join();
     }
 
