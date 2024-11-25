@@ -1,4 +1,5 @@
 #include "InputDeviceHandler.hpp"
+#include "Core.hpp"
 
 int g_arrVK[ static_cast<UINT>( InputData::EOE ) ] = {
 	VK_LEFT,
@@ -38,16 +39,19 @@ int g_arrVK[ static_cast<UINT>( InputData::EOE ) ] = {
 	VK_LSHIFT,
 	VK_SPACE,
 	VK_RETURN,
-	VK_ESCAPE
+	VK_ESCAPE,
+
+	VK_LBUTTON,
+	VK_RBUTTON
 };
 
 InputDeviceHandler::InputDeviceHandler( )
-	: inputDataInfo_{ } {
+	: inputDataInfo_( )
+	, mousePos_( ) {
 	inputDataInfo_.reserve( static_cast<UINT>( InputData::EOE ) );
 }
 
-InputDeviceHandler::~InputDeviceHandler( )
-{}
+InputDeviceHandler::~InputDeviceHandler( ) {}
 
 void InputDeviceHandler::init( ) {
 	for ( UINT i = 0; i < static_cast<UINT>( InputData::EOE ); ++i ) {
@@ -81,6 +85,11 @@ void InputDeviceHandler::update( ) {
 				inputDataInfo_[ i ].isPressed = false;
 			}
 		}
+
+		POINT pt;
+		GetCursorPos( &pt );
+		ScreenToClient( Core::getInst( ).getHwnd( ), &pt );
+		mousePos_ = static_cast<Vec2>( pt );
 	}
 	else {
 		for ( UINT i = 0; i < static_cast<UINT>( InputData::EOE ); ++i ) {

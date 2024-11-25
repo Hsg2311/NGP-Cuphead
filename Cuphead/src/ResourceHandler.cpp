@@ -11,18 +11,18 @@ ResourceHandler::ResourceHandler( )
 {}
 
 ResourceHandler::~ResourceHandler( ) {
-	Safe_Delete_Map( texMap_ );
+	safeDeleteMap( texMap_ );
 }
 
-Texture* ResourceHandler::LoadTexture( const std::wstring& resKey, const std::wstring& relativePath ) {
-	Texture* tex = FindTexture( resKey );
+Texture* ResourceHandler::loadTexture( const std::wstring& resKey, const std::wstring& relativePath ) {
+	Texture* tex = findTexture( resKey );
 	if ( tex )
 		return tex;
 
-	auto filePath = PathHandler::GetInst( ).getContentPath( ).c_str( ) + relativePath;
+	auto filePath = PathHandler::getInst( ).getContentPath( ).c_str( ) + relativePath;
 
 	tex = new Texture{ };
-	tex->Load( filePath );
+	tex->load( filePath );
 	tex->setResKey( resKey );
 	tex->setRelativePath( relativePath );
 
@@ -31,7 +31,7 @@ Texture* ResourceHandler::LoadTexture( const std::wstring& resKey, const std::ws
 	return tex;
 }
 
-Texture* ResourceHandler::FindTexture( const std::wstring& resKey ) {
+Texture* ResourceHandler::findTexture( const std::wstring& resKey ) {
 	auto tex = texMap_.find( resKey );
 
 	if ( tex == texMap_.end( ) )

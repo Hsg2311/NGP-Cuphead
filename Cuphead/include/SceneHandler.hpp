@@ -21,14 +21,16 @@ public:
 
 public:
 	Scene* getCurrScene( ) const { return currScene_; }
+	SCENE_TYPE getCurrSceneType( ) const { return currSceneType_; }
 
 private:
 	void changeScene( SCENE_TYPE sceneType ) {
-		currScene_->Exit( );
+		currScene_->exit( );
 
 		currScene_ = sceneList_[ static_cast<UINT>( sceneType ) ];
+		currSceneType_ = sceneType;
 
-		currScene_->Entry( );
+		currScene_->entry( );
 	}
 
 	friend class EventHandler;
@@ -36,6 +38,7 @@ private:
 private:
 	std::array<Scene*, static_cast<UINT>( SCENE_TYPE::EOE )> sceneList_;
 	Scene* currScene_;
+	SCENE_TYPE currSceneType_;
 };
 
 #endif // __SCENE_HANDLER_HPP

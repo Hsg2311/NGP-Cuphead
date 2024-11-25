@@ -2,6 +2,8 @@
 #define __INPUT_DEVICE_HANDLER_HPP
 
 #include "define.hpp"
+#include "struct.hpp"
+
 #include <vector>
 #include <Windows.h>
 
@@ -52,6 +54,9 @@ enum class InputData {
 	ENTER,
 	ESC,
 
+	MOUSE_LBTN,
+	MOUSE_RBTN,
+
 	EOE
 };
 
@@ -70,9 +75,13 @@ public:
 	KEY_STATE getKeyState( InputData key ) const {
 		return inputDataInfo_[ static_cast<UINT>( key ) ].state;
 	}
+	Vec2 getMousePos( ) const {
+		return mousePos_;
+	}
 
 private:
 	std::vector<InputDataInfo> inputDataInfo_;
+	Vec2 mousePos_;
 };
 
 #endif // __INPUT_DEVICE_HANDLER_HPP

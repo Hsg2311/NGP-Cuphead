@@ -4,7 +4,18 @@
 #include "EventHandler.hpp"
 #include "Collider.hpp"
 #include "Animator.hpp"
+#include "Camera.hpp"
+
 #include <string>
+
+struct texInfo {
+	std::wstring resKey;
+	std::wstring fileName;
+	Vec2 sliceSize{ 0.f, 0.f };
+	float duration = 0.f;
+	UINT frameCount = 0;
+	Vec2 offset{ 0.f, 0.f };
+};
 
 class Object {
 public:
@@ -23,11 +34,11 @@ public:
 		, collider_{ nullptr }
 		, animator_{ nullptr }
 		, alive_{ true } {
-		CreateCollider( );
+		createCollider( );
 		getCollider( )->setOffset( other.getCollider( )->getOffset( ) );
 		getCollider( )->setScale( other.getCollider( )->getScale( ) );
 
-		CreateAnimator( );
+		createAnimator( );
 	}
 
 	Object( Object&& other ) noexcept
@@ -61,42 +72,41 @@ public:
 	Collider* getCollider( ) const { return collider_; }
 	Animator* getAnimator( ) const { return animator_; }
 
-	bool IsAlive( ) const { return alive_; }
+	bool isAlive( ) const { return alive_; }
 
 public:
-	void CreateCollider( ) { collider_ = new Collider{ }; }
-	void CreateAnimator( ) { animator_ = new Animator{ }; }
+	void createCollider( ) { collider_ = new Collider{ }; }
+	void createAnimator( ) { animator_ = new Animator{ }; }
 
-	virtual void OnCollision( Object* other ) {}
-	virtual void OnCollisionEntry( Object* other ) {}
-	virtual void OnCollisionExit( Object* other ) {}
+	virtual void onCollision( Object* other ) {}
+	virtual void onCollisionEntry( Object* other ) {}
+	virtual void onCollisionExit( Object* other ) {}
 
-	void CreateObject( GROUP_TYPE groupType, Object* object ) {
+	void createObject( GROUP_TYPE groupType, Object* object ) {
 		auto event = Event{
 			.eventType = EVENT_TYPE::CREATE_OBJECT,
 			.wParam = static_cast<DWORD_PTR>( groupType ),
 			.lParam = reinterpret_cast<DWORD_PTR>( object )
 		};
 
-		EventHandler::GetInst( ).addEvent( event );
+		EventHandler::getInst( ).addEvent( event );
 	}
 
-	void DestroyObject( Object* object ) {
+	void destroyObject( Object* object ) {
 		auto event = Event{
 			.eventType = EVENT_TYPE::DESTROY_OBJECT,
 			.lParam = reinterpret_cast<DWORD_PTR>( object )
 		};
 
-		EventHandler::GetInst( ).addEvent( event );
+		EventHandler::getInst( ).addEvent( event );
 	}
 
 public:
-	virtual void update( ) = 0 {
-	}
+	virtual void update( ) = 0 {}
 
 	virtual void componentUpdate( ) final {
 		if ( collider_ ) {
-			collider_->update( getObjPos( ) );
+			collider_->update( objPos_ );
 		}
 		if ( animator_ ) {
 			animator_->update( );
@@ -104,11 +114,13 @@ public:
 	}
 
 	virtual void render( HDC hdc ) = 0 {
+		auto renderPos = Camera::getInst( ).getRenderPos( objPos_ );
+
 		Rectangle( hdc
-			, static_cast<int>( objPos_.x - objScale_.x / 2.f )
-			, static_cast<int>( objPos_.y - objScale_.y / 2.f )
-			, static_cast<int>( objPos_.x + objScale_.x / 2.f )
-			, static_cast<int>( objPos_.y + objScale_.y / 2.f ) );
+			, static_cast<int>( renderPos.x - objScale_.x / 2.f )
+			, static_cast<int>( renderPos.y - objScale_.y / 2.f )
+			, static_cast<int>( renderPos.x + objScale_.x / 2.f )
+			, static_cast<int>( renderPos.y + objScale_.y / 2.f ) );
 
 		componentRender( hdc );
 	}
@@ -118,7 +130,7 @@ public:
 			collider_->render( hdc );
 		}
 		if ( animator_ ) {
-			animator_->render( hdc, getObjPos( ) );
+			animator_->render( hdc, objPos_ );
 		}
 	}
 

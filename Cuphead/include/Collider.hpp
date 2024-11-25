@@ -3,6 +3,7 @@
 
 #include "SelectGdiObject.hpp"
 #include "struct.hpp"
+#include "Camera.hpp"
 
 class Collider {
 public:
@@ -45,11 +46,13 @@ public:
 
 		SelectGdiObject gdiObject{ hdc, pen, BRUSH_TYPE::HOLLOW };
 
+		auto renderPos = Camera::getInst( ).getRenderPos( finalPos_ );
+
 		Rectangle( hdc
-			, static_cast<int>( finalPos_.x - scale_.x / 2.f )
-			, static_cast<int>( finalPos_.y - scale_.y / 2.f )
-			, static_cast<int>( finalPos_.x + scale_.x / 2.f )
-			, static_cast<int>( finalPos_.y + scale_.y / 2.f ) );
+			, static_cast<int>( renderPos.x - scale_.x / 2.f )
+			, static_cast<int>( renderPos.y - scale_.y / 2.f )
+			, static_cast<int>( renderPos.x + scale_.x / 2.f )
+			, static_cast<int>( renderPos.y + scale_.y / 2.f ) );
 	}
 
 public:

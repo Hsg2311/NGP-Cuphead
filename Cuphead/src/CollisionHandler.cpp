@@ -45,7 +45,7 @@ void CollisionHandler::checkCollision( GROUP_TYPE lhs, GROUP_TYPE rhs ) {
 }
 
 void CollisionHandler::collisionUpdate( GROUP_TYPE lhs, GROUP_TYPE rhs ) {
-	auto currScene = SceneHandler::GetInst( ).getCurrScene( );
+	auto currScene = SceneHandler::getInst( ).getCurrScene( );
 
 	const auto& lhsGroup = currScene->getGroup( lhs );
 	const auto& rhsGroup = currScene->getGroup( rhs );
@@ -74,29 +74,29 @@ void CollisionHandler::collisionUpdate( GROUP_TYPE lhs, GROUP_TYPE rhs ) {
 				iter = collisionInfo_.find( combination.id );
 			}
 
-			if ( IsCollided( lgObj->getCollider( ), rgObj->getCollider( ) ) ) {
+			if ( isCollided( lgObj->getCollider( ), rgObj->getCollider( ) ) ) {
 				// 현재 충돌 중이다.
 
 				if ( iter->second ) {
 					// 이전에도 충돌하고 있었다. -> 충돌 중
 
-					if ( !lgObj->IsAlive( ) || !rgObj->IsAlive( ) ) {
+					if ( !lgObj->isAlive( ) || !rgObj->isAlive( ) ) {
 						// 근데 둘 중 하나가 삭제 예정이라면, 충돌 종료
-						lgObj->OnCollisionExit( rgObj );
-						rgObj->OnCollisionExit( lgObj );
+						lgObj->onCollisionExit( rgObj );
+						rgObj->onCollisionExit( lgObj );
 						iter->second = false;
 					}
 					else {
-						lgObj->OnCollision( rgObj );
-						rgObj->OnCollision( lgObj );
+						lgObj->onCollision( rgObj );
+						rgObj->onCollision( lgObj );
 					}
 				}
 				else {
 					// 이전에는 충돌하지 않았다. -> 막 충돌된 시점
 					// 근데 둘 중 하나가 삭제 예정이라면, 충돌하지 않은 것으로 취급
-					if ( lgObj->IsAlive( ) && rgObj->IsAlive( ) ) {
-						lgObj->OnCollisionEntry( rgObj );
-						rgObj->OnCollisionEntry( lgObj );
+					if ( lgObj->isAlive( ) && rgObj->isAlive( ) ) {
+						lgObj->onCollisionEntry( rgObj );
+						rgObj->onCollisionEntry( lgObj );
 						iter->second = true;
 					}
 				}
@@ -106,8 +106,8 @@ void CollisionHandler::collisionUpdate( GROUP_TYPE lhs, GROUP_TYPE rhs ) {
 
 				if ( iter->second ) {
 					// 이전에는 충돌하고 있었다. -> 충돌이 막 끝난 시점
-					lgObj->OnCollisionExit( rgObj );
-					rgObj->OnCollisionExit( lgObj );
+					lgObj->onCollisionExit( rgObj );
+					rgObj->onCollisionExit( lgObj );
 					iter->second = false;
 				}
 			}
@@ -115,7 +115,7 @@ void CollisionHandler::collisionUpdate( GROUP_TYPE lhs, GROUP_TYPE rhs ) {
 	} );
 }
 
-bool CollisionHandler::IsCollided( Collider* lhs, Collider* rhs ) {
+bool CollisionHandler::isCollided( Collider* lhs, Collider* rhs ) {
 	auto lPos = lhs->getFinalPos( );
 	auto lScale = lhs->getScale( );
 

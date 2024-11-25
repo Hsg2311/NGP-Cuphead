@@ -35,7 +35,7 @@ public:
 
 private:
 	void collisionUpdate( GROUP_TYPE lhs, GROUP_TYPE rhs );
-	bool IsCollided( Collider* lhs, Collider* rhs );
+	bool isCollided( Collider* lhs, Collider* rhs );
 
 private:
 	std::array<UINT, static_cast<UINT>( GROUP_TYPE::EOE )> collisionTable_;

@@ -10,7 +10,7 @@ Monster::Monster( )
 	, dir_{ 1 }
 	, hp_{ 5 }
 {
-	CreateCollider( );
+	createCollider( );
 	getCollider( )->setScale( Vec2{ 40.f, 40.f } );
 }
 
@@ -35,11 +35,11 @@ void Monster::render( HDC hdc ) {
 	Object::render( hdc );
 }
 
-void Monster::OnCollision( Object* other )
+void Monster::onCollision( Object* other )
 {
 }
 
-void Monster::OnCollisionEntry( Object* other )
+void Monster::onCollisionEntry( Object* other )
 {
 	getCollider( )->addCollisionCount( );
 
@@ -47,12 +47,12 @@ void Monster::OnCollisionEntry( Object* other )
 		--hp_;
 
 		if ( hp_ <= 0 ) {
-			DestroyObject( this );
+			destroyObject( this );
 		}
 	}
 }
 
-void Monster::OnCollisionExit( Object* other )
+void Monster::onCollisionExit( Object* other )
 {
 	getCollider( )->subCollisionCount( );
 }

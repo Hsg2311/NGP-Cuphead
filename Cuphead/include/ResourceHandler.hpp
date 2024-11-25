@@ -12,8 +12,8 @@ class ResourceHandler {
 	SINGLETON( ResourceHandler );
 
 public:
-	Texture* LoadTexture( const std::wstring& resKey, const std::wstring& relativePath );
-	Texture* FindTexture( const std::wstring& resKey );
+	Texture* loadTexture( const std::wstring& resKey, const std::wstring& relativePath );
+	Texture* findTexture( const std::wstring& resKey );
 
 private:
 	std::map<std::wstring, Res*> texMap_;
