@@ -8,8 +8,6 @@
 
 std::atomic_bool flag{ false };
 
-
-
 enum class ServerPacketType : unsigned char {
 	ClientStatePacket,
 	EnemyStateUpdate,
