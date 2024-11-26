@@ -10,6 +10,7 @@
 #include <cstdint>
 
 #include "MyException.hpp"
+#include <system_error>
 
 using namespace std::literals;
 
@@ -18,9 +19,6 @@ using namespace std::literals;
 #define NET_LAST_EXCEPT(desc) NET_EXCEPT(WSAGetLastError(), desc)
 
 namespace network {
-
-	void initNet( );
-	void closeNet( );
 	
 	class Exception : public MyException {
 	public:
@@ -89,6 +87,8 @@ namespace network {
 			sockaddr addr;
 			sockaddr_in addr_in;
 
+			UAddr( ) NET_NOEXCEPT = default;
+
 			UAddr( const Ipv4Addr& ip, Port port ) NET_NOEXCEPT
 				: addr_in{
 					.sin_family = static_cast<decltype( sockaddr_in::sin_family )>( AF_INET ),
@@ -126,9 +126,144 @@ namespace network {
 	class TcpSocket {
 	public:
 		TcpSocket( )
-			: sock_( createNativeSocket( ) ), open_( true ) {}
+			: sock_( createNativeSocket( ) ), addr_( ), open_( true ) {}
 
-		
+		TcpSocket( SOCKET sock, bool bOpen = true ) NET_NOEXCEPT
+			: sock_( sock ), addr_( ), open_( bOpen ) {}
+
+		TcpSocket( SOCKET sock, const SockAddr& addr, bool bOpen = true ) NET_NOEXCEPT
+			: sock_( sock ), addr_( addr ), open_( bOpen ) {}
+
+		~TcpSocket( ) {
+			if ( open_ ) {
+				closesocket( sock_ );
+			}
+		}
+
+		TcpSocket( const TcpSocket& other ) = delete;
+		TcpSocket& operator=( const TcpSocket& other ) = delete;
+
+		TcpSocket( TcpSocket&& other ) noexcept
+			: sock_( std::exchange( other.sock_, INVALID_SOCKET ) )
+			, addr_( std::exchange( other.addr_, SockAddr( ) ) )
+			, open_( std::exchange( other.open_, false ) ) {}
+
+		TcpSocket& operator=( TcpSocket&& other ) noexcept {
+			if ( open_ ) {
+				closesocket( sock_ );
+			}
+
+			sock_ = std::exchange( other.sock_, INVALID_SOCKET );
+			addr_ = std::exchange( other.addr_, SockAddr( ) );
+			open_ = std::exchange( other.open_, false );
+
+			return *this;
+		}
+
+		void bind( const SockAddr& addr ) {
+			addr_ = addr;
+			if ( ::bind( sock_, &addr_.get( ).addr, static_cast<int>( addr.size( ) ) ) == SOCKET_ERROR ) {
+				throw NET_LAST_EXCEPT( "Failed to bind TCP socket"sv );
+			}
+		}
+
+		void listen( std::size_t backlog = SOMAXCONN ) {
+			if ( ::listen( sock_, static_cast<int>( backlog ) ) == SOCKET_ERROR ) {
+				throw NET_LAST_EXCEPT( "Failed to listen TCP socket"sv );
+			}
+		}
+
+		void connect( const SockAddr& addr ) {
+			addr_ = addr;
+			if ( ::connect( sock_, &addr_.get( ).addr, static_cast<int>( addr.size( ) ) ) == SOCKET_ERROR ) {
+				throw NET_LAST_EXCEPT( "Failed to connect TCP server"sv );
+			}
+		}
+
+		std::size_t send( const void* data, std::size_t size ) {
+			int sendSize = ::send( sock_, static_cast<const char*>( data ), static_cast<int>( size ), 0 );
+			if ( sendSize < 0 ) {
+				throw NET_LAST_EXCEPT( "Failed to send data"sv );
+			}
+			return sendSize;
+		}
+
+		std::size_t recv( char* data, std::size_t size ) {
+			int recvSize = ::recv( sock_, data, static_cast<int>( size ), 0 );
+			if ( recvSize < 0 ) {
+				throw NET_LAST_EXCEPT( "Failed to receive data"sv );
+				return 0;
+			}
+			return recvSize;
+		}
+
+		int sendUc( const void* data, std::size_t size ) {
+			return ::send( sock_, static_cast<const char*>( data ), static_cast<int>( size ), 0 );
+		}
+
+		int recvUc( char* data, std::size_t size ) {
+			return ::recv( sock_, data, static_cast<int>( size ), 0 );
+		}
+
+		TcpSocket accept( ) {
+			auto tmp = SockAddr( );
+			return accept( tmp );
+		}
+
+		TcpSocket accept( SockAddr& addr ) {
+			int addrSize = static_cast<int>( addr.size( ) );
+			SOCKET client = ::accept( sock_, &addr.get( ).addr, &addrSize );
+			if ( client == INVALID_SOCKET ) {
+				throw NET_LAST_EXCEPT( "Failed to accept TCP connection"sv );
+			}
+			return TcpSocket( client, addr );
+		}
+
+		TcpSocket acceptUc( ) {
+			auto tmp = SockAddr( );
+			return acceptUc( tmp );
+		}
+
+		TcpSocket acceptUc( SockAddr& addr ) {
+			int addrSize = static_cast<int>( addr.size( ) );
+			SOCKET client = ::accept( sock_, &addr.get( ).addr, &addrSize );
+			if ( client == INVALID_SOCKET ) {
+				return TcpSocket( INVALID_SOCKET, false );
+			}
+			return TcpSocket( client, addr );
+		}
+
+		void close( ) {
+			if ( closesocket( sock_ ) == SOCKET_ERROR ) {
+				throw NET_LAST_EXCEPT( "Failed to close TCP socket"sv );
+			}
+			open_ = false;
+		}
+
+		void open( ) {
+			if ( open_ ) {
+				throw NET_EXCEPT( WSAEISCONN, "Socket is already open"sv );
+			}
+
+			sock_ = createNativeSocket( );
+			open_ = true;
+		}
+
+		bool invalid( ) const NET_NOEXCEPT {
+			return sock_ == INVALID_SOCKET;
+		}
+
+		IN_ADDR& getAddr( ) NET_NOEXCEPT {
+			return addr_.get( ).addr_in.sin_addr;
+		}
+
+		USHORT getPort( ) NET_NOEXCEPT {
+			return addr_.get( ).addr_in.sin_port;
+		}
+
+		SOCKET& getSock( ) NET_NOEXCEPT {
+			return sock_;
+		}
 
 	private:
 		static SOCKET createNativeSocket( ) {
@@ -140,8 +275,51 @@ namespace network {
 		}
 
 		SOCKET sock_;
+		SockAddr addr_;
 		bool open_;
 	};
-}
+
+}	// namespace network
 
 #endif // NETWORK_HPP
+
+//enum class PacketType : std::uint16_t {
+//	move,
+//	chat,
+//	join,
+//	leave,
+//};
+//
+//struct MovePacket { /* ... */ };
+//struct ChatPacket { /* ... */ };
+//struct JoinPacket { /* ... */ };
+//struct LeavePacket { /* ... */ };
+//
+//struct Packet {
+//	PacketType type;
+//	std::uint16_t size;
+//
+//	union /* PacketData*/ {
+//		MovePacket mv;
+//		ChatPacket ct;
+//		JoinPacket jo;
+//		LeavePacket le;
+//	};
+//};
+//
+//void foo( ) {
+//	Packet p;
+//	p.type = PacketType::move;
+//	p.size = sizeof( MovePacket );
+//	p.mv = MovePacket{ /* ... */ };
+//}
+//
+//union pacekt {
+//	// pakcet type = move
+//	// struct move packet
+//	// struct 
+//	// struct
+//	// struct
+//	// struct
+//	// struct
+//};
