@@ -1,11 +1,13 @@
 ﻿#include <iostream>
 #include <thread>
 #include <vector>
+
 #include "Network.hpp"
 #include "Protocol.hpp"
 
 char buf[512];
 //Player players[2];
+
 
 void processPacket(char* buf, int bufSize)
 {

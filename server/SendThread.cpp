@@ -4,6 +4,8 @@
 
 #include "Network.hpp"
 #include "Protocol.hpp"
+ServerPacket::Player players[2];
+ServerPacket::Boss boss;
 
 char buf[1024];
 
@@ -51,37 +53,40 @@ DWORD WINAPI sendThread(LPARAM sendSoket, void* sendBuf)
 
 void sendClientState(int id)
 {
-    ClientStatePacket p;
-    p.hp = players[id].hp;
+    ServerPacket p;
     p.type = ServerPacketType::ClientStatePacket;
-    p.x = players[id].x;
-    p.y = players[id].y;
+
+    p.clientState.hp = players[id].hp;
+    p.clientState.x = players[id].x;
+    p.clientState.y = players[id].y;
     
 }
 
 void sendEnemyState()
 {
-    EnemyStatePacket p;
-    //p.entityId
-    p.hp = boss.hp;
+    ServerPacket p;
     p.type = ServerPacketType::EnemyStateUpdate;
-    p.x = boss.x;
-    p.y = boss.y;
+
+    p.enemyState.hp = boss.hp;
+    p.enemyState.x = boss.x;
+    p.enemyState.y = boss.y;
 }
 
 
 void sendCollisionEvent(int id)
 {
-    CollisionEventPacket p;
-    p.entityId = players[id].entityId;
+    ServerPacket p;
     p.type = ServerPacketType::CollisionEvent;
+
+    p.collisionEvent.entityId = players[id].entityId;
+
 }
 
 void sendDeath(int id)
 {
-    DeathEventPacket p;
-    p.entityId = players[id].entityId;
+    ServerPacket p;
     p.type = ServerPacketType::DeathEvent;
+    p.deathEvent.entityId = players[id].entityId;
 
 
 }

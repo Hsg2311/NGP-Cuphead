@@ -2,23 +2,20 @@
 #define PROTOCOL_HPP
 
 #include <iostream>
+#include <atomic>
 
-struct Player {
-	int x, y;
-	int hp;
-	int entityId;
-};
+#define BUFSIZE 1024
 
-struct Boss {
-	int x, y;
-	int hp;
-	int entityId;
-};
+std::atomic_bool flag{ false };
 
-Player players[2];
-Boss boss;
 
-enum class LogSystem : unsigned char {
+
+enum class ServerPacketType : unsigned char {
+	ClientStatePacket,
+	EnemyStateUpdate,
+	CollisionEvent,
+	DeathEvent,
+	//------------------------------------
 	SignUp,
 	LogIn,
 	LogOut,
@@ -34,64 +31,79 @@ enum class LogSystem : unsigned char {
 	SaveLogfile
 };
 
+struct ServerPacket {
+	ServerPacketType type;
+
+	union {
+		struct Player {
+			int x, y;
+			int hp;
+			int entityId;
+		}players;
+
+		struct Boss {
+			int x, y;
+			int hp;
+			int entityId;
+		}boss;
+
+		struct ClientStatePacket {
+			short x, y;
+			unsigned char hp;
+		}clientState;
+
+		struct EnemyStatePacket {
+			short x, y;
+			unsigned char entityId;
+			unsigned char hp;
+		}enemyState;
+
+		struct CollisionEventPacket {
+			unsigned char entityId;
+		}collisionEvent;
+
+		struct DeathEventPacket {
+			unsigned char entityId;
+		}deathEvent;
+
+		struct LoadSaveFile {
+			unsigned char stage;
+		}loadSaveFile;
+	};
+};
+
+
 enum class ClientPacketType : unsigned char {
-	Input = 3 //¿”¿«∑Œ...
+	Input = 1,
+	LogIn = 2,
+	LogOut = 3
 };
 
-enum class ServerPacketType : unsigned char {
-	ClientStatePacket,
-	EnemyStateUpdate,
-	CollisionEvent,
-	DeathEvent
-};
 
-struct SignUpOrLogInPacket {
-	LogSystem type;
-	std::string username;
-	std::string password;
-};
-
-struct LogOutPacket {
-	LogSystem type;
-	std::string username;
-};
-
-struct InputPacket {
-	unsigned char size;
+struct ClientPacket {
 	ClientPacketType type;
-	unsigned char entityId;
-	unsigned char dir;
-	unsigned char jump;
-	unsigned char attack;
+
+	union {
+		struct InputPacket {
+			unsigned char entityId;
+			unsigned char dir;
+			unsigned char jump;
+			unsigned char attack;
+		};
+		struct SignUpOrLogInPacket {
+			std::string username;
+			std::string password;
+		};
+
+		struct LogOutPacket {
+			std::string username;
+		};
+	};
 };
 
-struct ClientStatePacket {
-	ServerPacketType type;
-	short x, y;
-	unsigned char hp;
-};
 
 
-struct EnemyStatePacket {
-	ServerPacketType type;
-	short x, y;
-	unsigned char entityId;
-	unsigned char hp;
-};
 
-struct CollisionEventPacket {
-	ServerPacketType type;
-	unsigned char entityId;
-};
 
-struct DeathEventPacket {
-	ServerPacketType type;
-	unsigned char entityId;
-};
-
-struct LoadSaveFile {
-	ServerPacketType type;
-	unsigned char stage;
-};
 
 #endif // PROTOCOL_HPP
