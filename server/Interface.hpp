@@ -1,19 +1,18 @@
-#ifndef INTERFACE_HPP
-#define INTERFACE_HPP
+#include <iostream>
+#include <mutex>
+#include "Network.hpp"
 
-#include "framework.h"
-#include "Protocol.hpp"
-#include <thread>
-
-
-class Interface
-{
+class SendingStorage {
 public:
-	InputPacket packetInput{};
-	void checkData();
-	InputPacket getData() { return packetInput; }
-	void intiallizeData() { packetInput = { ClientPacketType::Input, 0, 0, 0, 0 }; }
+	Singleton();
 
-};
+	void pushPacket(const ServerPacket& packet);
+	void setFlag();
+	void resetFlag();
+	void copyTo(char* destBuffer);  //->이 안에서 lock과 unlock
 
-#endif // INTERFACE_HPP
+private:
+	std::atomic<bool> flag_;
+	char buffer_[BUFSIZE];
+	std::mutex bufferMtx_;
+}
