@@ -11,28 +11,29 @@ char buf[512];
 
 void processPacket(char* buf, int bufSize)
 {
-    unsigned char type = buf[0]; // 패킷의 첫 바이트를 타입으로 간주
+    //if (bufSize >= sizeof(InputPacket)) { 
+    //    InputPacket* inputPacket = reinterpret_cast<InputPacket*>(buf);
+    //    recvQueue.push(inputPacket);
+    //}
+    //else { // LogSystem 처리
+    //    LogSystem logType = static_cast<LogSystem>(type);
 
-    if (bufSize >= sizeof(InputPacket)) { 
-        InputPacket* inputPacket = reinterpret_cast<InputPacket*>(buf);
-        recvQueue.push(inputPacket);
-    }
-    else { // LogSystem 처리
-        LogSystem logType = static_cast<LogSystem>(type);
+    //    if (logType == LogSystem::SignUp) {
+    //        std::cout << "SignUp Packet received\n";
+    //       
+    //    }
+    //    else if (logType == LogSystem::LogIn) {
+    //        std::cout << "LogIn Packet received\n";
+    //      
+    //    }
+    //    else if (logType == LogSystem::LogOut) {
+    //        std::cout << "LogOut Packet received\n";
+    //       
+    //    }
+    //}
+    
+    ClientPacket* p = reinterpret_cast<ClientPacket*>(buf[0]);
 
-        if (logType == LogSystem::SignUp) {
-            std::cout << "SignUp Packet received\n";
-           
-        }
-        else if (logType == LogSystem::LogIn) {
-            std::cout << "LogIn Packet received\n";
-          
-        }
-        else if (logType == LogSystem::LogOut) {
-            std::cout << "LogOut Packet received\n";
-           
-        }
-    }
 }
 
 DWORD WINAPI recvThread(LPARAM sock_)
