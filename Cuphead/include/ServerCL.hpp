@@ -2,8 +2,8 @@
 #define SERVERCL_HPP
 
 #include "framework.h"
-#include "Protocol.hpp"
 #include "Interface.hpp"
+#include "Protocol.hpp"
 
 #include <atomic>
 #include <thread>

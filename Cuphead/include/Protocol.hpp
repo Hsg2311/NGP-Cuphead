@@ -6,7 +6,7 @@
 
 #define BUFSIZE 1024
 
-std::atomic_bool flag{false};
+extern std::atomic_bool flag;
 
 
 
@@ -88,15 +88,15 @@ struct ClientPacket {
 			unsigned char dir;
 			unsigned char jump;
 			unsigned char attack;
-		};
+		}Input;
 		struct SignUpOrLogInPacket {
-			std::string username;
-			std::string password;
-		};
+			unsigned char username[50];
+			unsigned char password[50];
+		}LogIn;
 
 		struct LogOutPacket {
-			std::string username;
-		};
+			unsigned char username[50];
+		}LogOut;
 	};
 };
 

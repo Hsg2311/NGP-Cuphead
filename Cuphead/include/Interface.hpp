@@ -9,11 +9,9 @@
 class Interface
 {
 public:
-	InputPacket packetInput{};
+	ClientPacket packetInput;
 	void checkData();
-	InputPacket getData() { return packetInput; }
-	void intiallizeData(){ packetInput = { ClientPacketType::Input, 0, 0, 0, 0 }; }
-	
+
 };
 
 #endif // INTERFACE_HPP
