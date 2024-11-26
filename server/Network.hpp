@@ -8,12 +8,16 @@
 #include <string>
 #include <string_view>
 #include <cstdint>
+#include <queue>
+#include <mutex>
 
 
 #include "MyException.hpp"
 #include "Protocol.hpp"
 
 using namespace std::literals;
+std::mutex queueMutex;
+std::queue<ClientPacket>recvQueue;
 
 #define NET_NOEXCEPT noexcept
 #define NET_EXCEPT(error, desc) network::Exception(__LINE__, __FILE__, error, desc)

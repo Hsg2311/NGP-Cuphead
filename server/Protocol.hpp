@@ -87,19 +87,19 @@ struct ClientPacket {
 			unsigned char dir;
 			unsigned char jump;
 			unsigned char attack;
-		};
+		}input;
+
 		struct SignUpOrLogInPacket {
-			std::string username;
-			std::string password;
-		};
+			unsigned char username[10];
+			unsigned char password[10];
+
+		}signUp;
 
 		struct LogOutPacket {
-			std::string username;
-		};
+			char username[10];
+		}logOut;
 	};
 };
-
-
 
 
 
