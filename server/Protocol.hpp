@@ -15,6 +15,9 @@ struct Boss {
 	int entityId;
 };
 
+Player players[2];
+Boss boss;
+
 enum class LogSystem : unsigned char {
 	SignUp,
 	LogIn,
