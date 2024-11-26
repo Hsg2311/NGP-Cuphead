@@ -6,6 +6,8 @@
 #include "Projectile.hpp"
 #include "func.hpp"
 
+char buf[512];
+
 Player::Player( ) {
 	CreateCollider( );
 	getCollider( )->setScale( Vec2{ 100.f, 100.f } );
@@ -22,29 +24,43 @@ Player::~Player( )
 
 void Player::update( ) {
 	Vec2 objPos = getObjPos( );
-	char dir;
-	if ( KEY_HOLD( InputData::LEFT ) ) {
-		objPos.x -= 200.f * fDT;
-		dir = 1;
 
-		InputPacket p;
-		p.dir = dir;
+	InputPacket p;
+	if ( KEY_HOLD( InputData::LEFT ) ) {
+		//objPos.x -= 200.f * fDT;
+
+		p.dir = 1;
 		p.type = ClientPacketType::Input;
 		//bool inputFlag = true;
 		//sendInput(p);
 	}
 	if ( KEY_HOLD( InputData::RIGHT ) ) {
-		objPos.x += 200.f * fDT;
+		//objPos.x += 200.f * fDT;
+
+		p.dir = 2;
+		p.type = ClientPacketType::Input;
 	}
 	if ( KEY_HOLD( InputData::UP) ) {
-		objPos.y -= 200.f * fDT;
+		//objPos.y -= 200.f * fDT;
+
+		p.dir = 3;
+		p.type = ClientPacketType::Input;
 	}
 	if ( KEY_HOLD( InputData::DOWN) ) {
-		objPos.y += 200.f * fDT;
+		//objPos.y += 200.f * fDT;
+
+		p.dir = 4;
+		p.type = ClientPacketType::Input;
 	}
 	if ( KEY_TAP( InputData::Z ) ) {
 		CreateProjectile( );
+		
+		p.attack = 1;
+		p.type = ClientPacketType::Input;
 	}
+
+	memset(buf, 0, sizeof(buf));
+	memcpy(buf, &p, sizeof(InputPacket));
 
 	setObjPos( objPos );
 }
