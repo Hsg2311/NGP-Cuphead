@@ -1,13 +1,19 @@
-#pragma once
-#include <iostream>
+#ifndef INTERFACE_HPP
+#define INTERFACE_HPP
 
-//클라에게 보낼 정보 
+#include "framework.h"
+#include "Protocol.hpp"
+#include <thread>
 
-class Interface {
-private:
-	
+
+class Interface
+{
 public:
-	void serverSend(char* buf);
-	
+	InputPacket packetInput{};
+	void checkData();
+	InputPacket getData() { return packetInput; }
+	void intiallizeData() { packetInput = { ClientPacketType::Input, 0, 0, 0, 0 }; }
 
 };
+
+#endif // INTERFACE_HPP
