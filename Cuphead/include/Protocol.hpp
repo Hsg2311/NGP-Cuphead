@@ -2,6 +2,11 @@
 #define PROTOCOL_HPP
 
 #include <iostream>
+#include <atomic>
+
+#define BUFSIZE 1024
+
+std::atomic_bool flag{false};
 
 struct Player {
 	int x, y;
@@ -31,9 +36,7 @@ enum class LogSystem : unsigned char {
 	SaveLogfile
 };
 
-enum class ClientPacketType : unsigned char {
-	Input = 3 //임의로...
-};
+
 
 enum class ServerPacketType : unsigned char {
 	ClientStatePacket,
@@ -42,25 +45,8 @@ enum class ServerPacketType : unsigned char {
 	DeathEvent
 };
 
-struct SignUpOrLogInPacket {
-	LogSystem type;
-	std::string username;
-	std::string password;
-};
 
-struct LogOutPacket {
-	LogSystem type;
-	std::string username;
-};
 
-struct InputPacket {
-	unsigned char size;
-	ClientPacketType type;
-	unsigned char entityId;
-	unsigned char dir;
-	unsigned char jump;
-	unsigned char attack;
-};
 
 struct ClientStatePacket {
 	ServerPacketType type;
@@ -89,6 +75,29 @@ struct DeathEventPacket {
 struct LoadSaveFile {
 	ServerPacketType type;
 	unsigned char stage;
+};
+
+enum class ClientPacketType : unsigned char {
+	Input = 3 //임의로...
+};
+
+struct InputPacket {
+	ClientPacketType type;
+	unsigned char entityId;
+	unsigned char dir;
+	unsigned char jump;
+	unsigned char attack;
+};
+
+struct SignUpOrLogInPacket {
+	LogSystem type;
+	std::string username;
+	std::string password;
+};
+
+struct LogOutPacket {
+	LogSystem type;
+	std::string username;
 };
 
 #endif // PROTOCOL_HPP

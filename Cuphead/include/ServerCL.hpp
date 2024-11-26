@@ -2,7 +2,10 @@
 #define SERVERCL_HPP
 
 #include "framework.h"
+#include "Protocol.hpp"
+#include "Interface.hpp"
 
+#include <atomic>
 #include <thread>
 class ServerCL
 {
@@ -17,6 +20,8 @@ public:
 	void clientProcessPacket();
 
 	void processLogSystem();
+
+	
 };
 
 #endif // SERVERCL_HPP

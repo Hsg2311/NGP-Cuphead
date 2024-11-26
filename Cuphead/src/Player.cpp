@@ -25,6 +25,9 @@ void Player::update( ) {
 
 	if ( KEY_HOLD( InputData::LEFT ) ) {
 		objPos.x -= 200.f * fDT;
+
+
+		
 	}
 	if ( KEY_HOLD( InputData::RIGHT ) ) {
 		objPos.x += 200.f * fDT;
