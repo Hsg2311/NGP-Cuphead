@@ -3,14 +3,24 @@
 
 #include "framework.h"
 #include "Protocol.hpp"
+#include "define.hpp"
 #include <thread>
 
 
 class Interface
 {
+	SINGLETON(Interface);
 public:
-	ClientPacket packetInput;
-	void checkData();
+	
+
+	ClientPacket packet;
+	void checkData() {
+		if (packet.type != ClientPacketType::None) { flag = TRUE; }
+	}
+
+	void setPacketInput(const ClientPacket& newPacket) { packet = newPacket; }
+
+	const ClientPacket& getPacketInput() const { return packet; }
 
 };
 

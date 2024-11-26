@@ -26,8 +26,19 @@ void ServerCL::clientSend(SOCKET sock)
 
 		if (!flag) {
 			flag = false;
-		
+			//getPacketInput()
+			ClientPacket packet = Interface::getInst().getPacketInput();
+			switch (packet.type) {
+			case ClientPacketType::Input:
+				
+				break;
+			case ClientPacketType::LogIn:
 
+				break;
+			case ClientPacketType::LogOut:
+
+				break;
+			}
 		}
 			
 	}

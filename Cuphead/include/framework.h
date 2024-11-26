@@ -6,8 +6,8 @@
 #define __FRAMEWORK_H
 
 
-#define SERVERIP "192.168.219.188"
-//#define SERVERIP "127.0.0.1"
+//#define SERVERIP "192.168.219.188"
+#define SERVERIP "127.0.0.1"
 
 
 #include "targetver.h"

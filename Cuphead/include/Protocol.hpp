@@ -73,9 +73,10 @@ struct ServerPacket {
 
 
 enum class ClientPacketType : unsigned char {
-	Input = 1,
-	LogIn = 2,
-	LogOut = 3
+	None,
+	Input ,
+	LogIn ,
+	LogOut 
 };
 
 
