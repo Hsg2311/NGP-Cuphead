@@ -1,6 +1,9 @@
 #ifndef NETWORK_HPP
 #define NETWORK_HPP
 
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32")
@@ -8,6 +11,7 @@
 #include <string>
 #include <string_view>
 #include <cstdint>
+#include <array>
 
 #include "MyException.hpp"
 #include <system_error>
@@ -278,6 +282,8 @@ namespace network {
 		SockAddr addr_;
 		bool open_;
 	};
+
+	std::string getCounterpartIp( TcpSocket& sock );
 
 }	// namespace network
 
