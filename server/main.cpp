@@ -1,4 +1,5 @@
 #include "Network.hpp"
+#include "protocol.hpp"
 
 #include <iostream>
 #include <thread>
@@ -7,9 +8,6 @@
 #include <atomic>
 #include <ranges>
 #include <algorithm>
-
-constexpr short PORT = 9000;
-constexpr short BUFSIZE = 1024;
 
 std::vector<network::TcpSocket> clients;
 std::vector<std::thread> recvThreads;
