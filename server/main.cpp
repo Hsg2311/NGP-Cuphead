@@ -1,13 +1,23 @@
 #include "Network.hpp"
 #include "protocol.hpp"
+#include "SendingStorage.hpp"
 
 #include <iostream>
 #include <thread>
 #include <array>
 #include <vector>
 #include <atomic>
+#include <chrono>
+#include <queue>
+
 #include <ranges>
 #include <algorithm>
+
+using Clock = std::chrono::high_resolution_clock;
+using Seconds = std::chrono::duration<float>;
+inline constexpr Seconds operator""_s( unsigned long long _Val ) noexcept {
+	return Seconds( static_cast<float>( _Val ) );
+}
 
 std::vector<network::TcpSocket> clients;
 std::vector<std::thread> recvThreads;
@@ -37,7 +47,7 @@ int main( ) {
 		serverSock.listen( 2 );
 
 		auto acceptThread = std::thread( acceptClient, std::ref( serverSock ) );
-		auto serverThread = std::thread( serverSend );
+		auto sendThread = std::thread( serverSend );
 
 		// update
 		// ...
@@ -50,7 +60,7 @@ int main( ) {
 			}
 		}
 
-		serverThread.join( );
+		sendThread.join( );
 		for ( auto& thread : recvThreads ) {
 			thread.join( );
 		}
@@ -77,23 +87,46 @@ void acceptClient( network::TcpSocket& serverSock ) {
 		if ( clientSock.invalid( ) ) {
 			continue;
 		}
-
+		
 		// 접속한 클라이언트 정보 출력
-		auto addr = std::array<char, INET_ADDRSTRLEN>( );
-		inet_ntop( AF_INET, &clientSock.getAddr( ), addr.data( ), addr.size( ) );
-		std::cout << "[TCP 서버] 클라이언트 접속: IP 주소=" << addr.data( )
+		auto ip = network::getCounterpartIp( clientSock );
+		std::cout << "[TCP 서버] 클라이언트 접속: IP 주소=" << ip.c_str( )
 			<< ", 포트 번호=" << ntohs( clientSock.getPort( ) ) << '\n';
 
-		// 차라리 id pool을 만들어버리자.
 		clients.push_back( std::move( clientSock ) );
 
-		recvThreads.push_back( std::thread( serverRecv, std::ref( clientSock ) ) );
+		recvThreads.push_back( std::thread( serverRecv, std::ref( clients.back( ) ) ) );
 	}
 }
 
 void serverSend( ) {
-	while ( serverRun ) {
+	static auto lastTp = Clock::now( );
 
+	while ( serverRun ) {
+		if ( !SendingStorage::getInst( ).getFlag( ) ) {
+			continue;
+		}
+
+		auto tp = Clock::now( );
+		auto elapsedTime = std::chrono::duration_cast<Seconds>( tp - lastTp );
+		lastTp = tp;
+
+		if ( elapsedTime < ( 1_s / 30.f ) ) {
+			std::this_thread::sleep_for( ( 1_s / 30.f ) - elapsedTime );
+		}
+
+		auto buffer = std::array<char, BUFSIZE>( );
+		std::uint16_t bufferSize = 0;
+		SendingStorage::getInst( ).copyTo( buffer.data( ), bufferSize );
+
+		// send ------------------------------------------------------
+		for ( auto& client : clients ) {
+			client.send( &bufferSize, sizeof( bufferSize ) );
+			client.send( buffer.data( ), bufferSize );
+		}
+		//------------------------------------------------------------
+
+		SendingStorage::getInst( ).resetFlag( );
 	}
 }
 
@@ -104,8 +137,7 @@ void serverRecv( network::TcpSocket& clientSock ) {
 		// 클라이언트 접속 종료 체크해서 반복문 탈출
 	}
 
-	auto addr = std::array<char, INET_ADDRSTRLEN>( );
-	inet_ntop( AF_INET, &clientSock.getAddr( ), addr.data( ), addr.size( ) );
-	std::cout << "[TCP 서버] 클라이언트 종료: IP 주소=" << addr.data( )
+	auto ip = network::getCounterpartIp( clientSock );
+	std::cout << "[TCP 서버] 클라이언트 종료: IP 주소=" << ip.c_str( )
 		<< ", 포트 번호=" << ntohs( clientSock.getPort( ) ) << '\n';
 }
