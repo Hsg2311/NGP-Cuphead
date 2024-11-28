@@ -2,6 +2,8 @@
 #include "Background.hpp"
 #include "OverworldPlayer.hpp"
 
+#include "OverworldFriend.hpp"
+
 void WorldScene::entry( ) {
 	auto background = new Background( L"World Background", L"overworld/world1_large_island_main_01.png" );
 	background->setObjName( L"World Main Island" );
@@ -131,6 +133,11 @@ void WorldScene::entry( ) {
 	player->setObjName( L"Overworld Player" );
 	player->setObjPos( Vec2( 600.f, 800.f ) );
 	addObject( GROUP_TYPE::PLAYER, player );
+	
+	auto friend_ = new OverworldFriend(info2);
+	friend_->setObjName(L"Overworld Friend");
+	friend_->setObjPos(Vec2(600.f, 800.f));
+	addObject(GROUP_TYPE::PLAYER, friend_);
 
 	Camera::getInst( ).setTarget( player );
 }
