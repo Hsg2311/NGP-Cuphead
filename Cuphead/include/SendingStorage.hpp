@@ -14,7 +14,7 @@ class SendingStorage {
 	SINGLETON(SendingStorage);
 
 public:
-	void pushPacket(const ClientPacketType& packet);
+	void pushPacket(const Packet& packet);
 	void copyTo(char* destBuffer, std::uint16_t& bufferSize);
 
 	void setFlag() {
@@ -29,14 +29,17 @@ public:
 		return flag_;
 	}
 
-	void pushPacket(ServerPacket packet) {
+	void pushPacketQueue(Packet packet) {
 		packetQueue.push(packet);
 	}
 
+	void pushLogPacketQueue(Packet packet) {
+		logPacketQueue.push(packet);
+	}
 private:
 	std::atomic<bool> flag_;
-	std::queue<ServerPacket> packetQueue;
-	std::queue<ServerPacket> logPacketQueue;
+	std::queue<Packet> packetQueue;
+	std::queue<Packet> logPacketQueue;
 	std::array<char, BUFSIZE> buffer_;
 	std::uint16_t bufferSize_;
 	std::mutex bufferMtx_;

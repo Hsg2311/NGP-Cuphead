@@ -26,15 +26,16 @@ void ServerCL::clientRecv(SOCKET sock)
 		recv(sock, (char*)buffer.data(), bufferSize, 0);
 	
 
-		for (int readCnt = 0; readCnt < bufferSize / sizeof(ServerPacket); ++readCnt) {
-			ServerPacket packet;
-			std::copy(buffer.begin() + readCnt * sizeof(ServerPacket)
-				, buffer.begin() + (readCnt + 1) * sizeof(ServerPacket)
+		for (int readCnt = 0; readCnt < bufferSize / sizeof(Packet); ++readCnt) {
+			Packet packet;
+			std::copy(buffer.begin() + readCnt * sizeof(Packet)
+				, buffer.begin() + (readCnt + 1) * sizeof(Packet)
 				, reinterpret_cast<char*>(&packet));
 
+		
 
 
-			SendingStorage::getInst().pushPacket(packet);
+			SendingStorage::getInst().pushPacketQueue(packet);
 
 		}
 
