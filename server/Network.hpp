@@ -193,7 +193,7 @@ namespace network {
 		}
 
 		std::size_t recv( char* data, std::size_t size ) {
-			int recvSize = ::recv( sock_, data, static_cast<int>( size ), 0 );
+			int recvSize = ::recv( sock_, data, static_cast<int>( size ), MSG_WAITALL );
 			if ( recvSize < 0 ) {
 				throw NET_LAST_EXCEPT( "Failed to receive data"sv );
 				return 0;
@@ -206,7 +206,7 @@ namespace network {
 		}
 
 		int recvUc( char* data, std::size_t size ) {
-			return ::recv( sock_, data, static_cast<int>( size ), 0 );
+			return ::recv( sock_, data, static_cast<int>( size ), MSG_WAITALL );
 		}
 
 		TcpSocket accept( ) {
