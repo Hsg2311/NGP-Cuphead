@@ -19,7 +19,7 @@ inline constexpr Seconds operator""_s( unsigned long long _Val ) noexcept {
 	return Seconds( static_cast<float>( _Val ) );
 }
 
-std::vector<network::TcpSocket> clients;
+std::vector<std::unique_ptr<network::TcpSocket>> clients;
 std::vector<std::thread> recvThreads;
 
 std::atomic<bool> serverRun = true;
@@ -94,9 +94,9 @@ void acceptClient( network::TcpSocket& serverSock ) {
 		std::cout << "[TCP 서버] 클라이언트 접속: IP 주소=" << ip.c_str( )
 			<< ", 포트 번호=" << ntohs( clientSock.getPort( ) ) << '\n';
 
-		clients.push_back( std::move( clientSock ) );
+		clients.emplace_back( new network::TcpSocket( std::move( clientSock ) ) );
 
-		recvThreads.push_back( std::thread( serverRecv, std::ref( clients.back( ) ) ) );
+		recvThreads.push_back( std::thread( serverRecv, std::ref( *clients.back( ) ) ) );
 	}
 }
 
@@ -121,9 +121,9 @@ void serverSend( ) {
 		SendingStorage::getInst( ).copyTo( buffer.data( ), bufferSize );
 
 		// send ------------------------------------------------------
-		for ( auto& client : clients ) {
-			client.send( &bufferSize, sizeof( bufferSize ) );
-			client.send( buffer.data( ), bufferSize );
+		for ( auto& pClient : clients ) {
+			pClient->send( &bufferSize, sizeof( bufferSize ) );
+			pClient->send( buffer.data( ), bufferSize );
 		}
 		//------------------------------------------------------------
 
@@ -132,6 +132,8 @@ void serverSend( ) {
 }
 
 void serverRecv( network::TcpSocket& clientSock ) {
+	bool exit = false;
+
 	while ( true ) {
 		std::uint16_t bufferSize = 0;
 		clientSock.recv( reinterpret_cast<char*>( &bufferSize ), sizeof( bufferSize ) );
@@ -139,20 +141,29 @@ void serverRecv( network::TcpSocket& clientSock ) {
 		auto buffer = std::array<char, BUFSIZE>( );
 		clientSock.recv( buffer.data( ), bufferSize );
 
-		// recv ------------------------------------------------------
 		for ( int readCnt = 0; readCnt < bufferSize / sizeof( Packet ); ++readCnt ) {
 			Packet packet;
 			std::copy( buffer.begin( ) + readCnt * sizeof( Packet )
 				, buffer.begin( ) + ( readCnt + 1 ) * sizeof( Packet )
 				, reinterpret_cast<char*>( &packet ) );
 
+			if ( packet.type == PacketType::LEAVE ) {
+				exit = true;
+				break;
+			}
+
 			packetQueue.push( packet );
 		}
 
 		// 클라이언트 접속 종료 체크해서 반복문 탈출
+		if ( exit ) {
+			break;
+		}
 	}
 
 	auto ip = network::getCounterpartIp( clientSock );
 	std::cout << "[TCP 서버] 클라이언트 종료: IP 주소=" << ip.c_str( )
 		<< ", 포트 번호=" << ntohs( clientSock.getPort( ) ) << '\n';
+
+	clientSock.close( );
 }
