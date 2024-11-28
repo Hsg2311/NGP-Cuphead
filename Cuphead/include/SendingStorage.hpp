@@ -13,7 +13,7 @@ class SendingStorage {
 	SINGLETON(SendingStorage);
 
 public:
-	void pushPacket(const Packet& packet);
+	void pushPacket(const ClientPacketType& packet);
 	void copyTo(char* destBuffer, std::uint16_t& bufferSize);
 
 	void setFlag() {
@@ -28,8 +28,11 @@ public:
 		return flag_;
 	}
 
-private:
+
 	std::atomic<bool> flag_;
+
+private:
+
 
 	std::array<char, BUFSIZE> buffer_;
 	std::uint16_t bufferSize_;

@@ -10,7 +10,8 @@ SendingStorage::SendingStorage()
 
 SendingStorage::~SendingStorage() {}
 
-void SendingStorage::pushPacket(const Packet& packet) {
+void SendingStorage::pushPacket(const ClientPacketType& packet)
+{
 	auto lock = std::lock_guard(bufferMtx_);
 
 	std::copy(reinterpret_cast<const char*>(&packet)
