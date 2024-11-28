@@ -28,26 +28,25 @@ void OverworldFriend::update() {
 	
 
 	
-		getAnimator()->play(L"Idle_Up");
+	getAnimator()->play(L"Idle_Up");
+
+	getAnimator()->play(L"Idle_Down");
+		
 	
-
-		getAnimator()->play(L"Idle_Down");
+	getAnimator()->play(L"Idle_Left");
 		
+
+	getAnimator()->play(L"Idle_Right");
+		
+
+	getAnimator()->play(L"Idle_Left_Up");
+		
+
+	getAnimator()->play(L"Idle_Right_Up");
 	
-		getAnimator()->play(L"Idle_Left");
+	getAnimator()->play(L"Idle_Left_Down");
 		
-
-		getAnimator()->play(L"Idle_Right");
-		
-
-		getAnimator()->play(L"Idle_Left_Up");
-		
-
-		getAnimator()->play(L"Idle_Right_Up");
-	
-		getAnimator()->play(L"Idle_Left_Down");
-		
-		getAnimator()->play(L"Idle_Right_Down");
+	getAnimator()->play(L"Idle_Right_Down");
 		
 
 

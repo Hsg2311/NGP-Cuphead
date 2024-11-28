@@ -29,13 +29,7 @@ public:
 		return flag_;
 	}
 
-	void pushPacketQueue(Packet packet) {
-		packetQueue.push(packet);
-	}
-
-	void pushLogPacketQueue(Packet packet) {
-		logPacketQueue.push(packet);
-	}
+	
 private:
 	std::atomic<bool> flag_;
 	std::queue<Packet> packetQueue;

@@ -134,10 +134,12 @@ void WorldScene::entry( ) {
 	player->setObjPos( Vec2( 600.f, 800.f ) );
 	addObject( GROUP_TYPE::PLAYER, player );
 	
+
 	auto friend_ = new OverworldFriend(info2);
 	friend_->setObjName(L"Overworld Friend");
 	friend_->setObjPos(Vec2(600.f, 800.f));
 	addObject(GROUP_TYPE::PLAYER, friend_);
+
 
 	Camera::getInst( ).setTarget( player );
 }

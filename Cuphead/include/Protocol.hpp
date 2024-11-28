@@ -9,13 +9,13 @@ constexpr short BUFSIZE = 1024;
 
 enum class PacketType {
 	NONE,
-
 	LOGIN,
 	LEAVE,
-
 	MOVE,
 
 };
+
+
 
 enum class Direction {
 	NONE,

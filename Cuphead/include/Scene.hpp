@@ -5,6 +5,7 @@
 #include "define.hpp"
 #include "func.hpp"
 #include "EventHandler.hpp"
+#include "PacketQueue.hpp"
 #include <array>
 #include <string>
 #include <vector>
@@ -31,8 +32,8 @@ public:
 	virtual void exit( ) = 0;
 
 public:
-	void addObject( GROUP_TYPE groupType, Object* obj ) {
-		objGroupList_[ static_cast<UINT>( groupType ) ].emplace_back( obj );
+	void addObject(GROUP_TYPE groupType, Object* obj) {
+		objGroupList_[static_cast<UINT>(groupType)].emplace_back(obj);
 	}
 
 	const std::vector<Object*>& getGroup( GROUP_TYPE groupType ) const {
@@ -53,6 +54,8 @@ public:
 
 		EventHandler::getInst( ).addEvent( event );
 	}
+
+
 
 private:
 	// 오브젝트를 저장 및 관리할 벡터를 그룹 개수만큼 선언

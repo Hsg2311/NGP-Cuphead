@@ -2,7 +2,9 @@
 #define SERVERCL_HPP
 
 #include "framework.h"
+
 #include "SendingStorage.hpp"
+#include "PacketQueue.hpp"
 #include "Protocol.hpp"
 
 #include <atomic>

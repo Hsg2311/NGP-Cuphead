@@ -32,13 +32,10 @@ void ServerCL::clientRecv(SOCKET sock)
 				, buffer.begin() + (readCnt + 1) * sizeof(Packet)
 				, reinterpret_cast<char*>(&packet));
 
-		
-
-
-			SendingStorage::getInst().pushPacketQueue(packet);
-
+			PacketQueue::getInst().pushPacket(packet);
+	
 		}
-
+		
 
 
 	}
