@@ -17,10 +17,7 @@ struct texInfo {
 	Vec2 offset{ 0.f, 0.f };
 };
 
-uint16_t getNextId() {
-	static std::uint16_t id = 0;
-	return id++;
-}
+
 
 class Object {
 public:
@@ -112,6 +109,10 @@ public:
 public:
 	uint16_t getId() {
 		return networkId;
+	}
+	uint16_t getNextId() {
+		static std::uint16_t id = 0;
+		return id++;
 	}
 public:
 	virtual void update( ) = 0 {}

@@ -41,8 +41,6 @@ int main( ) {
 		return -1;
 	}
 
-	Timer::getInst( ).init( );
-
 	try {
 		auto serverSock = network::TcpSocket( );
 
@@ -56,6 +54,8 @@ int main( ) {
 		auto acceptThread = std::thread( acceptClient, std::ref( serverSock ) );
 		auto sendThread = std::thread( serverSend );
 
+		static auto lastTp = Clock::now( );
+
 		// update
 		while ( true ) {
 			if ( GetAsyncKeyState( 'Q' ) & 0x8000 ) {
@@ -63,7 +63,15 @@ int main( ) {
 				break;
 			}
 
-			Timer::getInst( ).update( );
+			auto tp = Clock::now( );
+			auto elapsedTime = std::chrono::duration_cast<Seconds>( tp - lastTp );
+
+			if ( elapsedTime < ( 1_s / 30.f ) ) {
+				continue;
+			}
+			else {
+				lastTp = tp;
+			}
 
 			// 패킷을 이용해서 게임 상태 update
 			/*{

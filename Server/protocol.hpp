@@ -8,37 +8,30 @@ constexpr short PORT = 9000;
 constexpr short BUFSIZE = 1024;
 
 enum class PacketType {
-	NONE,
+    NONE,
 
-	LOGIN,
-	LEAVE,
+    LOGIN,
+    LEAVE,
 
-	MOVE,
-
+    MOVE,
+    INPUT,
 };
 
 enum class Direction {
-	NONE,
+    NONE,
 
-	E, W, S, N,
-	NE, NW, SE, SW,
+    E, W, S, N,
+    NE, NW, SE, SW,
 };
 
-struct MovePacket {
-	std::uint8_t id;
-	Direction dir;
-	Vec2 pos;
+struct MovePacket {        // server -> client
+    std::uint8_t id;
+    Direction dir;
+    Vec2 pos;
 };
 
-struct Packet {
-	PacketType type;
-
-	union /*PacketData*/ {
-		MovePacket mv;
-	};
-
-	Packet( )
-		: type( PacketType::NONE ), mv( ) {}
+struct InputPacket {        // client -> server
+    std::uint16_t id;
+    bool left, right, up, down;
 };
-
 #endif // PROTOCOL_HPP

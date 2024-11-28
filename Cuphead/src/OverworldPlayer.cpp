@@ -203,7 +203,7 @@ void OverworldPlayer::onCollisionExit( Object* other ) {
 void OverworldPlayer::moveInputPacket() {
 	Packet packet;
 	packet.type = PacketType::MOVE;
-	packet.mv.id = ;
+	packet.mv.id = getId();
 	packet.mv.dir = currentDirection;
 	packet.mv.pos = getObjPos();
 
