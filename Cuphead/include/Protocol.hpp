@@ -6,7 +6,6 @@
 
 #define BUFSIZE 1024
 
-extern std::atomic_bool flag;
 
 
 

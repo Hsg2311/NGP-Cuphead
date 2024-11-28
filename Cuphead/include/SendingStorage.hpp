@@ -29,10 +29,9 @@ public:
 	}
 
 
-	std::atomic<bool> flag_;
 
 private:
-
+	std::atomic<bool> flag_;
 
 	std::array<char, BUFSIZE> buffer_;
 	std::uint16_t bufferSize_;
