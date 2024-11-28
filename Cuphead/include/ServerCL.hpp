@@ -17,9 +17,7 @@ public:
 
 	static void clientSend(SOCKET sock);
 
-	void clientProcessPacket();
 
-	void processLogSystem();
 
 	
 };

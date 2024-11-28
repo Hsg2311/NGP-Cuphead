@@ -8,6 +8,7 @@
 #include <array>
 #include <mutex>
 #include <cstdint>
+#include <queue>
 
 class SendingStorage {
 	SINGLETON(SendingStorage);
@@ -28,11 +29,14 @@ public:
 		return flag_;
 	}
 
-
+	void pushPacket(ServerPacket packet) {
+		packetQueue.push(packet);
+	}
 
 private:
 	std::atomic<bool> flag_;
-
+	std::queue<ServerPacket> packetQueue;
+	std::queue<ServerPacket> logPacketQueue;
 	std::array<char, BUFSIZE> buffer_;
 	std::uint16_t bufferSize_;
 	std::mutex bufferMtx_;
