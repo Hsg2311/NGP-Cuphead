@@ -1,6 +1,7 @@
 #include "Network.hpp"
 #include "protocol.hpp"
 #include "SendingStorage.hpp"
+#include "Timer.hpp"
 
 #include <iostream>
 #include <thread>
@@ -26,6 +27,7 @@ std::atomic<bool> serverRun = true;
 
 std::queue<Packet> packetQueue;
 std::queue<Packet> logPacketQueue;
+std::mutex packetQueueMtx;
 
 // accept랑 send는 서버가 종료되면 같이 종료, recv는 클라이언트가 종료하면 같이 종료
 void acceptClient( network::TcpSocket& serverSock );
@@ -38,6 +40,8 @@ int main( ) {
 		std::cerr << "Failed to initialize Winsock\n";
 		return -1;
 	}
+
+	Timer::getInst( ).init( );
 
 	try {
 		auto serverSock = network::TcpSocket( );
@@ -53,11 +57,91 @@ int main( ) {
 		auto sendThread = std::thread( serverSend );
 
 		// update
-		// ...
 		while ( true ) {
 			if ( GetAsyncKeyState( 'Q' ) & 0x8000 ) {
 				serverRun = false;
 				break;
+			}
+
+			Timer::getInst( ).update( );
+
+			// 패킷을 이용해서 게임 상태 update
+			/*{
+				auto lock = std::lock_guard( packetQueueMtx );
+				while ( !logPacketQueue.empty( ) ) {
+					auto packet = logPacketQueue.front( );
+					logPacketQueue.pop( );
+
+					if ( packet.type == PacketType::LOGIN ) {
+						std::cout << "로그인 패킷: " << packet.mv.id << '\n';
+					}
+				}
+			}*/
+
+			{
+				auto lock = std::lock_guard( packetQueueMtx );
+				while ( !packetQueue.empty( ) ) {
+					auto packet = packetQueue.front( );
+					packetQueue.pop( );
+
+					if ( packet.type == PacketType::MOVE ) {
+						switch ( packet.mv.dir ) {
+						case Direction::E:
+							packet.mv.pos.x += 300.f * Timer::getInst( ).getFDT( );
+							break;
+
+						case Direction::W:
+							packet.mv.pos.x -= 300.f * Timer::getInst( ).getFDT( );
+							break;
+
+						case Direction::S:
+							packet.mv.pos.y += 300.f * Timer::getInst( ).getFDT( );
+							break;
+
+						case Direction::N:
+							packet.mv.pos.y -= 300.f * Timer::getInst( ).getFDT( );
+							break;
+
+						case Direction::NE: {
+							auto dir = Vec2( 1.f, -1.f );
+							dir.normalize( );
+
+							packet.mv.pos.x += 300.f * dir.x * Timer::getInst( ).getFDT( );
+							packet.mv.pos.y -= 300.f * dir.y * Timer::getInst( ).getFDT( );
+							break;
+						}
+
+						case Direction::NW: {
+							auto dir = Vec2( -1.f, -1.f );
+							dir.normalize( );
+
+							packet.mv.pos.x -= 300.f * dir.x * Timer::getInst( ).getFDT( );
+							packet.mv.pos.y -= 300.f * dir.y * Timer::getInst( ).getFDT( );
+							break;
+						}
+
+						case Direction::SE: {
+							auto dir = Vec2( 1.f, 1.f );
+							dir.normalize( );
+
+							packet.mv.pos.x += 300.f * dir.x * Timer::getInst( ).getFDT( );
+							packet.mv.pos.y += 300.f * dir.y * Timer::getInst( ).getFDT( );
+							break;
+						}
+
+						case Direction::SW: {
+							auto dir = Vec2( -1.f, 1.f );
+							dir.normalize( );
+
+							packet.mv.pos.x -= 300.f * dir.x * Timer::getInst( ).getFDT( );
+							packet.mv.pos.y += 300.f * dir.y * Timer::getInst( ).getFDT( );
+							break;
+						}
+						}
+
+						SendingStorage::getInst( ).pushPacket( packet );
+					}
+				}
 			}
 		}
 
@@ -152,7 +236,13 @@ void serverRecv( network::TcpSocket& clientSock ) {
 				break;
 			}
 
-			packetQueue.push( packet );
+			auto lock = std::lock_guard( packetQueueMtx );
+			if ( packet.type == PacketType::LOGIN ) {
+				logPacketQueue.push( packet );
+			}
+			else {
+				packetQueue.push( packet );
+			}
 		}
 
 		// 클라이언트 접속 종료 체크해서 반복문 탈출
