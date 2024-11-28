@@ -3,7 +3,7 @@
 
 #include "Object.hpp"
 #include "Texture.hpp"
-
+#include "Protocol.hpp"
 //enum class Direction {
 //	UP,
 //	DOWN,
@@ -27,12 +27,18 @@ public:
 	virtual void onCollisionEntry( Object* other ) override;
 	virtual void onCollisionExit( Object* other ) override;
 
+	
+
 	virtual OverworldPlayer* clone( ) override { 
 		return new OverworldPlayer( *this );
 	}
+public:
+	void moveInputPacket();
 
 private:
 	std::vector<Texture*> textures_;
+	Direction currentDirection = Direction::NONE;
+
 };
 
 #endif // OVERWORLD_PLAYER_HPP

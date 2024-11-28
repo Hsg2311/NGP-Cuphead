@@ -4,6 +4,7 @@
 #include "InputDeviceHandler.hpp"
 #include "Timer.hpp"
 
+#include "SendingStorage.hpp"
 #include <ranges>
 #include <algorithm>
 
@@ -73,65 +74,114 @@ void OverworldPlayer::update( ) {
 	if ( bUp && !bDown && !bLeft && !bRight ) {
 		getAnimator( )->play( L"Walk_Up" );
 		objPos.y -= 300.f * fDT;
+	
 	}
 	if ( bDown && !bUp && !bLeft && !bRight ) {
 		getAnimator( )->play( L"Walk_Down" );
 		objPos.y += 300.f * fDT;
+	
 	}
 	if ( bLeft && !bRight && !bUp && !bDown ) {
 		getAnimator( )->play( L"Walk_Left" );
 		objPos.x -= 300.f * fDT;
+		
 	}
 	if ( bRight && !bLeft && !bUp && !bDown ) {
 		getAnimator( )->play( L"Walk_Right" );
 		objPos.x += 300.f * fDT;
+	
 	}
 	if ( bLeft && bUp && !bDown && !bRight ) {
 		getAnimator( )->play( L"Walk_Left_Up" );
 		objPos.x -= 300.f * lu.x * fDT;
 		objPos.y -= 300.f * lu.y * fDT;
+	
 	}
 	if ( bRight && bUp && !bDown && !bLeft ) {
 		getAnimator( )->play( L"Walk_Right_Up" );
 		objPos.x += 300.f * ru.x * fDT;
 		objPos.y -= 300.f * ru.y * fDT;
+	
 	}
 	if ( bLeft && bDown && !bUp && !bRight ) {
 		getAnimator( )->play( L"Walk_Left_Down" );
 		objPos.x -= 300.f * ld.x * fDT;
 		objPos.y += 300.f * ld.y * fDT;
+		
 	}
 	if ( bRight && bDown && !bUp && !bLeft ) {
 		getAnimator( )->play( L"Walk_Right_Down" );
 		objPos.x += 300.f * rd.x * fDT;
 		objPos.y += 300.f * rd.y * fDT;
+		
 	}
 
 	if ( KEY_AWAY( InputData::UP ) ) {
 		getAnimator( )->play( L"Idle_Up" );
+		currentDirection = Direction::N;
 	}
 	if ( KEY_AWAY( InputData::DOWN ) ) {
 		getAnimator( )->play( L"Idle_Down" );
+		currentDirection = Direction::S;
 	}
 	if ( KEY_AWAY( InputData::LEFT ) ) {
 		getAnimator( )->play( L"Idle_Left" );
+		currentDirection = Direction::W;
 	}
 	if ( KEY_AWAY( InputData::RIGHT ) ) {
 		getAnimator( )->play( L"Idle_Right" );
+		currentDirection = Direction::E;
 	}
 	if ( KEY_AWAY( InputData::LEFT ) && KEY_AWAY( InputData::UP ) ) {
 		getAnimator( )->play( L"Idle_Left_Up" );
+		currentDirection = Direction::NW;
 	}
 	if ( KEY_AWAY( InputData::RIGHT ) && KEY_AWAY( InputData::UP ) ) {
 		getAnimator( )->play( L"Idle_Right_Up" );
+		currentDirection = Direction::NE;
 	}
 	if ( KEY_AWAY( InputData::LEFT ) && KEY_AWAY( InputData::DOWN ) ) {
 		getAnimator( )->play( L"Idle_Left_Down" );
+		currentDirection = Direction::SW;
 	}
 	if ( KEY_AWAY( InputData::RIGHT ) && KEY_AWAY( InputData::DOWN ) ) {
 		getAnimator( )->play( L"Idle_Right_Down" );
+		currentDirection = Direction::SE;
 	}
 
+	
+	if (KEY_HOLD(InputData::UP) || KEY_AWAY(InputData::UP)) {
+		moveInputPacket();
+	}
+
+	if (KEY_HOLD(InputData::DOWN) || KEY_AWAY(InputData::DOWN)) {
+		moveInputPacket();
+	}
+
+	if (KEY_HOLD(InputData::LEFT) || KEY_AWAY(InputData::LEFT)) {
+		moveInputPacket();
+	}
+	if (KEY_HOLD(InputData::RIGHT) || KEY_AWAY(InputData::RIGHT)) {
+		moveInputPacket();
+	}
+	if ((KEY_HOLD(InputData::LEFT) && KEY_HOLD(InputData::UP))|| (KEY_AWAY(InputData::LEFT) && KEY_AWAY(InputData::UP))) {
+		moveInputPacket();
+	}
+	if ((KEY_HOLD(InputData::RIGHT) && KEY_HOLD(InputData::UP))|| (KEY_AWAY(InputData::RIGHT) && KEY_AWAY(InputData::UP))) {
+		moveInputPacket();
+	}
+	if ((KEY_HOLD(InputData::LEFT) && KEY_HOLD(InputData::DOWN))|| (KEY_AWAY(InputData::LEFT) && KEY_AWAY(InputData::DOWN))) {
+		moveInputPacket();
+	}
+	if ((KEY_HOLD(InputData::RIGHT) && KEY_HOLD(InputData::DOWN))||(KEY_AWAY(InputData::RIGHT) && KEY_AWAY(InputData::DOWN))) {
+		moveInputPacket();
+	}
+
+
+	
+		
+	
+	
 	setObjPos( objPos );
 }
 
@@ -148,4 +198,14 @@ void OverworldPlayer::onCollisionEntry( Object* other ) {
 
 void OverworldPlayer::onCollisionExit( Object* other ) {
 	getCollider( )->subCollisionCount( );
+}
+
+void OverworldPlayer::moveInputPacket() {
+	Packet packet;
+	packet.type = PacketType::MOVE;
+	packet.mv.id = 1;
+	packet.mv.dir = currentDirection;
+	packet.mv.pos = getObjPos();
+
+	SendingStorage::getInst().pushPacket(packet);
 }

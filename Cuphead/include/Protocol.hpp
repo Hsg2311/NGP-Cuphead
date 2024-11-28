@@ -38,7 +38,7 @@ struct Packet {
 	};
 
 	Packet()
-		: type(PacketType::NONE), mv() {
+	: type(PacketType::NONE), mv() {
 	}
 };
 

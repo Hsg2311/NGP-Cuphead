@@ -10,6 +10,8 @@ SendingStorage::SendingStorage()
 
 SendingStorage::~SendingStorage() {}
 
+
+
 void SendingStorage::pushPacket(const Packet& packet)
 {
 	auto lock = std::lock_guard(bufferMtx_);

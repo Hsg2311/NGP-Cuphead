@@ -3,7 +3,6 @@
 
 #include "framework.h"
 #include "Cuphead.h"
-
 #include "Core.hpp"
 #include "SceneHandler.hpp"
 #include "EventHandler.hpp"
@@ -17,6 +16,7 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 HWND g_hWnd;
 SOCKET sock; // 소켓
+
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -39,49 +39,49 @@ void err_quit(const char* msg)
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     // 메모리 릭 체크
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	//_CrtSetBreakAlloc( 숫자 );  // 자동으로 Break point 걸어서 메모리 릭 위치 찾아줌. 사용하고 다시 주석 처리하기
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetBreakAlloc( 숫자 );  // 자동으로 Break point 걸어서 메모리 릭 위치 찾아줌. 사용하고 다시 주석 처리하기
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: 여기에 코드를 입력합니다.
-    int retval;
+    //// TODO: 여기에 코드를 입력합니다.
+    //int retval;
 
-    // 윈속 초기화
-    WSADATA wsa;
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-        return 1;
+    //// 윈속 초기화
+    //WSADATA wsa;
+    //if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+    //    return 1;
 
-    // 소켓 생성
-    sock = socket(AF_INET, SOCK_STREAM, 0);
+    //// 소켓 생성
+    //sock = socket(AF_INET, SOCK_STREAM, 0);
 
-    // connect()
-    struct sockaddr_in serveraddr;
-    memset(&serveraddr, 0, sizeof(serveraddr));
-    serveraddr.sin_family = AF_INET;
-    inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
-    serveraddr.sin_port = htons(9000);
-    retval = connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-    if (retval == 0) {
-        // Recv스레드 생성
-        std::thread recvThread(&ServerCL::clientRecv,sock); // 스레드 생성
-        recvThread.detach();
+    //// connect()
+    //struct sockaddr_in serveraddr;
+    //memset(&serveraddr, 0, sizeof(serveraddr));
+    //serveraddr.sin_family = AF_INET;
+    //inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
+    //serveraddr.sin_port = htons(9000);
+    //retval = connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+    //if (retval == 0) {
+    //    // Recv스레드 생성
+    //    std::thread recvThread(&ServerCL::clientRecv,sock); // 스레드 생성
+    //    recvThread.detach();
 
-        // Send스레드 생성
-        std::thread sendThread(&ServerCL::clientSend,sock); // 스레드 생성
-        sendThread.detach();
-    }
-    else {
-        err_quit("connect()");
-    }
-   
-   
+    //    // Send스레드 생성
+    //    std::thread sendThread(&ServerCL::clientSend,sock); // 스레드 생성
+    //    sendThread.detach();
+    //}
+    //else {
+    //    err_quit("connect()");
+    //}
+
+
 
 
 
@@ -91,14 +91,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // 애플리케이션 초기화를 수행합니다:
-    if (!InitInstance (hInstance, nCmdShow))
+    if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
     }
 
 
-    if ( FAILED( Core::getInst( ).init( g_hWnd, POINT{ 1280, 720 } ) ) ) {
-        MessageBox( nullptr, L"Core Init Failed", L"Error", MB_OK );
+    if (FAILED(Core::getInst().init(g_hWnd, POINT{ 1280, 720 }))) {
+        MessageBox(nullptr, L"Core Init Failed", L"Error", MB_OK);
         return FALSE;
     }
 
@@ -107,22 +107,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
-    while ( true ) {
-        if ( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) ) {
-            if ( msg.message == WM_QUIT )
+    while (true) {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+            if (msg.message == WM_QUIT)
                 break;
 
-            if ( !TranslateAccelerator( msg.hwnd, hAccelTable, &msg ) ) {
-                TranslateMessage( &msg );
-                DispatchMessage( &msg );
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
             }
         }
         else {
-            Core::getInst( ).progress( );
+            Core::getInst().progress();
         }
     }
 
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
 
 
@@ -138,17 +138,17 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CUPHEAD));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = nullptr; //MAKEINTRESOURCEW( IDC_CUPHEAD );
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInstance;
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CUPHEAD));
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = nullptr; //MAKEINTRESOURCEW( IDC_CUPHEAD );
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
 }
@@ -165,20 +165,20 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   g_hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    g_hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!g_hWnd)
-   {
-      return FALSE;
-   }
+    if (!g_hWnd)
+    {
+        return FALSE;
+    }
 
-   ShowWindow(g_hWnd, nCmdShow);
-   UpdateWindow(g_hWnd);
+    ShowWindow(g_hWnd, nCmdShow);
+    UpdateWindow(g_hWnd);
 
-   return TRUE;
+    return TRUE;
 }
 
 //
@@ -196,36 +196,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_COMMAND:
+    {
+        int wmId = LOWORD(wParam);
+        // 메뉴 선택을 구문 분석합니다:
+        switch (wmId)
         {
-            int wmId = LOWORD(wParam);
-            // 메뉴 선택을 구문 분석합니다:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
+        case IDM_ABOUT:
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+            break;
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
+            break;
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
         }
-        break;
+    }
+    break;
     case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-            EndPaint(hWnd, &ps);
-        }
-        break;
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+        // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
+        EndPaint(hWnd, &ps);
+    }
+    break;
     case WM_KEYDOWN:
-        if ( SceneHandler::getInst( ).getCurrSceneType( ) == SCENE_TYPE::TITLE_SCENE ) {
-			EventHandler::getInst( ).addEvent( Event { 
-                .eventType = EVENT_TYPE::CHANGE_SCENE,
-                .wParam = static_cast<DWORD_PTR>( SCENE_TYPE::MENU_SCENE )
-            } );
+        if (SceneHandler::getInst().getCurrSceneType() == SCENE_TYPE::TITLE_SCENE) {
+            EventHandler::getInst().addEvent(Event{
+                   .eventType = EVENT_TYPE::CHANGE_SCENE,
+                   .wParam = static_cast<DWORD_PTR>(SCENE_TYPE::MENU_SCENE)
+                });
         }
         break;
     case WM_DESTROY:

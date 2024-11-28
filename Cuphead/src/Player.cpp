@@ -6,6 +6,7 @@
 #include "ResourceHandler.hpp"
 #include "Projectile.hpp"
 #include "func.hpp"
+#include "SendingStorage.hpp"
 
 Player::Player( ) {
 	createCollider( );
@@ -25,9 +26,6 @@ void Player::update( ) {
 
 	if ( KEY_HOLD( InputData::LEFT ) ) {
 		objPos.x -= 200.f * fDT;
-
-
-		
 	}
 	if ( KEY_HOLD( InputData::RIGHT ) ) {
 		objPos.x += 200.f * fDT;

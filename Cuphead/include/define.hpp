@@ -24,6 +24,8 @@
 #define KEY_HOLD( key ) KEY_CHECK( key, KEY_STATE::HOLD )
 #define KEY_AWAY( key ) KEY_CHECK( key, KEY_STATE::AWAY )
 #define KEY_NONE( key ) KEY_CHECK( key, KEY_STATE::NONE )
+
+
 #define MOUSE_POS InputDeviceHandler::getInst().getMousePos()
 
 enum class GROUP_TYPE {
