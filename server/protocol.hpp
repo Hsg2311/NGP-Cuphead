@@ -14,7 +14,7 @@ enum class PacketType {
 	LEAVE,
 
 	MOVE,
-
+	INPUT,
 };
 
 enum class Direction {
@@ -24,10 +24,15 @@ enum class Direction {
 	NE, NW, SE, SW,
 };
 
-struct MovePacket {
+struct MovePacket {		// server -> client
 	std::uint8_t id;
 	Direction dir;
 	Vec2 pos;
+};
+
+struct InputPacket {		// client -> server
+	std::uint16_t id;
+	bool left, right, up, down;
 };
 
 struct Packet {
@@ -35,10 +40,10 @@ struct Packet {
 
 	union /*PacketData*/ {
 		MovePacket mv;
+		InputPacket in;
 	};
 
-	Packet( )
-		: type( PacketType::NONE ), mv( ) {}
+	
 };
 
-#endif // PROTOCOL_HPP
+#endif	// PROTOCOL_HPP
