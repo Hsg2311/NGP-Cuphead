@@ -476,3 +476,9 @@ FodyWeavers.xsd
 *.sln
 *.vcxproj
 *.vcxproj.filters
+Server/main.cpp
+Server/PacketQueue.cpp
+Server/PacketQueue.hpp
+Server/protocol.hpp
+Server/SendingStorage.cpp
+Server/SendingStorage.hpp
