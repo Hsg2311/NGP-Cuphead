@@ -10,7 +10,7 @@ SendingStorage::SendingStorage( )
 SendingStorage::~SendingStorage( ) {}
 
 void SendingStorage::pushPacket( const Packet& packet ) {
-	auto lock = std::lock_guard<std::mutex>( bufferMtx_ );
+	auto lock = std::lock_guard( bufferMtx_ );
 
 	std::copy( reinterpret_cast<const char*>( &packet )
 		, reinterpret_cast<const char*>( &packet ) + sizeof( packet )
@@ -23,7 +23,7 @@ void SendingStorage::pushPacket( const Packet& packet ) {
 }
 
 void SendingStorage::copyTo( char* destBuffer, std::uint16_t& bufferSize ) {
-	auto lock = std::lock_guard<std::mutex>( bufferMtx_ );
+	auto lock = std::lock_guard( bufferMtx_ );
 	std::copy( buffer_.begin( ), buffer_.end( ), destBuffer );
 	bufferSize = bufferSize_;
 }
