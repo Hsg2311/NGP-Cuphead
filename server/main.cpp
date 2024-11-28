@@ -24,6 +24,9 @@ std::vector<std::thread> recvThreads;
 
 std::atomic<bool> serverRun = true;
 
+std::queue<Packet> packetQueue;
+std::queue<Packet> logPacketQueue;
+
 // accept랑 send는 서버가 종료되면 같이 종료, recv는 클라이언트가 종료하면 같이 종료
 void acceptClient( network::TcpSocket& serverSock );
 void serverSend( );
@@ -52,8 +55,6 @@ int main( ) {
 		// update
 		// ...
 		while ( true ) {
-
-
 			if ( GetAsyncKeyState( 'Q' ) & 0x8000 ) {
 				serverRun = false;
 				break;
@@ -132,7 +133,21 @@ void serverSend( ) {
 
 void serverRecv( network::TcpSocket& clientSock ) {
 	while ( true ) {
-		
+		std::uint16_t bufferSize = 0;
+		clientSock.recv( reinterpret_cast<char*>( &bufferSize ), sizeof( bufferSize ) );
+
+		auto buffer = std::array<char, BUFSIZE>( );
+		clientSock.recv( buffer.data( ), bufferSize );
+
+		// recv ------------------------------------------------------
+		for ( int readCnt = 0; readCnt < bufferSize / sizeof( Packet ); ++readCnt ) {
+			Packet packet;
+			std::copy( buffer.begin( ) + readCnt * sizeof( Packet )
+				, buffer.begin( ) + ( readCnt + 1 ) * sizeof( Packet )
+				, reinterpret_cast<char*>( &packet ) );
+
+			packetQueue.push( packet );
+		}
 
 		// 클라이언트 접속 종료 체크해서 반복문 탈출
 	}

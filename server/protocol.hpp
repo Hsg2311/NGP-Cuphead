@@ -9,7 +9,11 @@ enum class PacketType {
 };
 
 struct Packet {
+	PacketType type;
 
+	union PacketData {
+
+	};
 };
 
 #endif // PROTOCOL_HPP
