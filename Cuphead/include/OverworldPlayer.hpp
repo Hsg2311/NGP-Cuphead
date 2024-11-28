@@ -26,7 +26,7 @@ public:
 	virtual void onCollision( Object* other ) override;
 	virtual void onCollisionEntry( Object* other ) override;
 	virtual void onCollisionExit( Object* other ) override;
-
+	virtual uint16_t getId() override;
 	
 
 	virtual OverworldPlayer* clone( ) override { 

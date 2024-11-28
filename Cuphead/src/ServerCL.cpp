@@ -1,5 +1,6 @@
 #include "ServerCL.hpp"
 
+
 using Clock = std::chrono::high_resolution_clock;
 using Seconds = std::chrono::duration<float>;
 inline constexpr Seconds operator""_s(unsigned long long _Val) noexcept {
@@ -33,9 +34,9 @@ void ServerCL::clientRecv(SOCKET sock)
 				, reinterpret_cast<char*>(&packet));
 
 		
+			PacketQueue::getInst().pushPacket(packet);
 
-
-			SendingStorage::getInst().pushPacketQueue(packet);
+			
 
 		}
 

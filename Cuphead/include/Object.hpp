@@ -17,6 +17,11 @@ struct texInfo {
 	Vec2 offset{ 0.f, 0.f };
 };
 
+uint16_t getNextId() {
+	static std::uint16_t id = 0;
+	return id++;
+}
+
 class Object {
 public:
 	Object( )
@@ -25,7 +30,8 @@ public:
 		, objScale_{ }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
-		, alive_{ true } {}
+		, alive_{ true }
+		, networkId{ getNextId() } {}
 
 	Object( const Object& other )
 		: objName_{ other.objName_ }
@@ -33,7 +39,8 @@ public:
 		, objScale_{ other.objScale_ }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
-		, alive_{ true } {
+		, alive_{ true }
+		, networkId{ getNextId() } {
 		createCollider( );
 		getCollider( )->setOffset( other.getCollider( )->getOffset( ) );
 		getCollider( )->setScale( other.getCollider( )->getScale( ) );
@@ -47,7 +54,8 @@ public:
 		, objScale_{ std::move( other.objScale_ ) }
 		, collider_{ other.collider_ }
 		, animator_{ other.animator_ }
-		, alive_{ true } {
+		, alive_{ true }
+		, networkId{ getNextId() } {
 		other.collider_ = nullptr;
 		other.animator_ = nullptr;
 	}
@@ -102,6 +110,10 @@ public:
 	}
 
 public:
+	uint16_t getId() {
+		return networkId;
+	}
+public:
 	virtual void update( ) = 0 {}
 
 	virtual void componentUpdate( ) final {
@@ -147,6 +159,8 @@ private:
 
 	bool alive_;
 	
+	uint16_t networkId;
+
 	friend class EventHandler;
 };
 

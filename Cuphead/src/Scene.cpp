@@ -1,17 +1,25 @@
 #include "Object.hpp"
 #include "Scene.hpp"
+#include "PacketQueue.hpp"
 #include <ranges>
 #include <algorithm>
 
 Scene::Scene( )
 	: objGroupList_{ }
 	, sceneName_{ }
-{}
+{
+	std::ranges::for_each(objGroupList_, [](auto& objs) {
+		std::ranges::for_each(objs, [](auto obj) {
+			PacketQueue::getInst().addObject(obj);
+			});
+		});
+}
 
 Scene::~Scene( ) {
 	// Scene에 등록된 Object들을 delete
 	std::ranges::for_each( objGroupList_, []( auto& objs ) {
 		std::ranges::for_each( objs, []( auto obj ) {
+			PacketQueue::getInst().deleteObject(obj);
 			delete obj;
 		} );
 	} );
