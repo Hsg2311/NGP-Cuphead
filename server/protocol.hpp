@@ -6,6 +6,7 @@ constexpr short BUFSIZE = 1024;
 
 enum class PacketType {
 	MOVE,
+	LEAVE,
 };
 
 struct Packet {
