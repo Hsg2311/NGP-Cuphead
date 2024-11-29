@@ -13,12 +13,8 @@ void PacketQueue::dispatch( ) {
 		packetQueue_.pop( );
 
 		switch ( p.type ) {
-		case PacketType::LOGIN:
-			//handleLoginPacket( p );
-			break;
-
 		case PacketType::INPUT: {
-			auto lu = Vec2( -1.f, 1.f );
+			/*auto lu = Vec2( -1.f, 1.f );
 			auto ru = Vec2( 1.f, 1.f );
 			auto ld = Vec2( -1.f, -1.f );
 			auto rd = Vec2( 1.f, -1.f );
@@ -60,14 +56,14 @@ void PacketQueue::dispatch( ) {
 			if ( bRight && bDown && !bUp && !bLeft ) {
 				objPos.x += 300.f * rd.x * Timer::getInst( ).getFDT( );
 				objPos.y += 300.f * rd.y * Timer::getInst( ).getFDT( );
-			}
+			}*/
 			break;
 		}
 		}
 	}
 }
 
-void PacketQueue::addObject( Object* obj ) {
-	networkIdToObject[ obj->getNetworkId( ) ] = obj;
-	objectToNetworkId[ obj ] = obj->getNetworkId( );
-}
+//void PacketQueue::addObject( Object* obj ) {
+//	networkIdToObject[ obj->getNetworkId( ) ] = obj;
+//	objectToNetworkId[ obj ] = obj->getNetworkId( );
+//}
