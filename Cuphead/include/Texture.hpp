@@ -6,7 +6,7 @@
 
 #include <atlimage.h>
 #include <string>
-#include <Windows.h>
+#include "WinUT.hpp"
 
 class Texture : public Res {
 private:

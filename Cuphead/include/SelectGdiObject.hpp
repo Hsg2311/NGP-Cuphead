@@ -2,7 +2,7 @@
 #define __SELECT_GDI_OBJECT_HPP
 
 #include "Core.hpp"
-#include <Windows.h>
+#include "WinUT.hpp"
 
 class SelectGdiObject {
 public:

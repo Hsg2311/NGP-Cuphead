@@ -1,9 +1,9 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
+#include "Core.hpp"
 #include "define.hpp"
 #include "struct.hpp"
-#include "Core.hpp"
 
 class Object;
 

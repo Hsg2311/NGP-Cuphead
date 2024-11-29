@@ -1,7 +1,7 @@
+#include "Core.hpp"
 #include "TitleScene.hpp"
 #include "Background.hpp"
 #include "define.hpp"
-#include "Core.hpp"
 #include "Camera.hpp"
 #include "UserInterface.hpp"
 #include "BlinkingUI.hpp"

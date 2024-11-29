@@ -17,6 +17,11 @@ struct texInfo {
 	Vec2 offset{ 0.f, 0.f };
 };
 
+inline std::uint16_t getNextId( ) {
+	static std::uint16_t id = 0;
+	return id++;
+}
+
 class Object {
 public:
 	Object( )
@@ -25,7 +30,8 @@ public:
 		, objScale_{ }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
-		, alive_{ true } {}
+		, alive_{ true }
+		, networkId_{ getNextId( ) } {}
 
 	Object( const Object& other )
 		: objName_{ other.objName_ }
@@ -33,7 +39,8 @@ public:
 		, objScale_{ other.objScale_ }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
-		, alive_{ true } {
+		, alive_{ true }
+		, networkId_( getNextId( ) ) {
 		createCollider( );
 		getCollider( )->setOffset( other.getCollider( )->getOffset( ) );
 		getCollider( )->setScale( other.getCollider( )->getScale( ) );
@@ -47,7 +54,8 @@ public:
 		, objScale_{ std::move( other.objScale_ ) }
 		, collider_{ other.collider_ }
 		, animator_{ other.animator_ }
-		, alive_{ true } {
+		, alive_{ true } 
+		, networkId_{ other.networkId_ } {
 		other.collider_ = nullptr;
 		other.animator_ = nullptr;
 	}
@@ -73,6 +81,8 @@ public:
 	Animator* getAnimator( ) const { return animator_; }
 
 	bool isAlive( ) const { return alive_; }
+
+	std::uint16_t getNetworkId( ) const { return networkId_; }
 
 public:
 	void createCollider( ) { collider_ = new Collider{ }; }
@@ -146,6 +156,8 @@ private:
 	Animator* animator_;
 
 	bool alive_;
+
+	std::uint16_t networkId_;
 	
 	friend class EventHandler;
 };

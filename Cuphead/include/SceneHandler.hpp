@@ -4,7 +4,7 @@
 #include "define.hpp"
 #include "Scene.hpp"
 #include <array>
-#include <Windows.h>
+#include "WinUT.hpp"
 
 class EventHandler;
 

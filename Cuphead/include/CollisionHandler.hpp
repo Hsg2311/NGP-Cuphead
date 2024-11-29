@@ -8,7 +8,7 @@
 #define NOMINMAX		// Windows.h의 min, max 매크로를 사용하지 않도록 한다.
 #define LEAN_AND_MEAN	// 잘 사용하지 않는 API를 제외한다.
 						// 이 두가지는 Windows.h를 include하기 전에 define 하는 것을 추천한다.
-#include <Windows.h>
+#include "WinUT.hpp"
 
 class Collider;
 

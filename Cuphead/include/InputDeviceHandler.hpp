@@ -5,7 +5,7 @@
 #include "struct.hpp"
 
 #include <vector>
-#include <Windows.h>
+#include "WinUT.hpp"
 
 enum class KEY_STATE {
 	NONE,
