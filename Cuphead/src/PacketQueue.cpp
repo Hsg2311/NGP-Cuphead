@@ -1,5 +1,7 @@
 #include "PacketQueue.hpp"
 
+std::mutex queueMutex;
+
 void PacketQueue::pushPacket(const Packet& packet)
 {
     std::lock_guard<std::mutex> lock(queueMutex);

@@ -9,7 +9,7 @@ SendingStorage::SendingStorage( )
 
 SendingStorage::~SendingStorage( ) {}
 
-void SendingStorage::pushPacket( const MovePacket& packet ) {
+void SendingStorage::pushPacket( const Packet& packet ) {
 	auto lock = std::lock_guard( bufferMtx_ );
 
 	std::copy( reinterpret_cast<const char*>( &packet )
@@ -19,11 +19,14 @@ void SendingStorage::pushPacket( const MovePacket& packet ) {
 	assert( bufferSize_ < bufferSize_ + sizeof( packet ) );		// 오버플로우 방지
 	bufferSize_ += sizeof( packet );
 
-	// bufferSize_(offset) 넘어가는 패킷 처리해야 함 -> 버리는 쪽으로
+	setFlag( );	// 패킷이 들어왔으니 flag를 true로
 }
 
-void SendingStorage::copyTo( char* destBuffer, std::uint16_t& bufferSize ) {
+void SendingStorage::flush( char* destBuffer, std::uint16_t& bufferSize ) {
 	auto lock = std::lock_guard( bufferMtx_ );
 	std::copy( buffer_.begin( ), buffer_.end( ), destBuffer );
 	bufferSize = bufferSize_;
+
+	buffer_.fill( 0 );
+	bufferSize_ = 0;
 }

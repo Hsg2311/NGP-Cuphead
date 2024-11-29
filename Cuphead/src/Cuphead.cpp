@@ -50,36 +50,36 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    //// TODO: 여기에 코드를 입력합니다.
-    //int retval;
+    // TODO: 여기에 코드를 입력합니다.
+    int retval;
 
-    //// 윈속 초기화
-    //WSADATA wsa;
-    //if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-    //    return 1;
+    // 윈속 초기화
+    WSADATA wsa;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+        return 1;
 
-    //// 소켓 생성
-    //sock = socket(AF_INET, SOCK_STREAM, 0);
+    // 소켓 생성
+    sock = socket(AF_INET, SOCK_STREAM, 0);
 
-    //// connect()
-    //struct sockaddr_in serveraddr;
-    //memset(&serveraddr, 0, sizeof(serveraddr));
-    //serveraddr.sin_family = AF_INET;
-    //inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
-    //serveraddr.sin_port = htons(9000);
-    //retval = connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-    //if (retval == 0) {
-    //    // Recv스레드 생성
-    //    std::thread recvThread(&ServerCL::clientRecv,sock); // 스레드 생성
-    //    recvThread.detach();
+    // connect()
+    struct sockaddr_in serveraddr;
+    memset(&serveraddr, 0, sizeof(serveraddr));
+    serveraddr.sin_family = AF_INET;
+    inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
+    serveraddr.sin_port = htons(9000);
+    retval = connect(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
+    if (retval == 0) {
+        // Recv스레드 생성
+        std::thread recvThread(&ServerCL::clientRecv,sock); // 스레드 생성
+        recvThread.detach();
 
-    //    // Send스레드 생성
-    //    std::thread sendThread(&ServerCL::clientSend,sock); // 스레드 생성
-    //    sendThread.detach();
-    //}
-    //else {
-    //    err_quit("connect()");
-    //}
+        // Send스레드 생성
+        std::thread sendThread(&ServerCL::clientSend,sock); // 스레드 생성
+        sendThread.detach();
+    }
+    else {
+        err_quit("connect()");
+    }
 
 
 

@@ -54,6 +54,7 @@ public:
 		EventHandler::getInst( ).addEvent( event );
 	}
 
+
 private:
 	// 오브젝트를 저장 및 관리할 벡터를 그룹 개수만큼 선언
 	std::array<std::vector<Object*>, static_cast<UINT>( GROUP_TYPE::EOE )> objGroupList_;

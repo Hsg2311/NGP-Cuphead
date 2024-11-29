@@ -2,6 +2,7 @@
 #include "protocol.hpp"
 #include "SendingStorage.hpp"
 #include "Timer.hpp"
+#include "PacketQueue.hpp"
 
 #include <iostream>
 #include <thread>
@@ -25,7 +26,7 @@ std::vector<std::thread> recvThreads;
 
 std::atomic<bool> serverRun = true;
 
-std::queue<Packet> packetQueue;
+PacketQueue q;
 std::queue<Packet> logPacketQueue;
 std::mutex packetQueueMtx;
 
@@ -86,71 +87,7 @@ int main( ) {
 				}
 			}*/
 
-			{
-				auto lock = std::lock_guard( packetQueueMtx );
-				while ( !packetQueue.empty( ) ) {
-					auto packet = packetQueue.front( );
-					packetQueue.pop( );
-
-					if ( packet.type == PacketType::MOVE ) {
-						switch ( packet.mv.dir ) {
-						case Direction::E:
-							packet.mv.pos.x += 300.f * Timer::getInst( ).getFDT( );
-							break;
-
-						case Direction::W:
-							packet.mv.pos.x -= 300.f * Timer::getInst( ).getFDT( );
-							break;
-
-						case Direction::S:
-							packet.mv.pos.y += 300.f * Timer::getInst( ).getFDT( );
-							break;
-
-						case Direction::N:
-							packet.mv.pos.y -= 300.f * Timer::getInst( ).getFDT( );
-							break;
-
-						case Direction::NE: {
-							auto dir = Vec2( 1.f, -1.f );
-							dir.normalize( );
-
-							packet.mv.pos.x += 300.f * dir.x * Timer::getInst( ).getFDT( );
-							packet.mv.pos.y -= 300.f * dir.y * Timer::getInst( ).getFDT( );
-							break;
-						}
-
-						case Direction::NW: {
-							auto dir = Vec2( -1.f, -1.f );
-							dir.normalize( );
-
-							packet.mv.pos.x -= 300.f * dir.x * Timer::getInst( ).getFDT( );
-							packet.mv.pos.y -= 300.f * dir.y * Timer::getInst( ).getFDT( );
-							break;
-						}
-
-						case Direction::SE: {
-							auto dir = Vec2( 1.f, 1.f );
-							dir.normalize( );
-
-							packet.mv.pos.x += 300.f * dir.x * Timer::getInst( ).getFDT( );
-							packet.mv.pos.y += 300.f * dir.y * Timer::getInst( ).getFDT( );
-							break;
-						}
-
-						case Direction::SW: {
-							auto dir = Vec2( -1.f, 1.f );
-							dir.normalize( );
-
-							packet.mv.pos.x -= 300.f * dir.x * Timer::getInst( ).getFDT( );
-							packet.mv.pos.y += 300.f * dir.y * Timer::getInst( ).getFDT( );
-							break;
-						}
-						}
-
-						SendingStorage::getInst( ).pushPacket( packet );
-					}
-				}
-			}
+			
 		}
 
 		sendThread.join( );
@@ -210,7 +147,7 @@ void serverSend( ) {
 
 		auto buffer = std::array<char, BUFSIZE>( );
 		std::uint16_t bufferSize = 0;
-		SendingStorage::getInst( ).copyTo( buffer.data( ), bufferSize );
+		SendingStorage::getInst( ).flush( buffer.data( ), bufferSize );
 
 		// send ------------------------------------------------------
 		for ( auto& pClient : clients ) {
@@ -228,27 +165,34 @@ void serverRecv( network::TcpSocket& clientSock ) {
 
 	while ( true ) {
 		std::uint16_t bufferSize = 0;
-		clientSock.recv( reinterpret_cast<char*>( &bufferSize ), sizeof( bufferSize ) );
+		clientSock.recvUc( reinterpret_cast<char*>( &bufferSize ), sizeof( bufferSize ) );
+		if ( clientSock.invalid( ) ) {
+			continue;
+		}
 
 		auto buffer = std::array<char, BUFSIZE>( );
-		clientSock.recv( buffer.data( ), bufferSize );
+		clientSock.recvUc( buffer.data( ), bufferSize );
+		if ( clientSock.invalid( ) ) {
+			continue;
+		}
 
 		for ( int readCnt = 0; readCnt < bufferSize / sizeof( Packet ); ++readCnt ) {
-			Packet packet;
+			auto packet = Packet{
+				.type = PacketType::NONE,
+			};
 			std::copy( buffer.begin( ) + readCnt * sizeof( Packet )
 				, buffer.begin( ) + ( readCnt + 1 ) * sizeof( Packet )
 				, reinterpret_cast<char*>( &packet ) );
-
-			if ( packet.type == PacketType::LEAVE ) {
-				exit = true;
-				break;
-			}
 
 			auto lock = std::lock_guard( packetQueueMtx );
 			if ( packet.type == PacketType::LOGIN ) {
 				logPacketQueue.push( packet );
 			}
-			else {
+			else if ( packet.type == PacketType::LEAVE ) {
+				exit = true;
+				break;
+			}
+			else if ( packet.type == PacketType::INPUT ) {
 				packetQueue.push( packet );
 			}
 		}

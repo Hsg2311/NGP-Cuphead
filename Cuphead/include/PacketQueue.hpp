@@ -6,8 +6,7 @@
 
 
 
-std::mutex queueMutex;
-std::queue<Packet> packetQueue;
+extern std::mutex queueMutex;
 
 class Object;
 

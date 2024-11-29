@@ -1,6 +1,7 @@
 #include "Object.hpp"
 #include "Scene.hpp"
 #include "PacketQueue.hpp"
+#include "SendingStorage.hpp"
 #include <ranges>
 #include <algorithm>
 
@@ -11,6 +12,14 @@ Scene::Scene( )
 	std::ranges::for_each(objGroupList_, [](auto& objs) {
 		std::ranges::for_each(objs, [](auto obj) {
 			PacketQueue::getInst().addObject(obj);
+			
+			Packet packet;
+			packet.type = PacketType::REGIST;
+			packet.rs.groupType = obj->getGroup();
+			packet.rs.id = obj->getId();
+
+			SendingStorage::getInst().pushPacket(packet);
+			
 			});
 		});
 }

@@ -10,13 +10,15 @@
 
 class PacketQueue {
 public:
-	void pushPacket(const MovePacket& packet);
-	void dispatch();
-	void addObject(Object* obj);
-	Object* getObject(std::uint16_t id) {
-		return networkIdToObject[id];
+	void pushPacket( const Packet& packet );
+	void dispatch( );
+	void addObject( Object* obj );
+	Object* getObject( std::uint16_t id ) {
+		return networkIdToObject[ id ];
 	}
 
+	void processPacketQueue();
+	
 private:
 	std::queue<Packet> packetQueue_;
 	std::mutex queueMtx_;

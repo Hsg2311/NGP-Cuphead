@@ -55,6 +55,8 @@ public:
 		, networkId{ getNextId() } {
 		other.collider_ = nullptr;
 		other.animator_ = nullptr;
+
+		
 	}
 
 	Object& operator=( const Object& ) = delete;
@@ -77,7 +79,11 @@ public:
 	Collider* getCollider( ) const { return collider_; }
 	Animator* getAnimator( ) const { return animator_; }
 
-	bool isAlive( ) const { return alive_; }
+	bool isAlive() const { return alive_; }
+
+public:
+	void setGroup(GROUP_TYPE group_) { group = group_; }
+	GROUP_TYPE getGroup() { return group; }
 
 public:
 	void createCollider( ) { collider_ = new Collider{ }; }
@@ -147,6 +153,9 @@ public:
 		}
 	}
 
+
+
+
 public:
 	virtual Object* clone( ) = 0;
 
@@ -157,6 +166,7 @@ private:
 
 	Collider* collider_;
 	Animator* animator_;
+	GROUP_TYPE group;
 
 	bool alive_;
 	
