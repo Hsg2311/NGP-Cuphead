@@ -1,108 +1,59 @@
 #ifndef PROTOCOL_HPP
 #define PROTOCOL_HPP
 
-#include <iostream>
-#include <atomic>
+#include "struct.hpp"
+#include <cstdint>
 
-#define BUFSIZE 1024
+constexpr short PORT = 9000;
+constexpr short BUFSIZE = 1024;
 
+enum class PacketType {
+	NONE,
 
+	LOGIN,
+	LOGIN_RESULT,
+	LEAVE,
 
-
-enum class ServerPacketType : unsigned char {
-	ClientStatePacket,
-	EnemyStateUpdate,
-	CollisionEvent,
-	DeathEvent,
-	//------------------------------------
-	SignUp,
-	LogIn,
-	LogOut,
-
-	CompletedSignUp,
-	CompletedLogIn,
-	CompletedLogOut,
-
-	FailedSignUp,
-	FailedLogIn,
-	FailedLogOut,
-
-	SaveLogfile
+	MOVE,
+	INPUT,
 };
 
-struct ServerPacket {
-	ServerPacketType type;
+enum class Direction {
+	NONE,
 
-	union {
-		struct Player {
-			int x, y;
-			int hp;
-			int entityId;
-		};
+	E, W, S, N,
+	NE, NW, SE, SW,
+};
 
-		struct Boss {
-			int x, y;
-			int hp;
-			int entityId;
-		};
-		struct ClientStatePacket {
-			short x, y;
-			unsigned char hp;
-		};
+struct LoginPacket {	// client -> server
+	char id[16];
+	char pw[16];
+};
 
-		struct EnemyStatePacket {
-			short x, y;
-			unsigned char entityId;
-			unsigned char hp;
-		};
+struct LoginResultPacket {	// server -> client
+	bool result;
+};
 
-		struct CollisionEventPacket {
-			unsigned char entityId;
-		};
+struct MovePacket {		// server -> client
+	std::uint8_t id;
+	Direction dir;
+	Vec2 pos;
+};
 
-		struct DeathEventPacket {
-			unsigned char entityId;
-		};
+struct InputPacket {	// client -> server
+	std::uint16_t id;
+	bool left, right, up, down;
+};
 
-		struct LoadSaveFile {
-			unsigned char stage;
-		};
+struct Packet {
+	PacketType type;
+
+	union /*PacketData*/ {
+		LoginPacket lg;
+		LoginResultPacket lr;
+		MovePacket mv;
+		InputPacket in;
 	};
 };
 
-
-enum class ClientPacketType : unsigned char {
-	None,
-	Input ,
-	LogIn ,
-	LogOut 
-};
-
-
-struct ClientPacket {
-	ClientPacketType type;
-	
-	union {
-		struct InputPacket {
-			unsigned char entityId;
-			unsigned char dir;
-			unsigned char jump;
-			unsigned char attack;
-		}Input;
-		struct SignUpOrLogInPacket {
-			unsigned char username[50];
-			unsigned char password[50];
-		}LogIn;
-
-		struct LogOutPacket {
-			unsigned char username[50];
-		}LogOut;
-	};
-};
-
-
-
-
-
-
-#endif // PROTOCOL_HPP
+#endif	// PROTOCOL_HPP
