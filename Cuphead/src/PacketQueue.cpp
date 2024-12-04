@@ -2,6 +2,12 @@
 
 std::mutex queueMutex;
 
+PacketQueue& PacketQueue::getInst()
+{
+    static PacketQueue instance;
+    return instance;
+}
+
 void PacketQueue::pushPacket(const Packet& packet)
 {
     std::lock_guard<std::mutex> lock(queueMutex);

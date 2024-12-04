@@ -36,12 +36,7 @@ void ServerCL::clientRecv(SOCKET sock)
 		
 			PacketQueue::getInst().pushPacket(packet);
 
-			
-
 		}
-
-
-
 	}
 }
 

@@ -11,10 +11,10 @@ extern std::mutex queueMutex;
 class Object;
 
 class PacketQueue {
-
-    SINGLETON(PacketQueue);
-
 public:
+
+    static PacketQueue& getInst(); // Static member function
+
     void pushPacket(const Packet& packet);
     void dispatch();
     void addObject(Object* obj);

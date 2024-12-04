@@ -20,8 +20,8 @@ Scene::Scene( )
 
 			SendingStorage::getInst().pushPacket(packet);
 			
-			});
 		});
+	});
 }
 
 Scene::~Scene( ) {
