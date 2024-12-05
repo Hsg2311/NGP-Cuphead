@@ -32,6 +32,8 @@ void MenuScene::entry( ) {
 	addObject( GROUP_TYPE::UI, exitButton );
 
 	auto pos = Vec2( Core::getInst( ).getResolution( ) ) / 2.f;
+
+	
 	Camera::getInst( ).setLookAt( pos );
 }
 

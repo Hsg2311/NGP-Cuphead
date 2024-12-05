@@ -2,6 +2,8 @@
 #include "Background.hpp"
 #include "OverworldPlayer.hpp"
 
+#include "SendingStorage.hpp"
+
 void WorldScene::entry( ) {
 	auto background = new Background( L"World Background", L"overworld/world1_large_island_main_01.png" );
 	background->setObjName( L"World Main Island" );
@@ -131,6 +133,21 @@ void WorldScene::entry( ) {
 	player->setObjName( L"Overworld Player" );
 	player->setObjPos( Vec2( 600.f, 800.f ) );
 	addObject( GROUP_TYPE::PLAYER, player );
+	sendRegisterPacket("Overworld Player", player->getNetworkId());
+
 
 	Camera::getInst( ).setTarget( player );
+}
+
+
+void sendRegisterPacket( const char objectname[17], std::uint16_t id) {
+	auto registerPacket = Packet{
+		.type = PacketType::REGISTER,
+		.rs = {
+			.className = objectname[17],
+			.id = id
+        }
+	};
+
+	SendingStorage::getInst().pushPacket(registerPacket);
 }

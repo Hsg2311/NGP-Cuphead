@@ -12,6 +12,7 @@
 #include <atomic>
 #include <chrono>
 #include <queue>
+#include <mutex>
 
 #include <ranges>
 #include <algorithm>
