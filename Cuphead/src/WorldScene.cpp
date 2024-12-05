@@ -140,14 +140,14 @@ void WorldScene::entry( ) {
 	Camera::getInst( ).setTarget( player );
 }
 
-
-void sendRegisterPacket( const char objectname[17], std::uint16_t id) {
+void WorldScene::sendRegisterPacket(const char objectname[17], std::uint16_t id)
+{
 	auto registerPacket = Packet{
 		.type = PacketType::REGISTER,
 		.rs = {
 			.className = objectname[17],
 			.id = id
-        }
+		}
 	};
 
 	SendingStorage::getInst().pushPacket(registerPacket);

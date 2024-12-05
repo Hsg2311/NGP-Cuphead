@@ -247,6 +247,14 @@ void PacketQueue::addObject( Object* obj ) {
 	objectToNetworkId[ obj ] = obj->getNetworkId( );
 }
 
+void PacketQueue::removeObject(Object* obj)
+{
+	if (networkIdToObject.find(obj->getNetworkId()) != networkIdToObject.end()) {
+		networkIdToObject.erase(obj->getNetworkId());
+		objectToNetworkId.erase(obj);
+	}
+}
+
 void handleMovePacket( const Packet& packet ) {
 	auto obj = q.getObject( packet.mv.id );
 	obj->setObjPos( packet.mv.pos );

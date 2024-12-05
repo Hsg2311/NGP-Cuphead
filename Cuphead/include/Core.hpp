@@ -24,6 +24,7 @@ public:
 	void pushPacket( const Packet& packet );
 	void dispatch( );
 	void addObject( Object* obj );
+	void removeObject(Object* obj);
 	Object* getObject( std::uint16_t id ) {
 		return networkIdToObject[ id ];
 	}
