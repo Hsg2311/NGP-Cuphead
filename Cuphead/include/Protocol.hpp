@@ -14,6 +14,8 @@ enum class PacketType {
 	LOGIN_RESULT,
 	LEAVE,
 
+	REGISTER,
+
 	MOVE,
 	INPUT,
 };
@@ -45,6 +47,11 @@ struct InputPacket {	// client -> server
 	bool left, right, up, down;
 };
 
+struct RegisterPacket {
+	char className[10];
+	std::uint16_t id;
+};
+
 struct Packet {
 	PacketType type;
 
@@ -53,6 +60,7 @@ struct Packet {
 		LoginResultPacket lr;
 		MovePacket mv;
 		InputPacket in;
+		RegisterPacket rs;
 	};
 };
 

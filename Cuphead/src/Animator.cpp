@@ -16,7 +16,7 @@ void Animator::createAnimation( const std::wstring& animName, Texture* tex, Vec2
 Animation* Animator::findAnimation( const std::wstring& animName ) {
 	auto anim = animations_.find( animName );
 
-	if ( anim == animations_.end( ) )
+	if ( anim == animations_.end( ) )	
 		return nullptr;
 
 	assert( anim->second != nullptr );
