@@ -117,7 +117,7 @@ void Core::progress( ) {
 	SceneHandler::getInst( ).render( hMemDC_ );
 	BitBlt( hdc_, 0, 0, resolution_.x, resolution_.y, hMemDC_, 0, 0, SRCCOPY );
 
-	Timer::getInst( ).render( );
+	
 
 	// Event 지연 처리
 	EventHandler::getInst( ).update( );

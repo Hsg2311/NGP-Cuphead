@@ -15,6 +15,12 @@ class Object;
 
 class PacketQueue {
 public:
+
+	static PacketQueue& getInst() {
+		static PacketQueue instance;
+		return instance;
+	} 
+
 	void pushPacket( const Packet& packet );
 	void dispatch( );
 	void addObject( Object* obj );

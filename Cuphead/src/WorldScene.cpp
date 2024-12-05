@@ -134,7 +134,7 @@ void WorldScene::entry( ) {
 	player->setObjPos( Vec2( 600.f, 800.f ) );
 	addObject( GROUP_TYPE::PLAYER, player );
 	sendRegisterPacket("Overworld Player", player->getNetworkId());
-
+	PacketQueue::getInst().addObject(player);
 
 
 	Camera::getInst( ).setTarget( player );
