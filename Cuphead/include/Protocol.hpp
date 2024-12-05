@@ -27,6 +27,16 @@ enum class Direction {
 	NE, NW, SE, SW,
 };
 
+enum class MapManage {
+	REMOVE,
+	ADD
+};
+
+
+enum class ObjectName {
+	OverworldPlayer
+};
+
 struct LoginPacket {	// client -> server
 	char id[16];
 	char pw[16];
@@ -48,7 +58,8 @@ struct InputPacket {	// client -> server
 };
 
 struct RegisterPacket {
-	char className[10];
+	ObjectName objectname;
+	MapManage state;
 	std::uint16_t id;
 };
 
