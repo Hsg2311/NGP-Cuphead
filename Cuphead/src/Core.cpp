@@ -235,9 +235,7 @@ void PacketQueue::dispatch( ) {
 			handleMovePacket( p );
 			break;
 
-		case PacketType::REGISTER:
-			handleRegisterPacket(p);
-			break;
+
 		}
 	}
 }
@@ -267,8 +265,6 @@ void PacketQueue::removeObject(Object* obj)
 		objectToNetworkId.erase(obj);
 		networkIdtoObjectName.erase(obj->getNetworkId());
 
-		
-		
 	}
 }
 
@@ -304,10 +300,3 @@ void handleMovePacket( const Packet& packet ) {
 	}
 }
 
-//얘는 받는거였다
-void handleRegisterPacket(const Packet& packet) {
-	auto obj = q.getObject(packet.rs.id);
-	
-
-
-}
