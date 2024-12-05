@@ -1,6 +1,7 @@
 #include "LogPacketQueue.hpp"
 #include "SendingStorage.hpp"
 
+
 char ID[ 16 ] = "test ID";
 char PW[ 16 ] = "test PW";
 
@@ -24,7 +25,7 @@ void LogPacketQueue::dispatch( ) {
 		case PacketType::LOGIN: {
 			strcmp( p.lg.id, ID ) == 0 && strcmp( p.lg.pw, PW ) == 0 ?
 				loginState_ = LoginState::SUCCESS : loginState_ = LoginState::FAIL;
-
+		
 			auto packet = Packet{
 				.type = PacketType::LOGIN_RESULT,
 				.lr = {

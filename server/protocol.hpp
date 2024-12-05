@@ -14,6 +14,8 @@ enum class PacketType {
 	LOGIN_RESULT,
 	LEAVE,
 
+	REGISTER,
+
 	MOVE,
 	INPUT,
 };
@@ -25,9 +27,20 @@ enum class Direction {
 	NE, NW, SE, SW,
 };
 
+enum class MapManage {
+	REMOVE,
+	ADD
+};
+
+
+enum class ObjectType {
+	OverworldPlayer,
+	StagePlayer
+};
+
 struct LoginPacket {	// client -> server
-	char id[ 16 ];
-	char pw[ 16 ];
+	char id[16];
+	char pw[16];
 };
 
 struct LoginResultPacket {	// server -> client
@@ -45,6 +58,12 @@ struct InputPacket {	// client -> server
 	bool left, right, up, down;
 };
 
+struct RegisterPacket {
+	ObjectType objecType;
+	MapManage state;
+	std::uint16_t id;
+};
+
 struct Packet {
 	PacketType type;
 
@@ -53,6 +72,7 @@ struct Packet {
 		LoginResultPacket lr;
 		MovePacket mv;
 		InputPacket in;
+		RegisterPacket rs;
 	};
 };
 
