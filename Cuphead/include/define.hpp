@@ -43,7 +43,11 @@ enum class GROUP_TYPE {
 
 enum class SCENE_TYPE {
 	TITLE_SCENE,
+<<<<<<< HEAD
 	MENU_SCENE,
+=======
+	START_SCENE,
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 	TUTORIAL_SCENE,
 	WORLD_SCENE,
 

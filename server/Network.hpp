@@ -1,9 +1,12 @@
 #ifndef NETWORK_HPP
 #define NETWORK_HPP
 
+<<<<<<< HEAD
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 
+=======
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32")
@@ -11,18 +14,32 @@
 #include <string>
 #include <string_view>
 #include <cstdint>
+<<<<<<< HEAD
 #include <array>
 
 #include "MyException.hpp"
 #include <system_error>
 
 using namespace std::literals;
+=======
+#include <queue>
+#include <mutex>
+
+
+#include "MyException.hpp"
+#include "Protocol.hpp"
+
+using namespace std::literals;
+std::mutex queueMutex;
+std::queue<ClientPacket>recvQueue;
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 
 #define NET_NOEXCEPT noexcept
 #define NET_EXCEPT(error, desc) network::Exception(__LINE__, __FILE__, error, desc)
 #define NET_LAST_EXCEPT(desc) NET_EXCEPT(WSAGetLastError(), desc)
 
 namespace network {
+<<<<<<< HEAD
 	
 	class Exception : public MyException {
 	public:
@@ -32,6 +49,20 @@ namespace network {
 			return "Network Exception";
 		}
 		int error( ) const NET_NOEXCEPT {
+=======
+
+	void initNet();
+	void closeNet();
+
+	class Exception : public MyException {
+	public:
+		Exception(int line, const char* file, int error, std::string_view desc) NET_NOEXCEPT;
+
+		const char* type() const NET_NOEXCEPT override {
+			return "Network Exception";
+		}
+		int error() const NET_NOEXCEPT {
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 			return error_;
 		}
 
@@ -41,6 +72,7 @@ namespace network {
 
 	class Ipv4Addr {
 	public:
+<<<<<<< HEAD
 		Ipv4Addr( std::string_view ip = "127.0.0.1"sv )
 			: present_( ip ), addr_( ) {
 			if ( inet_pton( AF_INET, present_.data( ), &addr_ ) != 1 ) {
@@ -65,6 +97,32 @@ namespace network {
 			return present_;
 		}
 		std::uint32_t get( ) const NET_NOEXCEPT {
+=======
+		Ipv4Addr(std::string_view ip = "127.0.0.1"sv)
+			: present_(ip), addr_() {
+			if (inet_pton(AF_INET, present_.data(), &addr_) != 1) {
+				throw NET_LAST_EXCEPT("Failed to convert IPv4 address"sv);
+			}
+		}
+
+		Ipv4Addr(std::uint32_t addr)
+			: present_(15u, '\0'), addr_(addr) {
+			if (inet_ntop(AF_INET, &addr_, present_.data(), present_.size()) == nullptr) {
+				throw NET_LAST_EXCEPT("Failed to convert IPv4 address"sv);
+			}
+		}
+
+		Ipv4Addr(const sockaddr& addr) NET_NOEXCEPT
+			: present_(), addr_(reinterpret_cast<const sockaddr_in*>(&addr)->sin_addr.s_addr) {}
+
+		Ipv4Addr(const sockaddr_in& addr) NET_NOEXCEPT
+			: present_(), addr_(addr.sin_addr.s_addr) {}
+
+		std::string_view present() const NET_NOEXCEPT {
+			return present_;
+		}
+		std::uint32_t get() const NET_NOEXCEPT {
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 			return addr_;
 		}
 
@@ -75,9 +133,15 @@ namespace network {
 
 	class Port {
 	public:
+<<<<<<< HEAD
 		Port( std::uint16_t hostPort = 0 ) NET_NOEXCEPT : port_( htons( hostPort ) ) {}	
 
 		std::uint16_t get( ) const NET_NOEXCEPT {
+=======
+		Port(std::uint16_t hostPort = 0) NET_NOEXCEPT : port_(htons(hostPort)) {}
+
+		std::uint16_t get() const NET_NOEXCEPT {
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 			return port_;
 		}
 
@@ -91,6 +155,7 @@ namespace network {
 			sockaddr addr;
 			sockaddr_in addr_in;
 
+<<<<<<< HEAD
 			UAddr( ) NET_NOEXCEPT = default;
 
 			UAddr( const Ipv4Addr& ip, Port port ) NET_NOEXCEPT
@@ -274,11 +339,98 @@ namespace network {
 			auto ret = socket( AF_INET, SOCK_STREAM, 0 );
 			if ( ret == INVALID_SOCKET ) {
 				throw NET_LAST_EXCEPT( "Failed to create TCP socket"sv );
+=======
+			UAddr(const Ipv4Addr& ip, Port port) NET_NOEXCEPT
+				: addr_in{
+					.sin_family = static_cast<decltype(sockaddr_in::sin_family)>(AF_INET),
+					.sin_port = static_cast<decltype(sockaddr_in::sin_port)>(port.get())
+				} {
+				addr_in.sin_addr.s_addr = ip.get();
+			}
+
+			UAddr(const sockaddr& addr) NET_NOEXCEPT
+				: addr(addr) {}
+		} uAddr_;
+
+	public:
+		SockAddr() NET_NOEXCEPT = default;
+
+		SockAddr(const Ipv4Addr& ip, Port port) NET_NOEXCEPT
+			: uAddr_(ip, port) {}
+
+		SockAddr(const sockaddr& addr) NET_NOEXCEPT
+			: uAddr_(addr) {}
+
+		UAddr& get() NET_NOEXCEPT {
+			return uAddr_;
+		}
+
+		const UAddr& get() const NET_NOEXCEPT {
+			return uAddr_;
+		}
+
+		std::size_t size() const NET_NOEXCEPT {
+			return sizeof(uAddr_.addr);
+		}
+	};
+
+	class TcpSocket {
+	public:
+
+		TcpSocket()
+			: sock_(createNativeSocket()), open_(true) {}
+
+		TcpSocket(SOCKET& sock)
+		{
+			sock_ = sock;
+			open_ = true;
+		}
+
+		void bind(const SockAddr& addr)
+		{
+			if (::bind(sock_, &addr.get().addr, addr.size()) == SOCKET_ERROR) {
+				throw NET_LAST_EXCEPT("bind error");
+			}
+		}
+
+		void listen(int backlog = SOMAXCONN) {
+			if (::listen(sock_, backlog) == SOCKET_ERROR) {
+				throw NET_LAST_EXCEPT("listen error");
+			}
+		}
+		TcpSocket accept() {
+			sockaddr_in clientAddr;
+			int addrLen = sizeof(clientAddr);
+			SOCKET clientSock = ::accept(sock_, reinterpret_cast<sockaddr*>(&clientAddr), &addrLen);
+
+			if (clientSock == INVALID_SOCKET) {
+				throw NET_LAST_EXCEPT("Failed to accept a connection");
+			}
+			return TcpSocket(clientSock);
+		}
+
+		// ¼ÒÄÏ ´Ý±â
+		void close() NET_NOEXCEPT {
+			if (open_) {
+				closesocket(sock_);
+				open_ = false;
+			}
+		}
+
+		~TcpSocket() { close(); }
+
+	private:
+		static SOCKET createNativeSocket() {
+			auto ret = socket(AF_INET, SOCK_STREAM, 0);
+			if (ret == INVALID_SOCKET) {
+				throw NET_LAST_EXCEPT("Failed to create TCP socket"sv);
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 			}
 			return ret;
 		}
 
 		SOCKET sock_;
+<<<<<<< HEAD
 		SockAddr addr_;
 		bool open_;
 	};
@@ -329,3 +481,13 @@ namespace network {
 //	// struct
 //	// struct
 //};
+=======
+		bool open_;
+
+	};
+}
+
+
+
+#endif // NETWORK_HPP
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52

@@ -2,11 +2,12 @@
 #include "struct.hpp"
 #include "Timer.hpp"
 #include "InputDeviceHandler.hpp"
-#include "Texture.hpp"
 #include "ResourceHandler.hpp"
 #include "Projectile.hpp"
 #include "func.hpp"
 #include "SendingStorage.hpp"
+
+char buf[512];
 
 Player::Player( ) {
 	createCollider( );
@@ -24,21 +25,46 @@ Player::~Player( ) {}
 void Player::update( ) {
 	Vec2 objPos = getObjPos( );
 
+	InputPacket p;
 	if ( KEY_HOLD( InputData::LEFT ) ) {
-		objPos.x -= 200.f * fDT;
+		//objPos.x -= 200.f * fDT;
+
+		p.dir = 1;
+		p.type = ClientPacketType::Input;
+		//bool inputFlag = true;
+		//sendInput(p);
 	}
 	if ( KEY_HOLD( InputData::RIGHT ) ) {
-		objPos.x += 200.f * fDT;
+		//objPos.x += 200.f * fDT;
+
+		p.dir = 2;
+		p.type = ClientPacketType::Input;
 	}
 	if ( KEY_HOLD( InputData::UP) ) {
-		objPos.y -= 200.f * fDT;
+		//objPos.y -= 200.f * fDT;
+
+		p.dir = 3;
+		p.type = ClientPacketType::Input;
 	}
 	if ( KEY_HOLD( InputData::DOWN) ) {
-		objPos.y += 200.f * fDT;
+		//objPos.y += 200.f * fDT;
+
+		p.dir = 4;
+		p.type = ClientPacketType::Input;
 	}
 	if ( KEY_TAP( InputData::Z ) ) {
+<<<<<<< HEAD
 		createProjectile( );
+=======
+		CreateProjectile( );
+		
+		p.attack = 1;
+		p.type = ClientPacketType::Input;
+>>>>>>> 4a7d3951422e1aa00ff62c3f7f8d77d88525af52
 	}
+
+	memset(buf, 0, sizeof(buf));
+	memcpy(buf, &p, sizeof(InputPacket));
 
 	setObjPos( objPos );
 }
