@@ -29,6 +29,7 @@ PacketQueue q;
 void clientSend( network::TcpSocket& serverSock );
 void clientRecv( network::TcpSocket& serverSock );
 void handleMovePacket( const Packet& packet );
+void handleRegisterPacket(const Packet& packet);
 
 Core::Core( )
 	: hWnd_{ nullptr }
@@ -233,6 +234,10 @@ void PacketQueue::dispatch( ) {
 		case PacketType::MOVE:
 			handleMovePacket( p );
 			break;
+
+		case PacketType::REGISTER:
+			handleRegisterPacket(p);
+			break;
 		}
 	}
 }
@@ -272,4 +277,12 @@ void handleMovePacket( const Packet& packet ) {
 		obj->getAnimator( )->play( L"walk_left_down" );
 		break;
 	}
+}
+
+//얘는 받는거였다
+void handleRegisterPacket(const Packet& packet) {
+	auto obj = q.getObject(packet.rs.id);
+	
+
+
 }

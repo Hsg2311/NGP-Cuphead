@@ -12,6 +12,7 @@ Scene::~Scene( ) {
 	// Scene에 등록된 Object들을 delete
 	std::ranges::for_each( objGroupList_, []( auto& objs ) {
 		std::ranges::for_each( objs, []( auto obj ) {
+			
 			delete obj;
 		} );
 	} );
