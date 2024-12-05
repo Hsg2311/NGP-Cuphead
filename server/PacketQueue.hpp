@@ -12,17 +12,19 @@ class PacketQueue {
 public:
 	void pushPacket( const Packet& packet );
 	void dispatch( );
-	/*void addObject( Object* obj );
+	void addObject( Object* obj );
+	void removeObject(std::uint8_t networkId);
+
 	Object* getObject( std::uint16_t id ) {
 		return networkIdToObject[ id ];
-	}*/
+	}
 
 private:
 	std::queue<Packet> packetQueue_;
 	std::mutex queueMtx_;
 
-	/*std::unordered_map<int, Object*> networkIdToObject;
-	std::unordered_map<Object*, int> objectToNetworkId;*/
+	std::unordered_map<int, Object*> networkIdToObject;
+	std::unordered_map<Object*, int> objectToNetworkId;
 };
 
 #endif // PACKETQUEUE_HPP

@@ -13,6 +13,11 @@ public:
 		:objPos_ {other.objPos_}
 	{}
 
+	void setId(std::uint16_t id) { networkId_ = id; }
+	void setPosition(const Vec2& pos) { objPos_ = pos; }
+
+	std::uint16_t getNetworkId() { return networkId_; }
+	Vec2 getPosition() const { return objPos_; }
 
 private:
 	Vec2 objPos_;

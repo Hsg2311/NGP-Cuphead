@@ -1,18 +1,19 @@
 #include "PacketQueue.hpp"
 #include "Timer.hpp"
+#include "Object.hpp"
 
-void PacketQueue::pushPacket( const Packet& packet ) {
-	std::lock_guard<std::mutex> lock( queueMtx_ );
-	packetQueue_.push( packet );
+void PacketQueue::pushPacket(const Packet& packet) {
+	std::lock_guard<std::mutex> lock(queueMtx_);
+	packetQueue_.push(packet);
 }
 
-void PacketQueue::dispatch( ) {
-	while ( !packetQueue_.empty( ) ) {
-		std::lock_guard<std::mutex> lock( queueMtx_ );
-		Packet p = packetQueue_.front( );
-		packetQueue_.pop( );
+void PacketQueue::dispatch() {
+	while (!packetQueue_.empty()) {
+		std::lock_guard<std::mutex> lock(queueMtx_);
+		Packet p = packetQueue_.front();
+		packetQueue_.pop();
 
-		switch ( p.type ) {
+		switch (p.type) {
 		case PacketType::INPUT: {
 			/*auto lu = Vec2( -1.f, 1.f );
 			auto ru = Vec2( 1.f, 1.f );
@@ -59,11 +60,43 @@ void PacketQueue::dispatch( ) {
 			}*/
 			break;
 		}
+		case PacketType::REGISTER: {
+			switch (p.rs.objecType) {
+			case ObjectType::OverworldPlayer: {
+				Object* obj = new Object();
+				obj->setId(p.rs.id);
+
+				if (p.rs.state == MapManage::ADD) {
+					addObject(obj);
+				}
+
+				else if (p.rs.state == MapManage::REMOVE) {
+					removeObject(p.rs.id);
+				}
+
+				break;
+			}
+			case ObjectType::StagePlayer: {
+
+			}
+			}
+		}
 		}
 	}
 }
 
-//void PacketQueue::addObject( Object* obj ) {
-//	networkIdToObject[ obj->getNetworkId( ) ] = obj;
-//	objectToNetworkId[ obj ] = obj->getNetworkId( );
-//}
+void PacketQueue::addObject( Object* obj ) {
+	networkIdToObject[ obj->getNetworkId( ) ] = obj;
+	objectToNetworkId[ obj ] = obj->getNetworkId( );
+}
+
+void PacketQueue::removeObject(std::uint8_t networkId)
+{
+	auto it = networkIdToObject.find(networkId);
+	if (it != networkIdToObject.end()) {
+		Object* obj = it->second;
+		objectToNetworkId.erase(obj);
+		networkIdToObject.erase(it);
+		delete obj; 
+	}
+}
