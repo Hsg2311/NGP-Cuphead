@@ -242,16 +242,33 @@ void PacketQueue::dispatch( ) {
 	}
 }
 
-void PacketQueue::addObject( Object* obj ) {
+void PacketQueue::addObject( Object* obj , ObjectName objname ) {
 	networkIdToObject[ obj->getNetworkId( ) ] = obj;
 	objectToNetworkId[ obj ] = obj->getNetworkId( );
+	networkIdtoObjectName[obj->getNetworkId()] = objname;
 }
 
 void PacketQueue::removeObject(Object* obj)
 {
 	if (networkIdToObject.find(obj->getNetworkId()) != networkIdToObject.end()) {
+
+		auto registerPacket = Packet{
+			.type = PacketType::REGISTER,
+			.rs = {
+				.objectname = networkIdtoObjectName[obj->getNetworkId()],
+				.state = MapManage::REMOVE,
+				.id = obj->getNetworkId()
+			}
+		};
+	
+		SendingStorage::getInst().pushPacket(registerPacket);
+		
 		networkIdToObject.erase(obj->getNetworkId());
 		objectToNetworkId.erase(obj);
+		networkIdtoObjectName.erase(obj->getNetworkId());
+
+		
+		
 	}
 }
 

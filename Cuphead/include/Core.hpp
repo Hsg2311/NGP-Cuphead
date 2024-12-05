@@ -23,7 +23,7 @@ public:
 
 	void pushPacket( const Packet& packet );
 	void dispatch( );
-	void addObject( Object* obj );
+	void addObject( Object* obj , ObjectName objname);
 	void removeObject(Object* obj);
 	Object* getObject( std::uint16_t id ) {
 		return networkIdToObject[ id ];
@@ -35,6 +35,7 @@ private:
 
 	std::unordered_map<int, Object*> networkIdToObject;
 	std::unordered_map<Object*, int> objectToNetworkId;
+	std::unordered_map<int, ObjectName> networkIdtoObjectName;
 };
 
 class Core {

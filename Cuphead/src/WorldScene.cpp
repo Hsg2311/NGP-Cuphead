@@ -133,19 +133,20 @@ void WorldScene::entry( ) {
 	player->setObjName( L"Overworld Player" );
 	player->setObjPos( Vec2( 600.f, 800.f ) );
 	addObject( GROUP_TYPE::PLAYER, player );
-	sendRegisterPacket("Overworld Player", player->getNetworkId());
-	PacketQueue::getInst().addObject(player);
+	sendRegisterPacket(ObjectName::OverworldPlayer, player->getNetworkId());
+	PacketQueue::getInst().addObject(player, ObjectName::OverworldPlayer);
 
 
 	Camera::getInst( ).setTarget( player );
 }
 
-void WorldScene::sendRegisterPacket(const char objectname[17], std::uint16_t id)
+void WorldScene::sendRegisterPacket(ObjectName objectname, std::uint16_t id)
 {
 	auto registerPacket = Packet{
 		.type = PacketType::REGISTER,
 		.rs = {
-			.className = objectname[17],
+			.objectname = objectname,
+			.state = MapManage::ADD,
 			.id = id
 		}
 	};
