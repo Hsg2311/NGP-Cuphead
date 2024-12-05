@@ -1,6 +1,7 @@
 #include "PacketQueue.hpp"
 #include "Timer.hpp"
 #include "Object.hpp"
+#include "SendingStorage.hpp"
 
 void PacketQueue::pushPacket(const Packet& packet) {
 	std::lock_guard<std::mutex> lock(queueMtx_);
@@ -65,13 +66,23 @@ void PacketQueue::dispatch() {
 			case ObjectType::OverworldPlayer: {
 				Object* obj = new Object();
 				obj->setId(p.rs.id);
+				obj->setPosition(/*where*/Vec2());
 
 				if (p.rs.state == MapManage::ADD) {
 					addObject(obj);
+					auto packet = Packet{
+						.type = PacketType::MOVE,
+						.mv = {
+							.id = obj->getNetworkId(),
+							.dir = Direction::NONE,
+							.pos = obj->getPosition()
+}
+					};
+					SendingStorage::getInst().pushPacket(packet);
 				}
 
 				else if (p.rs.state == MapManage::REMOVE) {
-					removeObject(p.rs.id);
+					removeObject(obj->getNetworkId()/*p.rs.id*/);
 				}
 
 				break;
@@ -85,18 +96,18 @@ void PacketQueue::dispatch() {
 	}
 }
 
-void PacketQueue::addObject( Object* obj ) {
-	networkIdToObject[ obj->getNetworkId( ) ] = obj;
-	objectToNetworkId[ obj ] = obj->getNetworkId( );
+void PacketQueue::addObject(Object* obj) {
+	networkIdToObject[obj->getNetworkId()] = obj;
+	objectToNetworkId[obj] = obj->getNetworkId();
 }
 
-void PacketQueue::removeObject(std::uint8_t networkId)
+void PacketQueue::removeObject(std::uint16_t networkId)
 {
 	auto it = networkIdToObject.find(networkId);
 	if (it != networkIdToObject.end()) {
 		Object* obj = it->second;
 		objectToNetworkId.erase(obj);
 		networkIdToObject.erase(it);
-		delete obj; 
+		delete obj;
 	}
 }

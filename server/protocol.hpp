@@ -48,7 +48,7 @@ struct LoginResultPacket {	// server -> client
 };
 
 struct MovePacket {		// server -> client
-	std::uint8_t id;
+	std::uint16_t id;
 	Direction dir;
 	Vec2 pos;
 };
