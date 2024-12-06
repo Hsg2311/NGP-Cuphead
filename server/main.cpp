@@ -22,18 +22,20 @@ inline constexpr Seconds operator""_s( unsigned long long _Val ) noexcept {
 	return Seconds( static_cast<float>( _Val ) );
 }
 
-std::array<std::atomic<network::TcpSocket*>, 2> clients;
+//std::array<std::atomic<network::TcpSocket*>, 2> clients;
+std::vector<std::unique_ptr<network::TcpSocket>> clients;
 std::vector<std::thread> recvThreads;
 
 std::atomic<bool> serverRun = true;
 
 PacketQueue q;
 std::mutex packetQueueMtx;
+std::mutex m;
 
 // accept랑 send는 서버가 종료되면 같이 종료, recv는 클라이언트가 종료하면 같이 종료
 void acceptClient( network::TcpSocket& serverSock );
 void serverSend( );
-void serverRecv( std::atomic<network::TcpSocket*>& clientSock );
+void serverRecv( network::TcpSocket& clientSock );
 
 int main( ) {
 	WSADATA wsaData;
@@ -124,20 +126,22 @@ void acceptClient( network::TcpSocket& serverSock ) {
 		std::cout << "[TCP 서버] 클라이언트 접속: IP 주소=" << ip.c_str( )
 			<< ", 포트 번호=" << ntohs( clientSock.getPort( ) ) << '\n';
 
-		for ( auto& pClient : clients ) {
-			if ( !pClient ) {
-				pClient = new network::TcpSocket( std::move( clientSock ) );
-				break;
-			}
+		//for ( auto& pClient : clients ) {
+		//	if ( !pClient ) {
+		//		pClient = new network::TcpSocket( std::move( clientSock ) );
+		//		break;
+		//	}
 
-			/*network::TcpSocket* nullExpected = nullptr;
-			auto desired = new network::TcpSocket( std::move( clientSock ) );
-			if ( !pClient.compare_exchange_strong( nullExpected, desired ) ) {
-				delete desired;
-			}*/
-		}
+		//	/*network::TcpSocket* nullExpected = nullptr;
+		//	auto desired = new network::TcpSocket( std::move( clientSock ) );
+		//	if ( !pClient.compare_exchange_strong( nullExpected, desired ) ) {
+		//		delete desired;
+		//	}*/
+		//}
 
-		recvThreads.push_back( std::thread( serverRecv, std::ref( clients.back( ) ) ) );
+		clients.emplace_back( new network::TcpSocket( std::move( clientSock ) ) );
+
+		recvThreads.push_back( std::thread( serverRecv, std::ref( *clients.back( ) ) ) );
 	}
 }
 
@@ -161,8 +165,9 @@ void serverSend( ) {
 		std::uint16_t bufferSize = 0;
 		SendingStorage::getInst( ).flush( buffer.data( ), bufferSize );
 
+		//m.lock( );
 		// send ------------------------------------------------------
-		for ( auto& paClient : clients ) {
+		/*for ( auto& paClient : clients ) {
 			if ( !paClient ) {
 				continue;
 			}
@@ -170,16 +175,21 @@ void serverSend( ) {
 
 			pClient->send( &bufferSize, sizeof( bufferSize ) );
 			pClient->send( buffer.data( ), bufferSize );
+		}*/
+		for ( auto& pClient : clients ) {
+			pClient->send( &bufferSize, sizeof( bufferSize ) );
+			pClient->send( buffer.data( ), bufferSize );
 		}
 		//------------------------------------------------------------
+		//m.unlock( );
 
 		SendingStorage::getInst( ).resetFlag( );
 	}
 }
 
-void serverRecv( std::atomic<network::TcpSocket*>& pClientSock ) {
+void serverRecv( network::TcpSocket& clientSock ) {
 	bool exit = false;
-	auto& clientSock = *pClientSock;
+	//auto& clientSock = *pClientSock;
 
 	while ( true ) {
 		std::uint16_t bufferSize = 0;
@@ -207,7 +217,7 @@ void serverRecv( std::atomic<network::TcpSocket*>& pClientSock ) {
 				LogPacketQueue::getInst( ).pushPacket( packet );
 			}
 			else if ( packet.type == PacketType::LEAVE ) {
-				exit = true;	
+				exit = true;
 				break;
 			}
 			else if ( packet.type == PacketType::INPUT ) {
@@ -225,7 +235,12 @@ void serverRecv( std::atomic<network::TcpSocket*>& pClientSock ) {
 	std::cout << "[TCP 서버] 클라이언트 종료: IP 주소=" << ip.c_str( )
 		<< ", 포트 번호=" << ntohs( clientSock.getPort( ) ) << '\n';
 
-	auto tmp = pClientSock.load( );
+	/*auto tmp = pClientSock.load( );
+	m.lock( );
 	pClientSock = nullptr;
-	delete tmp;
+	m.unlock( );
+	delete tmp;*/
+	clients.erase( std::ranges::find_if( clients, [&clientSock]( const auto& pClient ) {
+		return pClient->getSock( ) == clientSock.getSock( );
+		} ) );
 }
