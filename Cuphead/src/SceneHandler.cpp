@@ -3,6 +3,8 @@
 #include "TitleScene.hpp"
 #include "WorldScene.hpp"
 
+#include "BossScene.hpp"
+
 SceneHandler::SceneHandler( )
 	: sceneList_{ }
 	, currScene_{ nullptr }
@@ -26,8 +28,10 @@ void SceneHandler::init( ) {
 	sceneList_[ static_cast<UINT>( SCENE_TYPE::WORLD_SCENE ) ] = new WorldScene( );
 	sceneList_[ static_cast<UINT>( SCENE_TYPE::WORLD_SCENE ) ]->setSceneName( L"World Scene" );
 
+	sceneList_[static_cast<UINT>(SCENE_TYPE::BOSS_SCENE)] = new BossScene();
+	sceneList_[static_cast<UINT>(SCENE_TYPE::BOSS_SCENE)]->setSceneName(L"Boss Scene");
 	// 현재 Scene 설정
-	currScene_ = sceneList_[ static_cast<UINT>( SCENE_TYPE::TITLE_SCENE ) ];
-	currSceneType_ = SCENE_TYPE::TITLE_SCENE;
+	currScene_ = sceneList_[ static_cast<UINT>( SCENE_TYPE::BOSS_SCENE) ];
+	currSceneType_ = SCENE_TYPE::BOSS_SCENE;
 	currScene_->entry( );
 }

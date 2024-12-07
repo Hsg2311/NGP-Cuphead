@@ -101,7 +101,15 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+
+    ATOM atom = RegisterClassExW(&wcex);
+    if (!atom) {
+        DWORD dwError = GetLastError();
+        wprintf(L"RegisterClassExW failed with error: %ld\n", dwError);
+    }
+    return atom;
+
+   
 }
 
 //
@@ -123,6 +131,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    if (!g_hWnd)
    {
+    /*   DWORD dwError = GetLastError()*/
       return FALSE;
    }
 
