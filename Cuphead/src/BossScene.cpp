@@ -4,12 +4,23 @@
 
 #include "SendingStorage.hpp"
 
+#include "Boss.hpp"
+
 void BossScene::entry() {
-	auto background = new Background(L"World Background", L"overworld/world1_large_island_main_01.png");
-	background->setObjName(L"World Main Island");
-	background->setObjPos(Vec2(640.f, 340.f));
+	
+	auto background = new Background(L"World Background", L"smile_boss/slime_background.png");
+	background->setObjName(L"World Boss");
+	background->setObjPos(Vec2(640.f, 360.f));
 	addObject(GROUP_TYPE::BACKGROUND, background);
 	
+	auto boss = new Boss();
+	boss->setObjname(L"Smile Boss");
+	boss->setObjPos();
+	addObject(GROUP_TYPE::ENEMY, boss);
+	sendRegisterPacket(ObjectName::Boss, boss->getNetworkId());
+	PacketQueue::getInst().addObject(boss, ObjectName::Boss);
+
+
 
 	auto player = new Player();
 	player->setObjName(L"Boss Player");

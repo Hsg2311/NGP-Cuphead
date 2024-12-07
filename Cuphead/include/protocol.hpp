@@ -35,7 +35,8 @@ enum class MapManage {
 
 enum class ObjectName {
 	OverworldPlayer,
-	BossPlayer
+	BossPlayer,
+	Boss
 };
 
 struct LoginPacket {	// client -> server
