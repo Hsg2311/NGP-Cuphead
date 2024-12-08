@@ -69,7 +69,7 @@ int Core::init( HWND hWnd, POINT resolution ) {
 
 	serverSock_ = network::TcpSocket( );
 
-	auto serverAddr = network::SockAddr( "192.168.42.16"sv, PORT );
+	auto serverAddr = network::SockAddr( "127.0.0.1"sv, PORT );
 	serverSock_.connect( serverAddr );
 
 	hWnd_ = hWnd;
