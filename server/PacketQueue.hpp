@@ -1,6 +1,7 @@
 #ifndef PACKETQUEUE_HPP
 #define PACKETQUEUE_HPP
 
+#include "define.hpp"
 #include "protocol.hpp"
 //#include "Object.hpp"
 
@@ -9,6 +10,8 @@
 #include <unordered_map>
 
 class PacketQueue {
+	SINGLETON( PacketQueue );
+
 public:
 	void pushPacket( const Packet& packet );
 	void dispatch( );

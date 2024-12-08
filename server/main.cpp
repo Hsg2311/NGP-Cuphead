@@ -23,12 +23,10 @@ inline constexpr Seconds operator""_s( unsigned long long _Val ) noexcept {
 }
 
 std::array<network::TcpSocket*, 2> clients;
-//std::vector<std::unique_ptr<network::TcpSocket>> clients;
 std::vector<std::thread> recvThreads;
 
 std::atomic<bool> serverRun = true;
 
-PacketQueue q;
 std::mutex packetQueueMtx;
 std::mutex sockMtx;
 
@@ -90,7 +88,7 @@ int main( ) {
 			}*/
 
 			LogPacketQueue::getInst( ).dispatch( );
-			q.dispatch( );
+			PacketQueue::getInst( ).dispatch( );
 		}
 
 		sendThread.join( );
@@ -210,7 +208,7 @@ void serverRecv( network::TcpSocket*& pClientSock ) {
 				break;
 			}
 			else if ( packet.type == PacketType::INPUT ) {
-				q.pushPacket( packet );
+				PacketQueue::getInst( ).pushPacket( packet );
 			}
 		}
 
