@@ -19,6 +19,8 @@ public:
 	Animation* findAnimation( const std::wstring& animName );
 	void play( const std::wstring& animName );
 
+	
+
 	void update( ) {
 		if( currAnim_ )
 			currAnim_->update( );

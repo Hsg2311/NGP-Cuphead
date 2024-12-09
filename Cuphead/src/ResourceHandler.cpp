@@ -18,11 +18,9 @@ Texture* ResourceHandler::loadTexture( const std::wstring& resKey, const std::ws
 	Texture* tex = findTexture( resKey );
 	if ( tex )
 		return tex;
-
 	auto filePath = PathHandler::getInst( ).getContentPath( ).c_str( ) + relativePath;
 
-	tex = new Texture{ };
-	tex->load( filePath );
+	tex = new Texture{ };	tex->load( filePath );
 	tex->setResKey( resKey );
 	tex->setRelativePath( relativePath );
 
@@ -40,5 +38,5 @@ Texture* ResourceHandler::findTexture( const std::wstring& resKey ) {
 	assert( tex->second != nullptr );
 	assert( dynamic_cast<Texture*>( tex->second ) != nullptr );
 
-	return static_cast<Texture*>( tex->second );
-}
+	return static_cast<Texture*>( tex->second );}
+

@@ -15,6 +15,10 @@ public:
 	Texture* loadTexture( const std::wstring& resKey, const std::wstring& relativePath );
 	Texture* findTexture( const std::wstring& resKey );
 
+	Texture* findTextureComplex(const std::wstring& resKey);
+
+	Texture* loadTextureComplex(const std::wstring& resKey, const std::wstring& relativePath);
+
 private:
 	std::map<std::wstring, Res*> texMap_;
 };

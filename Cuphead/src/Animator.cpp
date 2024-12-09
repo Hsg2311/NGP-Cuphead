@@ -1,4 +1,5 @@
 #include "Animator.hpp"
+#include "ResourceHandler.hpp"
 #include <cassert>
 
 void Animator::createAnimation( const std::wstring& animName, Texture* tex, Vec2 LT,
@@ -28,3 +29,4 @@ void Animator::play( const std::wstring& animName ) {
 	currAnim_ = findAnimation( animName );
 	assert( currAnim_ != nullptr );
 }
+

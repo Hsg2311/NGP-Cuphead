@@ -16,6 +16,7 @@ OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info ) {
 		auto tex = ResourceHandler::getInst( ).loadTexture( elem.resKey, std::wstring( L"/texture/idle/overworld/" + elem.fileName ) );
 		textures_.push_back( tex );
 
+
 		getAnimator( )->createAnimation( elem.resKey, tex, Vec2( 0.f, 0.f ),
 			elem.sliceSize, Vec2( elem.sliceSize.x, 0.f ), elem.duration, elem.frameCount, elem.offset );
 	} );
