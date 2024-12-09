@@ -233,6 +233,7 @@ void PacketQueue::dispatch( ) {
 		case PacketType::MOVE:
 			handleMovePacket( p );
 			break;
+			
 		}
 	}
 }

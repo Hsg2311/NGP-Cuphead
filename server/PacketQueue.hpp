@@ -2,7 +2,7 @@
 #define PACKETQUEUE_HPP
 
 #include "protocol.hpp"
-//#include "Object.hpp"
+#include "Object.hpp"
 
 #include <queue>
 #include <mutex>

@@ -8,7 +8,7 @@ public:
 		:objPos_{}
 		, networkId_{}
 	{}
-	~Object();
+	~Object() {}
 	Object(const Object& other)
 		:objPos_ {other.objPos_}
 	{}

@@ -83,6 +83,7 @@ void PacketQueue::dispatch() {
 
 				else if (p.rs.state == MapManage::REMOVE) {
 					removeObject(obj->getNetworkId()/*p.rs.id*/);
+
 				}
 
 				break;
