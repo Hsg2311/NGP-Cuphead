@@ -21,7 +21,16 @@ enum patturn {
 	RJump,
 	RUpJump,
 	RDownJump,
-	RAttack
+	RAttack,
+
+	LJump_2,
+	LUpJump_2,
+	LDownJump_2,
+	LAttack_2,
+	RJump_2,
+	RUpJump_2,
+	RDownJump_2,
+	RAttack_2
 };
 
 class Boss : public Object {

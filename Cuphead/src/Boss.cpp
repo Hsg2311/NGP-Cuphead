@@ -29,7 +29,7 @@ Boss::Boss() {
 
 		auto Rjump = ResourceHandler::getInst().loadTexture(L"Rjump", L"/texture/smileBoss/Phase1/jump/Rjump.png");
 		auto Rupjump = ResourceHandler::getInst().loadTexture(L"Rupjump", L"/texture/smileBoss/Phase1/jump/Rupjump.png");
-		auto Rdownjump = ResourceHandler::getInst().loadTexture(L"Rdownjump", L"/texture/smileBoss/Phase1/jump/Ldownjump.png");
+		auto Rdownjump = ResourceHandler::getInst().loadTexture(L"Rdownjump", L"/texture/smileBoss/Phase1/jump/Rdownjump.png");
 		auto RAttack = ResourceHandler::getInst().loadTexture(L"RAttack", L"/texture/smileBoss/Phase1/Attack/RAttack.png");
 		auto RPhaseTurn = ResourceHandler::getInst().loadTexture(L"RPhaseTurn", L"/texture/smileBoss/Phase1/RPhaseTurn.png");
 		
@@ -50,15 +50,30 @@ Boss::Boss() {
 	}
 	
 	// phase2
-
-	// 콘솔 확인 출력
-	AllocConsole();
-
-	FILE* fp;
-	freopen_s(&fp, "CONOUT$", "w", stdout);
+	{
+		auto Ljump_2 = ResourceHandler::getInst().loadTexture(L"Ljump_2", L"/texture/smileBoss/Phase2/jump/Ljump.png");
+		auto Lupjump_2 = ResourceHandler::getInst().loadTexture(L"Lupjump_2", L"/texture/smileBoss/Phase2/jump/LJumpUp.png");
+		auto Ldownjump_2 = ResourceHandler::getInst().loadTexture(L"Ldownjump_2", L"/texture/smileBoss/Phase2/jump/LJumpdown.png");
 
 
 
+
+		auto Rjump_2 = ResourceHandler::getInst().loadTexture(L"Rjump_2", L"/texture/smileBoss/Phase2/jump/Rjump.png");
+		auto Rupjump_2 = ResourceHandler::getInst().loadTexture(L"Rupjump_2", L"/texture/smileBoss/Phase2/jump/RJumpUp.png");
+		auto Rdownjump_2 = ResourceHandler::getInst().loadTexture(L"Rdownjump_2", L"/texture/smileBoss/Phase2/jump/RJumpdown.png");
+
+
+
+
+		getAnimator()->createAnimation(L"Ljump_2", Ljump_2, Vec2{ 0.f, 0.f }, Vec2{ 500.f, 800.f }, Vec2{ 500.f, 0.f }, 0.05f, 8); //290.f 200.f
+		getAnimator()->createAnimation(L"Lupjump_2", Lupjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 4); //220.f 200.f
+		getAnimator()->createAnimation(L"Ldownjump_2", Ldownjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 5); //200.f 200.f
+	
+		getAnimator()->createAnimation(L"Rjump_2", Rjump_2, Vec2{ 0.f, 0.f }, Vec2{ 500.f, 800.f }, Vec2{ 500.f, 0.f }, 0.05f, 8); //290.f 200.f
+		getAnimator()->createAnimation(L"Rupjump_2", Rupjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 4); //220.f 200.f
+		getAnimator()->createAnimation(L"Rdownjump_2", Rdownjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 5); //220.f 200.f
+		
+	}
 
 
 
@@ -70,7 +85,7 @@ Boss::Boss() {
 
 void Boss::update() {
 	Time += Timer::getInst().getDT();
-	printf(" dir : %d\n", dir);
+
 	TimeCheck();
 	PhaseTurn();
 }
@@ -131,6 +146,41 @@ void Boss::PaturnUpdate() {
 		Time = {};
 		break;
 	case RAttack:
+		getAnimator()->play(L"RAttack");
+		Time = {};
+		break;
+
+
+	case LJump_2:
+		getAnimator()->play(L"Ljump_2");
+		Time = {};
+		break;
+	case LUpJump_2:
+		getAnimator()->play(L"Lupjump_2");
+		Time = {};
+		break;
+	case LDownJump_2:
+		getAnimator()->play(L"Ldownjump_2");
+		Time = {};
+		break;
+	case LAttack_2:
+		getAnimator()->play(L"LAttack");
+		Time = {};
+		break;
+
+	case RJump_2:
+		getAnimator()->play(L"Rjump_2");
+		Time = {};
+		break;
+	case RUpJump_2:
+		getAnimator()->play(L"Rupjump_2");
+		Time = {};
+		break;
+	case RDownJump_2:
+		getAnimator()->play(L"Rdownjump_2");
+		Time = {};
+		break;
+	case RAttack_2:
 		getAnimator()->play(L"RAttack");
 		Time = {};
 		break;
@@ -337,43 +387,45 @@ void Boss::TimeCheck() {
 	case Phase2: 
 
 	{
+		
 		const float jumpDuration = 0.45f; // 애니메이션 시간
-
 		//phase2
 		switch (Patturn) {
-		case LPhaseTurn:
-			if (Time >= 4.8f) { // 애니메이션 끝남
-				Patturn = LJump;
-				PaturnUpdate();
-			}
-			break;
+
 		case RPhaseTurn:
 			if (Time >= 4.8f) { // 애니메이션 끝남
-				Patturn = RJump;
+				Patturn = RJump_2;
 				PaturnUpdate();
 			}
 			break;
-		case LJump: // 점프 준비 동작
 
-			if (Time >= jumpDuration) { // 애니메이션 끝남
-				Patturn = LUpJump;
+		case LPhaseTurn:
+			if (Time >= 4.8f) { // 애니메이션 끝남
+				Patturn = LJump_2;
+				PaturnUpdate();
+			}
+			break;
+		case LJump_2: // 점프 준비 동작
+
+			if (Time >= 0.4f) { // 애니메이션 끝남
+				Patturn = LUpJump_2;
 				PaturnUpdate();
 			}
 			else {
 				jumpStartPos = getObjPos();
 			}
 			break;
-		case LUpJump: // 점프 올라가는 중	
+		case LUpJump_2: // 점프 올라가는 중	
 		{
 			Vec2 Pos1{};
 			Pos1.x = jumpStartPos.x - Time / jumpDuration / 2 * 400 * dir;
-			Pos1.y = jumpStartPos.y - sin(pie * Time / jumpDuration / 2) * 300;
+			Pos1.y = jumpStartPos.y - sin(pie * Time / jumpDuration / 2) * 500;
 
 			if (Pos1.x < 100.f || Pos1.x > 1180.f) {
 				jumpStartPos.x = Pos1.x;
 				dir *= -1;
 				count += 1;
-				getAnimator()->play(L"Rupjump");
+				getAnimator()->play(L"Rupjump_2");
 			}
 
 			setObjPos(Pos1);
@@ -383,11 +435,11 @@ void Boss::TimeCheck() {
 				jumpStartPos.x = Pos1.x;
 
 				if (dir == 1) {
-					Patturn = LDownJump;
+					Patturn = LDownJump_2;
 					PaturnUpdate();
 				}
 				else {
-					Patturn = RDownJump;
+					Patturn = RDownJump_2;
 					PaturnUpdate();
 				}
 
@@ -395,17 +447,17 @@ void Boss::TimeCheck() {
 		}
 		break;
 
-		case LDownJump: // 점프 내려가는 중
+		case LDownJump_2: // 점프 내려가는 중
 		{
 			Vec2 Pos2{};
 			Pos2.x = jumpStartPos.x - Time / jumpDuration / 2 * 400 * dir;
-			Pos2.y = jumpStartPos.y - cos(pie * Time / jumpDuration / 2) * 300;
+			Pos2.y = jumpStartPos.y - cos(pie * Time / jumpDuration / 2) * 500;
 
 			if (Pos2.x < 100.f || Pos2.x > 1180.f) {
 				jumpStartPos.x = Pos2.x;
 				dir *= -1;
 				count += 1;
-				getAnimator()->play(L"Rdownjump");
+				getAnimator()->play(L"Rdownjump_2");
 			}
 
 			setObjPos(Pos2);;
@@ -414,22 +466,22 @@ void Boss::TimeCheck() {
 				if (count == 3) {
 					count = 0;
 					if (dir == -1) {
-						Patturn = RAttack;
+						Patturn = RAttack_2;
 						PaturnUpdate();
 					}
 
 					else {
-						Patturn = LAttack;
+						Patturn = LAttack_2;
 						PaturnUpdate();
 					}
 				}
 				else {
 					if (dir == 1) {
-						Patturn = LJump;
+						Patturn = LJump_2;
 						PaturnUpdate();
 					}
 					else {
-						Patturn = RJump;
+						Patturn = RJump_2;
 						PaturnUpdate();
 					}
 
@@ -440,54 +492,54 @@ void Boss::TimeCheck() {
 		}
 		break;
 
-		case RJump: // 점프 준비 동작
-			if (Time >= jumpDuration) { // 애니메이션 끝남
-				Patturn = RUpJump;
+		case RJump_2: // 점프 준비 동작
+			if (Time >= 0.4f) { // 애니메이션 끝남
+				Patturn = RUpJump_2;
 				PaturnUpdate();
 			}
 			else {
 				jumpStartPos = getObjPos();
 			}
 			break;
-		case RUpJump: // 점프 올라가는 중
+		case RUpJump_2: // 점프 올라가는 중
 		{
 			Vec2 Pos1{};
 			Pos1.x = jumpStartPos.x - Time / jumpDuration / 2 * 400 * dir;
-			Pos1.y = jumpStartPos.y - sin(pie * Time / jumpDuration / 2) * 300;
+			Pos1.y = jumpStartPos.y - sin(pie * Time / jumpDuration / 2) * 500;
 
 			if (Pos1.x < 100.f || Pos1.x > 1180.f) {
 				jumpStartPos.x = Pos1.x;
 				dir *= -1;
 				count += 1;
-				getAnimator()->play(L"Lupjump");
+				getAnimator()->play(L"Lupjump_2");
 			}
 
 			setObjPos(Pos1);
 			if (Time >= jumpDuration) { // 애니메이션 끝남
 				jumpStartPos.x = Pos1.x;
 				if (dir == 1) {
-					Patturn = LDownJump;
+					Patturn = LDownJump_2;
 					PaturnUpdate();
 				}
 				else {
-					Patturn = RDownJump;
+					Patturn = RDownJump_2;
 					PaturnUpdate();
 				}
 			}
 		}
 		break;
 
-		case RDownJump: // 점프 내려가는 중
+		case RDownJump_2: // 점프 내려가는 중
 		{
 			Vec2 Pos2{};
 			Pos2.x = jumpStartPos.x - Time / jumpDuration / 2 * 400 * dir;
-			Pos2.y = jumpStartPos.y - cos(pie * Time / jumpDuration / 2) * 300;
+			Pos2.y = jumpStartPos.y - cos(pie * Time / jumpDuration / 2) * 500;
 
 			if (Pos2.x < 100.f || Pos2.x > 1180.f) {
 				jumpStartPos.x = Pos2.x;
 				dir *= -1;
 				count += 1;
-				getAnimator()->play(L"Ldownjump");
+				getAnimator()->play(L"Ldownjump_2");
 			}
 
 			setObjPos(Pos2);;
@@ -496,23 +548,23 @@ void Boss::TimeCheck() {
 				if (count == 3) {
 					count = 0;
 					if (dir == -1) {
-						Patturn = RAttack;
+						Patturn = RAttack_2;
 						PaturnUpdate();
 					}
 
 					else {
-						Patturn = LAttack;
+						Patturn = LAttack_2;
 						PaturnUpdate();
 					}
 				}
 				else {
 
 					if (dir == 1) {
-						Patturn = LJump;
+						Patturn = LJump_2;
 						PaturnUpdate();
 					}
 					else {
-						Patturn = RJump;
+						Patturn = RJump_2;
 						PaturnUpdate();
 					}
 				}
@@ -521,18 +573,18 @@ void Boss::TimeCheck() {
 		}
 		break;
 
-		case LAttack:
+		case LAttack_2:
 			if (Time >= 1.6f)
 			{
-				Patturn = LJump;
+				Patturn = LJump_2;
 				PaturnUpdate();
 			}
 			break;
 
-		case RAttack:
+		case RAttack_2:
 			if (Time >= 1.6f)
 			{
-				Patturn = RJump;
+				Patturn = RJump_2;
 				PaturnUpdate();
 			}
 			break;
@@ -553,7 +605,7 @@ void Boss::PhaseTurn() {// 여기서 Phase 조건 걸면 됨
 
 	if (KEY_TAP(InputData::P)) {
 		Phase = Phase2;
-		if (dir = -1) {
+		if (dir == -1) {
 			Vec2 x = getObjPos();
 			x.y = 500.f;
 			setObjPos(x);
