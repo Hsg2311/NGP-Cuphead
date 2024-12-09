@@ -17,9 +17,10 @@ public:
 	virtual Background* clone( ) override {
 		return new Background{ *this };
 	}
-
+	void setAlpha(BYTE alpha) { alpha_ = alpha; }
 private:
 	Texture* texture_;
+	BYTE alpha_{ 255 };
 };
 
 class BackgroundAnim : public Object {

@@ -140,7 +140,7 @@ void WorldScene::entry( ) {
 }
 
 
-void sendRegisterPacket( const char objectname[17], std::uint16_t id) {
+void WorldScene::sendRegisterPacket( const char objectname[17], std::uint16_t id) {
 	auto registerPacket = Packet{
 		.type = PacketType::REGISTER,
 		.rs = {

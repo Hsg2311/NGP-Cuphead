@@ -28,3 +28,7 @@ void Timer::update( ) {
 		deltaTime_ = ( 1. / 60. );
 #endif
 }
+
+void Timer::render()
+{
+}

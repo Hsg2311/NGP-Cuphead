@@ -16,8 +16,12 @@ void Background::render( HDC hdc ) {
 	auto srcWidth = texture_->getWidth( );
 	auto srcHeight = texture_->getHeight( );
 
-	texture_->draw( hdc, xDest, yDest, srcWidth, srcHeight,
-					0, 0, srcWidth, srcHeight );
+
+	//texture_->draw( hdc, xDest, yDest, srcWidth, srcHeight,
+	//				0, 0, srcWidth, srcHeight );
+
+	texture_->draw(hdc, xDest, yDest, srcWidth, srcHeight,
+		0, 0, srcWidth, srcHeight, alpha_);
 
 	componentRender( hdc );
 }
