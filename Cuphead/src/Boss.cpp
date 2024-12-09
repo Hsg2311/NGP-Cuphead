@@ -45,7 +45,7 @@ Boss::Boss() {
 		getAnimator()->createAnimation(L"Rupjump", Rupjump, Vec2{ 0.f, 0.f }, Vec2{ 220.f, 200.f }, Vec2{ 220.f, 0.f }, 0.05f, 3); //220.f 200.f
 		getAnimator()->createAnimation(L"Rdownjump", Rdownjump, Vec2{ 0.f, 0.f }, Vec2{ 200.f, 200.f }, Vec2{ 200.f, 0.f }, 0.05f, 3); //220.f 200.f
 		getAnimator()->createAnimation(L"RAttack", RAttack, Vec2{ 0.f, 0.f }, Vec2{ 1300.f, 700.f }, Vec2{ 1300.f, 0.f }, 0.1f, 16); //200.f 200.f
-		getAnimator()->createAnimation(L"RPhaseTurn", RPhaseTurn, Vec2{ 0.f, 0.f }, Vec2{ 600.f, 900.f }, Vec2{ 600.f, 0.f }, 0.1f, 48); //200.f 200.f
+		getAnimator()->createAnimation(L"RPhaseTurn", RPhaseTurn, Vec2{ 0.f, 0.f }, Vec2{ 600.f, 900.f }, Vec2{ 600.f, 0.f }, 0.07f, 48); //200.f 200.f
 
 	}
 	
@@ -54,13 +54,12 @@ Boss::Boss() {
 		auto Ljump_2 = ResourceHandler::getInst().loadTexture(L"Ljump_2", L"/texture/smileBoss/Phase2/jump/Ljump.png");
 		auto Lupjump_2 = ResourceHandler::getInst().loadTexture(L"Lupjump_2", L"/texture/smileBoss/Phase2/jump/LJumpUp.png");
 		auto Ldownjump_2 = ResourceHandler::getInst().loadTexture(L"Ldownjump_2", L"/texture/smileBoss/Phase2/jump/LJumpdown.png");
-
-
-
+		auto Lattack_2 = ResourceHandler::getInst().loadTexture(L"Lattack_2", L"/texture/smileBoss/Phase2/LAttack.png");
 
 		auto Rjump_2 = ResourceHandler::getInst().loadTexture(L"Rjump_2", L"/texture/smileBoss/Phase2/jump/Rjump.png");
 		auto Rupjump_2 = ResourceHandler::getInst().loadTexture(L"Rupjump_2", L"/texture/smileBoss/Phase2/jump/RJumpUp.png");
 		auto Rdownjump_2 = ResourceHandler::getInst().loadTexture(L"Rdownjump_2", L"/texture/smileBoss/Phase2/jump/RJumpdown.png");
+		auto Rattack_2 = ResourceHandler::getInst().loadTexture(L"Rattack_2", L"/texture/smileBoss/Phase2/RAttack.png");
 
 
 
@@ -68,10 +67,12 @@ Boss::Boss() {
 		getAnimator()->createAnimation(L"Ljump_2", Ljump_2, Vec2{ 0.f, 0.f }, Vec2{ 500.f, 800.f }, Vec2{ 500.f, 0.f }, 0.05f, 8); //290.f 200.f
 		getAnimator()->createAnimation(L"Lupjump_2", Lupjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 4); //220.f 200.f
 		getAnimator()->createAnimation(L"Ldownjump_2", Ldownjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 5); //200.f 200.f
+		getAnimator()->createAnimation(L"Lattack_2", Lattack_2, Vec2{ 0.f, 0.f }, Vec2{ 1280.f, 800.f }, Vec2{ 1280.f, 0.f }, 0.07f, 19); //200.f 200.f
 	
 		getAnimator()->createAnimation(L"Rjump_2", Rjump_2, Vec2{ 0.f, 0.f }, Vec2{ 500.f, 800.f }, Vec2{ 500.f, 0.f }, 0.05f, 8); //290.f 200.f
 		getAnimator()->createAnimation(L"Rupjump_2", Rupjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 4); //220.f 200.f
 		getAnimator()->createAnimation(L"Rdownjump_2", Rdownjump_2, Vec2{ 0.f, 0.f }, Vec2{ 400.f, 400.f }, Vec2{ 400.f, 0.f }, 0.05f, 5); //220.f 200.f
+		getAnimator()->createAnimation(L"Rattack_2", Rattack_2, Vec2{ 0.f, 0.f }, Vec2{ 1280.f, 800.f }, Vec2{ 1280.f, 0.f }, 0.07f, 19); //200.f 200.f
 		
 	}
 
@@ -164,7 +165,7 @@ void Boss::PaturnUpdate() {
 		Time = {};
 		break;
 	case LAttack_2:
-		getAnimator()->play(L"LAttack");
+		getAnimator()->play(L"Lattack_2");
 		Time = {};
 		break;
 
@@ -181,12 +182,12 @@ void Boss::PaturnUpdate() {
 		Time = {};
 		break;
 	case RAttack_2:
-		getAnimator()->play(L"RAttack");
+		getAnimator()->play(L"Rattack_2");
 		Time = {};
 		break;
 	}
 
-	//phase2
+
 
 }
 
@@ -574,7 +575,7 @@ void Boss::TimeCheck() {
 		break;
 
 		case LAttack_2:
-			if (Time >= 1.6f)
+			if (Time >= 1.33f)
 			{
 				Patturn = LJump_2;
 				PaturnUpdate();
@@ -582,7 +583,7 @@ void Boss::TimeCheck() {
 			break;
 
 		case RAttack_2:
-			if (Time >= 1.6f)
+			if (Time >= 1.33f)
 			{
 				Patturn = RJump_2;
 				PaturnUpdate();
