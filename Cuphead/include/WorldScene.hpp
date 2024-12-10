@@ -12,7 +12,6 @@ public:
 	virtual void entry( ) override;
 	virtual void exit( ) override { Scene::destroyObjGroupList( ); }
 
-	void sendRegisterPacket(const char objectname[17], std::uint16_t id);
 };
 
 #endif // WORLD_SCENE_HPP

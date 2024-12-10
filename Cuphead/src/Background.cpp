@@ -11,17 +11,19 @@ void Background::render( HDC hdc ) {
 	auto xDest = static_cast<int>( renderPos.x - Core::getInst( ).getResolution( ).x / 2.f );
 	auto yDest = static_cast<int>( renderPos.y - Core::getInst( ).getResolution( ).y / 2.f );
 
-	auto destWidth = Core::getInst( ).getResolution( ).x;
-	auto destHeight = Core::getInst( ).getResolution( ).y;
+	auto destWidth = static_cast<int>(Core::getInst( ).getResolution( ).x * Object::getObjScale().x);
+	auto destHeight = static_cast<int>(Core::getInst( ).getResolution( ).x * Object::getObjScale().x);
 	auto srcWidth = texture_->getWidth( );
 	auto srcHeight = texture_->getHeight( );
 
 
 	//texture_->draw( hdc, xDest, yDest, srcWidth, srcHeight,
-	//				0, 0, srcWidth, srcHeight );
+					//0, 0, srcWidth, srcHeight );
 
 	texture_->draw(hdc, xDest, yDest, srcWidth, srcHeight,
 		0, 0, srcWidth, srcHeight, alpha_);
+
+
 
 	componentRender( hdc );
 }

@@ -22,7 +22,7 @@ void WorldScene::entry( ) {
 		.sliceSize = Vec2( 52.f, 96.f ),
 		.duration = 0.11f,
 		.frameCount = 5,
-		} );
+		} ); 
 	info2.push_back( texInfo {
 		.resKey = L"Idle_Up",
 		.fileName = L"idle_up.png",
@@ -133,21 +133,9 @@ void WorldScene::entry( ) {
 	player->setObjName( L"Overworld Player" );
 	player->setObjPos( Vec2( 600.f, 800.f ) );
 	addObject( GROUP_TYPE::PLAYER, player );
-	sendRegisterPacket("Overworld Player", player->getNetworkId());
+	//sendRegisterPacket("Overworld Player", player->getNetworkId());
 
 
 	Camera::getInst( ).setTarget( player );
 }
 
-
-void WorldScene::sendRegisterPacket( const char objectname[17], std::uint16_t id) {
-	auto registerPacket = Packet{
-		.type = PacketType::REGISTER,
-		.rs = {
-			.className = objectname[17],
-			.id = id
-        }
-	};
-
-	SendingStorage::getInst().pushPacket(registerPacket);
-}
