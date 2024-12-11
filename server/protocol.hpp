@@ -14,6 +14,7 @@ enum class PacketType {
 	LOGIN_RESULT,
 	LEAVE,
 
+	REGISTER,
 	MOVE,
 	INPUT,
 };
@@ -34,8 +35,18 @@ struct LoginResultPacket {	// server -> client
 	bool result;
 };
 
-struct MovePacket {		// server -> client
-	std::uint8_t id;
+struct RegisterPacket {	// server -> client
+	std::uint16_t id;
+
+	/*
+	특정 타입
+	해당 타입을 초기화하는데 필요한 모든 인자
+	*/
+
+};
+
+struct MovePacket {	// server -> client
+	std::uint16_t id;
 	Direction dir;
 	Vec2 pos;
 };
