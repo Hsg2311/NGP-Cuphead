@@ -2,10 +2,13 @@
 #define PROTOCOL_HPP
 
 #include "struct.hpp"
+#include "define.hpp"
+
 #include <cstdint>
 
 constexpr short PORT = 9000;
 constexpr short BUFSIZE = 1024;
+static std::uint16_t sId = 0;
 
 enum class PacketType {
 	NONE,
@@ -15,6 +18,7 @@ enum class PacketType {
 	LEAVE,
 
 	REGISTER,
+	DESTROY,
 	MOVE,
 	INPUT,
 };
@@ -42,7 +46,8 @@ struct RegisterPacket {	// server -> client
 	특정 타입
 	해당 타입을 초기화하는데 필요한 모든 인자
 	*/
-
+	GROUP_TYPE groupType;
+	Vec2 pos;
 };
 
 struct MovePacket {	// server -> client
@@ -56,14 +61,30 @@ struct InputPacket {	// client -> server
 	bool left, right, up, down;
 };
 
+// Animation Remote Procedure Call
+struct AnimationRPC {	// server -> client
+	enum class Type {
+		IdleRight
+	};
+
+	std::uint16_t id;
+	Type anim;
+};
+
+struct DestroyPacket {	// server -> client
+	std::uint16_t id;
+};
+
 struct Packet {
 	PacketType type;
 
 	union /*PacketData*/ {
 		LoginPacket lg;
 		LoginResultPacket lr;
+		RegisterPacket rg;
 		MovePacket mv;
 		InputPacket in;
+		DestroyPacket ds;
 	};
 };
 
