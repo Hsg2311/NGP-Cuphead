@@ -12,11 +12,18 @@ void Timer::init( ) {
 	QueryPerformanceFrequency( &frequency_ );
 }
 
-void Timer::update( ) {
+void Timer::update( bool isNewFrame ) {
 	QueryPerformanceCounter( &currCount_ );
 
-	deltaTime_ = static_cast<double>( currCount_.QuadPart - prevCount_.QuadPart ) 
+	auto elapsed = static_cast<double>( currCount_.QuadPart - prevCount_.QuadPart ) 
 				/ static_cast<double>( frequency_.QuadPart );
+
+	if ( isNewFrame ) {
+		deltaTime_ = elapsed;
+	}
+	else {
+		deltaTime_ += elapsed;
+	}
 
 	prevCount_ = currCount_;
 
