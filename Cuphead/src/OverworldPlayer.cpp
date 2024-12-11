@@ -48,7 +48,7 @@ void OverworldPlayer::update( ) {
 	auto packet = Packet{
 		.type = PacketType::INPUT,
 		.in = {
-			.id = getNetworkId( ),
+			.id = getID( ).value( ),
 			.left = bLeft,
 			.right = bRight,
 			.up = bUp,

@@ -7,6 +7,7 @@
 #include "Camera.hpp"
 
 #include <string>
+#include <optional>
 
 struct texInfo {
 	std::wstring resKey;
@@ -17,11 +18,6 @@ struct texInfo {
 	Vec2 offset{ 0.f, 0.f };
 };
 
-inline std::uint16_t getNextId( ) {
-	static std::uint16_t id = 0;
-	return id++;
-}
-
 class Object {
 public:
 	Object( )
@@ -31,7 +27,7 @@ public:
 		, collider_{ nullptr }
 		, animator_{ nullptr }
 		, alive_{ true }
-		, networkId_{ getNextId( ) } {}
+		, networkId_{} {}
 
 	Object( const Object& other )
 		: objName_{ other.objName_ }
@@ -40,7 +36,7 @@ public:
 		, collider_{ nullptr }
 		, animator_{ nullptr }
 		, alive_{ true }
-		, networkId_( getNextId( ) ) {
+		, networkId_() {
 		createCollider( );
 		getCollider( )->setOffset( other.getCollider( )->getOffset( ) );
 		getCollider( )->setScale( other.getCollider( )->getScale( ) );
@@ -52,10 +48,10 @@ public:
 		: objName_{ std::move( other.objName_ ) }
 		, objPos_{ std::move( other.objPos_ ) }
 		, objScale_{ std::move( other.objScale_ ) }
-		, collider_{ other.collider_ }
-		, animator_{ other.animator_ }
-		, alive_{ true } 
-		, networkId_{ other.networkId_ } {
+		, collider_{ std::exchange( other.collider_, nullptr ) }
+		, animator_{ std::exchange( other.animator_, nullptr ) }
+		, alive_{ std::exchange( other.alive_, false ) }
+		, networkId_{ std::exchange(other.networkId_, std::nullopt) } {
 		other.collider_ = nullptr;
 		other.animator_ = nullptr;
 	}
@@ -72,6 +68,7 @@ public:
 	void setObjName( const std::wstring& objName ) { objName_ = objName; }
 	void setObjPos( const Vec2& objPos ) { objPos_ = objPos; }
 	void setObjScale( const Vec2& objScale ) { objScale_ = objScale; }
+	void setID( std::uint16_t id ) { networkId_ = id; }
 
 	const std::wstring& getObjName( ) const { return objName_; }
 	Vec2 getObjPos( ) const { return objPos_; }
@@ -82,7 +79,7 @@ public:
 
 	bool isAlive( ) const { return alive_; }
 
-	std::uint16_t getNetworkId( ) const { return networkId_; }
+	const std::optional<std::uint16_t>& getID( ) const { return networkId_; }
 
 public:
 	void createCollider( ) { collider_ = new Collider{ }; }
@@ -157,7 +154,7 @@ private:
 
 	bool alive_;
 
-	std::uint16_t networkId_;
+	std::optional<std::uint16_t> networkId_;
 	
 	friend class EventHandler;
 };
