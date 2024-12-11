@@ -6,9 +6,6 @@
 
 #include <queue>
 #include <mutex>
-#include <unordered_map>
-
-class Object;
 
 class LogPacketQueue {
 	SINGLETON( LogPacketQueue );

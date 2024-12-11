@@ -85,7 +85,7 @@ void ClickableUI::mouseLbtnClicked( ) {
 		if ( LogPacketQueue::getInst( ).loginState( ) == LogPacketQueue::LoginState::SUCCESS ) {
 			EventHandler::getInst( ).addEvent( Event{
 				.eventType = EVENT_TYPE::CHANGE_SCENE,
-				.wParam = static_cast<DWORD_PTR>( SCENE_TYPE::LOBBY_SCENE )
+				.wParam = static_cast<DWORD_PTR>( SCENE_TYPE::WORLD_SCENE )
 			} );
 		}
 	}
