@@ -8,7 +8,7 @@ class Timer {
 
 public:
 	void init( );
-	void update( );
+	void update(bool isNewFrame);
 	void render( );
 
 	float getFDT( ) const { return static_cast<float>( deltaTime_ ); }
