@@ -1,6 +1,11 @@
 #include "PacketQueue.hpp"
 #include "Timer.hpp"
 
+PacketQueue::PacketQueue( )
+	: packetQueue_( ), queueMtx_( ) {}
+
+PacketQueue::~PacketQueue( ) {}
+
 void PacketQueue::pushPacket( const Packet& packet ) {
 	std::lock_guard<std::mutex> lock( queueMtx_ );
 	packetQueue_.push( packet );
