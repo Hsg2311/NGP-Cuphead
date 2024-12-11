@@ -11,6 +11,8 @@ public:
 	virtual void update( ) override { Scene::update( ); }
 	virtual void entry( ) override;
 	virtual void exit( ) override { Scene::destroyObjGroupList( ); }
+
+	virtual void handlePacket( const Packet& packet ) override {}
 };
 
 #endif // LOBBYSCENE_HPP
