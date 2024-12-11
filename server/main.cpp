@@ -4,6 +4,8 @@
 #include "Timer.hpp"
 #include "PacketQueue.hpp"
 #include "LogPacketQueue.hpp"
+#include "SceneHandler.hpp"
+#include "EventHandler.hpp"
 
 #include <iostream>
 #include <thread>
@@ -55,6 +57,9 @@ int main( ) {
 		auto acceptThread = std::thread( acceptClient, std::ref( serverSock ) );
 		auto sendThread = std::thread( serverSend );
 
+		Timer::getInst( ).init( );
+		SceneHandler::getInst( ).init( );
+
 		static auto lastTp = Clock::now( );
 
 		// update
@@ -64,31 +69,21 @@ int main( ) {
 				break;
 			}
 
-			auto tp = Clock::now( );
-			auto elapsedTime = std::chrono::duration_cast<Seconds>( tp - lastTp );
+			Timer::getInst( ).update( true );
 
-			if ( elapsedTime < ( 1_s / 30.f ) ) {
-				continue;
-			}
-			else {
-				lastTp = tp;
+			static constexpr float contextSwitchTimeEndurance = 5.f / 1000.f;
+
+			if ( Timer::getInst( ).getFDT( ) < 1.f / 30.f - contextSwitchTimeEndurance ) {
+				std::this_thread::sleep_for( Seconds( 1.f / 30.f - contextSwitchTimeEndurance - Timer::getInst( ).getFDT( ) ) );
 			}
 
-			// 패킷을 이용해서 게임 상태 update
-			/*{
-				auto lock = std::lock_guard( packetQueueMtx );
-				while ( !logPacketQueue.empty( ) ) {
-					auto packet = logPacketQueue.front( );
-					logPacketQueue.pop( );
-
-					if ( packet.type == PacketType::LOGIN ) {
-						std::cout << "로그인 패킷: " << packet.mv.id << '\n';
-					}
-				}
-			}*/
+			Timer::getInst( ).update( false );
 
 			LogPacketQueue::getInst( ).dispatch( );
 			PacketQueue::getInst( ).dispatch( );
+
+			SceneHandler::getInst( ).update( );
+			EventHandler::getInst( ).update( );
 		}
 
 		sendThread.join( );
@@ -148,8 +143,10 @@ void serverSend( ) {
 		auto elapsedTime = std::chrono::duration_cast<Seconds>( tp - lastTp );
 		lastTp = tp;
 
-		if ( elapsedTime < ( 1_s / 30.f ) ) {
-			std::this_thread::sleep_for( ( 1_s / 30.f ) - elapsedTime );
+		static constexpr float contextSwitchTimeEndurance = 5.f / 1000.f;
+
+		if ( elapsedTime < Seconds( ( 1.f / 30.f ) - contextSwitchTimeEndurance ) ) {
+			std::this_thread::sleep_for( Seconds( ( 1.f / 30.f ) - elapsedTime.count( ) - contextSwitchTimeEndurance ) );
 		}
 
 		auto buffer = std::array<char, BUFSIZE>( );
