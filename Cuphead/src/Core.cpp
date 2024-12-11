@@ -9,6 +9,7 @@
 #include "protocol.hpp"
 #include "SendingStorage.hpp"
 #include "LogPacketQueue.hpp"
+#include "PacketQueue.hpp"
 
 #include <ranges>
 #include <algorithm>
@@ -24,11 +25,9 @@ inline constexpr Seconds operator""_s( unsigned long long _Val ) noexcept {
 
 std::atomic<bool> clientRun = true;
 std::atomic<bool> sentLeave = false;
-PacketQueue q;
 
 void clientSend( network::TcpSocket& serverSock );
 void clientRecv( network::TcpSocket& serverSock );
-void handleMovePacket( const Packet& packet );
 
 Core::Core( )
 	: hWnd_{ nullptr }
@@ -103,11 +102,19 @@ int Core::init( HWND hWnd, POINT resolution ) {
 
 void Core::progress( ) {
 	// Handler update
-	Timer::getInst( ).update( );
+	Timer::getInst( ).update(true);
 	InputDeviceHandler::getInst( ).update( );
 
+	static constexpr float contextSwitchTimeEndurance = 5.f / 1000.f;
+
+	if ( Timer::getInst().getFDT() < 1.f / 30.f - contextSwitchTimeEndurance ) {
+		std::this_thread::sleep_for( Seconds( 1.f / 30.f - contextSwitchTimeEndurance - Timer::getInst( ).getFDT( )) );
+	}
+
+	Timer::getInst( ).update(false);
+
 	LogPacketQueue::getInst( ).dispatch( );
-	q.dispatch( );
+	PacketQueue::getInst( ).dispatch( );
 	SceneHandler::getInst( ).update( );
 	CollisionHandler::getInst( ).update( );
 	Camera::getInst( ).update( );
@@ -153,8 +160,10 @@ void clientSend( network::TcpSocket& serverSock ) {
 		auto elapsedTime = std::chrono::duration_cast<Seconds>( tp - lastTp );
 		lastTp = tp;
 
-		if ( elapsedTime < ( 1_s / 30.f ) ) {
-			std::this_thread::sleep_for( ( 1_s / 30.f ) - elapsedTime );
+		static constexpr float contextSwitchTimeEndurance = 5.f / 1000.f;
+
+		if ( elapsedTime < Seconds( ( 1.f / 30.f ) - contextSwitchTimeEndurance ) ) {
+			std::this_thread::sleep_for( Seconds( ( 1.f / 30.f ) - elapsedTime.count() - contextSwitchTimeEndurance ) );
 		}
 
 		auto buffer = std::array<char, BUFSIZE>( );
@@ -208,68 +217,8 @@ void clientRecv( network::TcpSocket& serverSock ) {
 				LogPacketQueue::getInst( ).pushPacket( packet );
 			}
 			else {
-				q.pushPacket( packet );
+				PacketQueue::getInst( ).pushPacket( packet );
 			}
 		}
-	}
-}
-
-void PacketQueue::pushPacket( const Packet& packet ) {
-	std::lock_guard<std::mutex> lock( queueMtx_ );
-	packetQueue_.push( packet );
-}
-
-void PacketQueue::dispatch( ) {
-	while ( !packetQueue_.empty( ) ) {
-		std::lock_guard<std::mutex> lock( queueMtx_ );
-		Packet p = packetQueue_.front( );
-		packetQueue_.pop( );
-
-		switch ( p.type ) {
-		case PacketType::LOGIN:
-			//handleLoginPacket( p );
-			break;
-
-		case PacketType::MOVE:
-			handleMovePacket( p );
-			break;
-		}
-	}
-}
-
-void PacketQueue::addObject( Object* obj ) {
-	networkIdToObject[ obj->getNetworkId( ) ] = obj;
-	objectToNetworkId[ obj ] = obj->getNetworkId( );
-}
-
-void handleMovePacket( const Packet& packet ) {
-	auto obj = q.getObject( packet.mv.id );
-	obj->setObjPos( packet.mv.pos );
-	
-	switch ( packet.mv.dir ) {
-	case Direction::E:
-		obj->getAnimator( )->play( L"walk_right" );
-		break;
-	case Direction::W:
-		obj->getAnimator( )->play( L"walk_left" );
-		break;
-	case Direction::S:
-		obj->getAnimator( )->play( L"walk_down" );
-		break;
-	case Direction::N:
-		obj->getAnimator( )->play( L"walk_up" );
-		break;
-	case Direction::NE:
-		obj->getAnimator( )->play( L"walk_right_up" );
-		break;
-	case Direction::NW:
-		obj->getAnimator( )->play( L"walk_left_up" );
-		break;
-	case Direction::SE:
-		obj->getAnimator( )->play( L"walk_right_down" );
-		break;
-	case Direction::SW:
-		obj->getAnimator( )->play( L"walk_left_down" );
-		break;
 	}
 }
