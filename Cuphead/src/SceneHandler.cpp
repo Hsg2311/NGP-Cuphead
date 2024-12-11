@@ -1,6 +1,7 @@
 #include "SceneHandler.hpp"
 #include "MenuScene.hpp"
 #include "TitleScene.hpp"
+#include "LobbyScene.hpp"
 #include "WorldScene.hpp"
 
 SceneHandler::SceneHandler( )
@@ -22,6 +23,9 @@ void SceneHandler::init( ) {
 
 	sceneList_[ static_cast<UINT>( SCENE_TYPE::MENU_SCENE ) ] = new MenuScene( );
 	sceneList_[ static_cast<UINT>( SCENE_TYPE::MENU_SCENE ) ]->setSceneName( L"Menu Scene" );
+
+	sceneList_[ static_cast<UINT>( SCENE_TYPE::LOBBY_SCENE ) ] = new LobbyScene( );
+	sceneList_[ static_cast<UINT>( SCENE_TYPE::LOBBY_SCENE ) ]->setSceneName( L"Lobby Scene" );
 
 	sceneList_[ static_cast<UINT>( SCENE_TYPE::WORLD_SCENE ) ] = new WorldScene( );
 	sceneList_[ static_cast<UINT>( SCENE_TYPE::WORLD_SCENE ) ]->setSceneName( L"World Scene" );
