@@ -4,7 +4,7 @@
 #include "PacketQueue.hpp"
 
 void WorldScene::entry( ) {
-	auto background = new Background( L"World Background", L"overworld/world_map.png" );
+	auto background = new Background( L"World Background", L"overworld/world1_large_island_main_01.png" );
 	background->setObjName( L"World Main Island" );
 	background->setObjPos( Vec2( 640.f, 340.f ) );
 	addObject( GROUP_TYPE::BACKGROUND, background );

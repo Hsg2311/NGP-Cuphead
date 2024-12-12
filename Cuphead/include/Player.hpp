@@ -8,7 +8,7 @@ class Texture;
 
 class Player : public Object {
 public:
-	Player( );
+	Player(const std::vector<texInfo>& info);
 	virtual ~Player( );
 
 	virtual void update( ) override;
@@ -21,6 +21,13 @@ public:
 	virtual void onCollisionExit( Object* other ) override;
 
 	virtual Player* clone( ) override { return new Player{ *this }; }
+
+
+	void setInputEnabled(bool inputEnabled) { inputEnabled_ = inputEnabled; }
+
+private:
+	std::vector<Texture*> textures_;
+	bool inputEnabled_;
 };
 
 #endif // __PLAYER_HPP

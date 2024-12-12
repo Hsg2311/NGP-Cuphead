@@ -1,4 +1,3 @@
-#include "BossPlayer.h"
 #include "StagePlayer.h"
 
 void StagePlayer::update()

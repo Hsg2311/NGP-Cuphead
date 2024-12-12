@@ -25,8 +25,11 @@ enum class PacketType {
 	DESTROY,
 	MOVE,
 	INPUT,
+	ATTACK,
 	TRY_GAME_START,
-	TRY_GAME_START_RESULT
+	TRY_GAME_START_RESULT,
+
+	ANIMRPC
 };
 
 enum class Direction {
@@ -73,18 +76,51 @@ struct MovePacket {	// server -> client
 
 struct InputPacket {	// client -> server
 	std::uint16_t id;
-	bool left, right, up, down;
+	bool left, right, up, down, attack;
 };
 
 // Animation Remote Procedure Call
 struct AnimationRPC {	// server -> client
 	enum class Type {
-		IdleRight
+		IdleDown,
+		IdleLeft,
+		IdleLeftDown,
+		IdleLeftUp,
+		IdleRight,
+		IdleRightDown,
+		IdleRightUp,
+		IdleUp,
+		WalkDown,
+		WalkLeft,
+		WalkLeftDown,
+		WalkLeftUp,
+		WalkRight,
+		WalkRightDown,
+		WalkRightUp,
+		WalkUp,
+
+
+		// boss Anim
+		LJump,
+		LUpJump,
+		LDownJump,
+		LAttack,
+		RJump,
+		RUpJump,
+		RDownJump,
+		RAttack,
+
+		// Ingame Anim
+		Idle_Ingame,
+		LRun_Ingame,
+		RRun_Ingame,
+		Jump_Ingame,
 	};
 
 	std::uint16_t id;
 	Type anim;
 };
+
 
 struct DestroyPacket {	// server -> client
 	std::uint16_t id;
@@ -95,6 +131,12 @@ struct TryGameStartResultPacket {
 	bool result;
 };
 
+struct ProjectilePacket {
+	std::uint16_t projtId;
+	std::uint16_t id;
+	Direction dir;
+
+};
 
 struct Packet {
 	PacketType type;
@@ -107,6 +149,8 @@ struct Packet {
 		InputPacket in;
 		DestroyPacket ds;
 		TryGameStartResultPacket tg;
+		AnimationRPC ar;
+		ProjectilePacket pp;
 	};
 };
 

@@ -6,47 +6,70 @@
 #include "ResourceHandler.hpp"
 #include "Projectile.hpp"
 #include "func.hpp"
+#include "SendingStorage.hpp"
 
-Player::Player( ) {
-	createCollider( );
-	getCollider( )->setScale( Vec2{ 100.f, 100.f } );
+#include <ranges>
+#include <algorithm>
 
-	auto tex = ResourceHandler::getInst( ).loadTexture( L"Player_Texture", L"/texture/idle/cuphead_idle.png" );
-	createAnimator( );
-	getAnimator( )->createAnimation( L"Player_Idle", tex, Vec2{ 0.f, 0.f },
-									Vec2{ 100.f, 155.f }, Vec2{ 100.f, 0.f }, 0.065f, 9 );
-	getAnimator( )->play( L"Player_Idle" );
+
+Player::Player(const std::vector<texInfo>& info) : Object(), inputEnabled_(false) {
+	createAnimator();
+
+
+
+	getAnimator()->play(info.front().resKey);
+
+	createCollider();
+	getCollider()->setScale(Vec2{ 100.f, 100.f });
 }
+
 
 Player::~Player( ) {}
 
-void Player::update( ) {
-	Vec2 objPos = getObjPos( );
-
-	if ( KEY_HOLD( InputData::LEFT ) ) {
-		objPos.x -= 200.f * fDT;
-	}
-	if ( KEY_HOLD( InputData::RIGHT ) ) {
-		objPos.x += 200.f * fDT;
-	}
-	if ( KEY_HOLD( InputData::UP) ) {
-		objPos.y -= 200.f * fDT;
-	}
-	if ( KEY_HOLD( InputData::DOWN) ) {
-		objPos.y += 200.f * fDT;
-	}
-	if ( KEY_TAP( InputData::Z ) ) {
-		createProjectile( );
+void Player::update() {
+	if (!inputEnabled_) {
+		return;
 	}
 
-	setObjPos( objPos );
+	bool bUp = false;
+	bool bDown = false;
+	bool bLeft = false;
+	bool bRight = false;
+	bool bAttack = false;
+
+
+	if (KEY_HOLD(InputData::LEFT)) {
+		bLeft = true;
+	}
+	if (KEY_HOLD(InputData::RIGHT)) {
+		bRight = true;
+	}
+	if (KEY_HOLD(InputData::Z)) {
+		bAttack = true;
+	}
+
+	auto packet = Packet{
+		.type = PacketType::INPUT,
+		.in = {
+			.id = getID().value(),
+			.left = bLeft,
+			.right = bRight,
+			.up = bUp,
+			.down = bDown,
+			.attack = bAttack
+		}
+	};
+
+	if (bUp || bDown || bRight || bLeft|| bAttack) {
+		SendingStorage::getInst().pushPacket(packet);
+	}
 }
 
 void Player::render( HDC hdc ) {
 	componentRender( hdc );
 }
 
-void Player::createProjectile( ) {
+void Player::createProjectile(Vec2 dir ) {
 	auto playerPos = getObjPos( );
 	playerPos.y -= getObjScale( ).y / 2.f;
 
