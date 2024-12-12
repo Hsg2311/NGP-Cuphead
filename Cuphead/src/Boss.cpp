@@ -76,6 +76,18 @@ Boss::Boss() {
 		
 	}
 
+	// phase3
+	{
+		auto Intro_3 = ResourceHandler::getInst().loadTexture(L"Intro_3", L"/texture/smileBoss/Phase3/Intro_3.png");
+		auto LeftMove = ResourceHandler::getInst().loadTexture(L"LeftMove", L"/texture/smileBoss/Phase3/LeftMove.png");
+		auto RightMove = ResourceHandler::getInst().loadTexture(L"RightMove", L"/texture/smileBoss/Phase3/RightMove.png");
+		auto Attack = ResourceHandler::getInst().loadTexture(L"Attack", L"/texture/smileBoss/Phase3/Attack.png");
+
+		getAnimator()->createAnimation(L"Intro_3", Intro_3, Vec2{ 0.f, 0.f }, Vec2{ 600.f, 700.f }, Vec2{ 600.f, 0.f }, 0.07f, 8);
+		getAnimator()->createAnimation(L"LeftMove", LeftMove, Vec2{ 0.f, 0.f }, Vec2{ 600.f, 700.f }, Vec2{ 600.f, 0.f }, 0.05f, 8);
+		getAnimator()->createAnimation(L"RightMove", RightMove, Vec2{ 0.f, 0.f }, Vec2{ 600.f, 700.f }, Vec2{ 600.f, 0.f }, 0.05f, 8);
+		getAnimator()->createAnimation(L"Attack", Attack, Vec2{ 0.f, 0.f }, Vec2{ 1000.f, 1000.f }, Vec2{ 1000.f, 0.f }, 0.05f, 14);
+	}
 
 
 
@@ -183,6 +195,27 @@ void Boss::PaturnUpdate() {
 		break;
 	case RAttack_2:
 		getAnimator()->play(L"Rattack_2");
+		Time = {};
+		break;
+
+
+	case Intro_3:
+		getAnimator()->play(L"Intro_3");
+		Time = {};
+		break;
+
+	case LeftMove:
+		getAnimator()->play(L"LeftMove");
+		Time = {};
+		break;
+
+	case RightMove:
+		getAnimator()->play(L"RightMove");
+		Time = {};
+		break;
+
+	case Attack:
+		getAnimator()->play(L"Attack");
 		Time = {};
 		break;
 	}
@@ -388,7 +421,6 @@ void Boss::TimeCheck() {
 	case Phase2: 
 
 	{
-		
 		const float jumpDuration = 0.45f; // 애니메이션 시간
 		//phase2
 		switch (Patturn) {
@@ -594,7 +626,90 @@ void Boss::TimeCheck() {
 		break;
 	case Phase3: 
 	{
+		switch (Patturn) {
+		case Intro_3:
+			if (Time >= 0.56f) { // 애니메이션 끝남
+				if (dir == 1) {
+					Patturn = LeftMove;
+					PaturnUpdate();
+				}
+				else {
+					Patturn = RightMove;
+					PaturnUpdate();
+				}
+			}
+			break;
+		case LeftMove:
 
+		{
+			Vec2 Pos2 = getObjPos();
+			Pos2.x = jumpStartPos.x - Time / 2 * 800 * dir;
+
+			if (Pos2.x < 200.f || Pos2.x > 1080.f) {
+				jumpStartPos.x = Pos2.x;
+				dir *= -1;
+				count += 1;
+			}
+
+			setObjPos(Pos2);
+
+			if (count != 3) {
+				if (dir == -1) {
+					Patturn = RightMove;
+					PaturnUpdate();
+				}
+				
+			}
+			else {
+				Patturn = Attack;
+				PaturnUpdate();
+				count = 0;
+			}
+		}
+			break;
+
+		case RightMove:
+		{
+			Vec2 Pos2 = getObjPos();
+			Pos2.x = jumpStartPos.x - Time / 2 * 800 * dir;
+
+			if (Pos2.x < 200.f || Pos2.x > 1080.f) {
+				jumpStartPos.x = Pos2.x;
+				dir *= -1;
+				count += 1;
+			}
+
+			setObjPos(Pos2);
+
+			if (count != 3) {
+				if (dir == 1) {
+					Patturn = LeftMove;
+					PaturnUpdate();
+				}
+
+			}
+			else {
+				Patturn = Attack;
+				PaturnUpdate();
+				count = 0;
+			}
+		}
+			
+			break;
+
+		case Attack:
+			if (Time >= 0.7f) { // 애니메이션 끝남
+				if (dir == 1) {
+					Patturn = LeftMove;
+					PaturnUpdate();
+				}
+				else {
+					Patturn = RightMove;
+					PaturnUpdate();
+				}
+			}
+			break;
+		}
 	}
 		break;
 	}
@@ -622,4 +737,24 @@ void Boss::PhaseTurn() {// 여기서 Phase 조건 걸면 됨
 		}
 
 	}
+
+	if (KEY_TAP(InputData::O)) {
+		Phase = Phase3;
+		if (dir == -1) {
+			Vec2 x = getObjPos();
+			x.y = 400.f;
+			setObjPos(x);
+			Patturn = LeftMove;
+			PaturnUpdate();
+		}
+		else {
+			Vec2 x = getObjPos();
+			x.y = 400.f;
+			setObjPos(x);
+			Patturn = RightMove;
+			PaturnUpdate();
+		}
+
+	}
+
 }
