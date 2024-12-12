@@ -18,6 +18,7 @@ private:
 	void handleRegisterPacket( const Packet& packet );
 	void handleDestroyPacket( const Packet& packet );
 	void handleMovePacket( const Packet& packet );
+	void handleAnimationRPCPacket(const Packet& packet);
 };
 
 #endif // WORLD_SCENE_HPP

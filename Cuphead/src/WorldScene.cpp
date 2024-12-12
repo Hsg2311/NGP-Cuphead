@@ -205,3 +205,70 @@ void WorldScene::handleMovePacket( const Packet& packet ) {
 		break;
 	}
 }
+
+void WorldScene::handleAnimationRPCPacket(const Packet& packet)
+{
+	auto obj = PacketQueue::getInst().getObject(packet.ar.id);
+
+	switch (packet.ar.anim)
+	{
+	case AnimationRPC::Type::IdleDown:
+		obj->getAnimator()->play(L"idle_down");
+		break;
+
+	case AnimationRPC::Type::IdleLeft:
+		obj->getAnimator()->play(L"idle_left");
+		break;
+
+	case AnimationRPC::Type::IdleLeftDown:
+		obj->getAnimator()->play(L"idle_left_down");
+		break;
+
+	case AnimationRPC::Type::IdleLeftUp:
+		obj->getAnimator()->play(L"idle_left_up");
+		break;
+
+	case AnimationRPC::Type::IdleRight:
+		obj->getAnimator()->play(L"idle_right");
+		break;
+
+	case AnimationRPC::Type::IdleRightDown:
+		obj->getAnimator()->play(L"idle_right_down");
+		break;
+
+	case AnimationRPC::Type::IdleRightUp:
+		obj->getAnimator()->play(L"idle_right_up");
+		break;
+
+	case AnimationRPC::Type::IdleUp:
+		obj->getAnimator()->play(L"idle_up");
+		break;
+
+	case AnimationRPC::Type::WalkDown:
+		obj->getAnimator()->play(L"walk_down");
+		break;
+	case AnimationRPC::Type::WalkLeft:
+		obj->getAnimator()->play(L"walk_left");
+		break;
+	case AnimationRPC::Type::WalkLeftDown:
+		obj->getAnimator()->play(L"walk_left_down");
+		break;
+	case AnimationRPC::Type::WalkLeftUp:
+		obj->getAnimator()->play(L"walk_left_up");
+		break;
+	case AnimationRPC::Type::WalkRight:
+		obj->getAnimator()->play(L"walk_right");
+		break;
+	case AnimationRPC::Type::WalkRightDown:
+		obj->getAnimator()->play(L"walk_right_down");
+		break;
+	case AnimationRPC::Type::WalkRightUp:
+		obj->getAnimator()->play(L"walk_right_up");
+		break;
+	case AnimationRPC::Type::WalkUp:
+		obj->getAnimator()->play(L"walk_up");
+		break;
+	default:
+		break;
+	}
+}

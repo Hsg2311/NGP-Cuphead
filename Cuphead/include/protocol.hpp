@@ -79,7 +79,22 @@ struct InputPacket {	// client -> server
 // Animation Remote Procedure Call
 struct AnimationRPC {	// server -> client
 	enum class Type {
-		IdleRight
+		IdleDown,
+		IdleLeft,
+		IdleLeftDown,
+		IdleLeftUp,
+		IdleRight,
+		IdleRightDown,
+		IdleRightUp,
+		IdleUp,
+		WalkDown,
+		WalkLeft,
+		WalkLeftDown,
+		WalkLeftUp,
+		WalkRight,
+		WalkRightDown,
+		WalkRightUp,
+		WalkUp,
 	};
 
 	std::uint16_t id;
@@ -107,6 +122,7 @@ struct Packet {
 		InputPacket in;
 		DestroyPacket ds;
 		TryGameStartResultPacket tg;
+		AnimationRPC ar;
 	};
 };
 
