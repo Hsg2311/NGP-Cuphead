@@ -6,6 +6,8 @@
 #include "LogPacketQueue.hpp"
 #include "SceneHandler.hpp"
 #include "EventHandler.hpp"
+#include "PathHandler.hpp"
+#include "ResourceHandler.hpp"
 
 #include <iostream>
 #include <thread>
@@ -17,6 +19,8 @@
 
 #include <ranges>
 #include <algorithm>
+
+#include <atlimage.h>
 
 using Clock = std::chrono::high_resolution_clock;
 using Seconds = std::chrono::duration<float>;
@@ -59,6 +63,7 @@ int main( ) {
 
 		Timer::getInst( ).init( );
 		SceneHandler::getInst( ).init( );
+		PathHandler::getInst( ).init( );
 
 		static auto lastTp = Clock::now( );
 

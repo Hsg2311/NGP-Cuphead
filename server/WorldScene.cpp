@@ -120,6 +120,31 @@ void WorldScene::handleInputPacket( const Packet& packet ) {
 		dir = Direction::SE;
 	}
 
+	if ( auto player = dynamic_cast<OverworldPlayer*>( obj ) ) {
+		// offset: (1160.f, 815.f)
+		const auto pixel = tex_->getPixel( 
+			std::clamp( static_cast<int>( objPos.x ) - 1160 + 640, 0, tex_->getWidth( ) - 1 ),
+			std::clamp( static_cast<int>( objPos.y ) + player->getImageHeight( ) / 2 - 815 + 340, 0, tex_->getHeight( ) - 1 )
+		);
+		
+		auto CollisionColor = RGB( 230, 17, 36 );
+
+		/*auto CollisionColor = ( (COLORREF)(
+			( (BYTE)( 230 )
+			| ( (WORD)( (BYTE)( 17 ) ) << 8 ) )
+			| ( ( (DWORD)(BYTE)( 36 ) ) << 16 ) )
+			| ( ( (DWORD)(BYTE)( 255 ) ) << 24 )
+		);*/
+
+		/*if ( pixel == CollisionColor ) {
+			return;
+		}*/
+
+		if ( pixel != 10288044 ) {
+			return;
+		}
+	}
+
 	obj->setObjPos( objPos );
 
 	SendingStorage::getInst( ).pushPacket( Packet{
