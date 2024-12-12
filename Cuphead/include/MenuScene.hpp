@@ -8,11 +8,14 @@ public:
 	MenuScene( ) {}
 	virtual ~MenuScene( ) {}
 
-	virtual void update( ) override;
+	virtual void update( ) override { Scene::update( ); }
 	virtual void entry( ) override;
-	virtual void exit( ) override;
+	virtual void exit( ) override { Scene::destroyObjGroupList( ); }
 
-	virtual void handlePacket( const Packet& packet ) override {}
+	virtual void handlePacket( const Packet& packet ) override;
+
+private:
+	void handleLoginResultPacket( const Packet& packet );
 };
 
 #endif // MENU_SCENE_HPP

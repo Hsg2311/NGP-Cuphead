@@ -1,4 +1,5 @@
 #include "LogPacketQueue.hpp"
+#include "SceneHandler.hpp"
 
 LogPacketQueue::LogPacketQueue( )
 	: logPacketQueue_( ), queueMtx_( ), loginState_( LoginState::NONE ) {}
@@ -16,10 +17,6 @@ void LogPacketQueue::dispatch( ) {
 		Packet p = logPacketQueue_.front( );
 		logPacketQueue_.pop( );
 
-		switch ( p.type ) {
-		case PacketType::LOGIN_RESULT:
-			loginState_ = p.lr.result ? LoginState::SUCCESS : LoginState::FAIL;
-			break;
-		}
+		SceneHandler::getInst( ).getCurrScene( )->handlePacket( p );
 	}
 }
