@@ -40,3 +40,36 @@ BackgroundAnim::BackgroundAnim( const std::wstring& resKey, const std::wstring& 
 void BackgroundAnim::render( HDC hdc ) {
 	componentRender( hdc );
 }
+
+BackgroundCharacter::BackgroundCharacter( const std::wstring& resKey, const std::wstring& fileName, bool isCuphead )
+	: texture_( ResourceHandler::getInst( ).loadTexture( resKey, std::wstring( L"/texture/background/" + fileName ) ) )
+	, imCuphead_( isCuphead ) {}
+
+void BackgroundCharacter::render( HDC hdc ) {
+	auto objPos = getObjPos( );
+	auto xDest = static_cast<int>( objPos.x - texture_->getWidth( ) / 2.f );
+	auto yDest = static_cast<int>( objPos.y - texture_->getHeight( ) / 2.f );
+
+	if ( imCuphead_ ) {
+		if ( gCupheadLogin ) {
+			texture_->draw( hdc, xDest, yDest, texture_->getWidth( ), texture_->getHeight( ),
+				0, 0, texture_->getWidth( ), texture_->getHeight( ), 255 );
+		}
+		else {
+			texture_->draw( hdc, xDest, yDest, texture_->getWidth( ), texture_->getHeight( ),
+				0, 0, texture_->getWidth( ), texture_->getHeight( ), 100 );
+		}
+	}
+	else {
+		if ( gMugmanLogin ) {
+			texture_->draw( hdc, xDest, yDest, texture_->getWidth( ), texture_->getHeight( ),
+				0, 0, texture_->getWidth( ), texture_->getHeight( ), 255 );
+		}
+		else {
+			texture_->draw( hdc, xDest, yDest, texture_->getWidth( ), texture_->getHeight( ),
+				0, 0, texture_->getWidth( ), texture_->getHeight( ), 100 );
+		}
+	}
+
+	componentRender( hdc );
+}
