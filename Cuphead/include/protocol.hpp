@@ -2,10 +2,17 @@
 #define PROTOCOL_HPP
 
 #include "struct.hpp"
+#include "define.hpp"
+
 #include <cstdint>
 
 constexpr short PORT = 9000;
 constexpr short BUFSIZE = 1024;
+
+extern bool gCupheadLogin;
+extern bool gMugmanLogin;
+
+extern bool gImCuphead;
 
 enum class PacketType {
 	NONE,
@@ -15,9 +22,11 @@ enum class PacketType {
 	LEAVE,
 
 	REGISTER,
-
+	DESTROY,
 	MOVE,
 	INPUT,
+	TRY_GAME_START,
+	TRY_GAME_START_RESULT
 };
 
 enum class Direction {
@@ -27,18 +36,6 @@ enum class Direction {
 	NE, NW, SE, SW,
 };
 
-enum class MapManage {
-	REMOVE,
-	ADD
-};
-
-
-enum class ObjectName {
-	OverworldPlayer,
-	BossPlayer,
-	Boss
-};
-
 struct LoginPacket {	// client -> server
 	char id[16];
 	char pw[16];
@@ -46,10 +43,30 @@ struct LoginPacket {	// client -> server
 
 struct LoginResultPacket {	// server -> client
 	bool result;
+	bool cupheadLogin;
+	bool mugmanLogin;
+
+	enum class Type {
+		None,
+		Cuphead,
+		Mugman
+	};
+	Type who;
 };
 
-struct MovePacket {		// server -> client
-	std::uint8_t id;
+struct RegisterPacket {	// server -> client
+	std::uint16_t id;
+
+	/*
+	특정 타입
+	해당 타입을 초기화하는데 필요한 모든 인자
+	*/
+	GROUP_TYPE groupType;
+	Vec2 pos;
+};
+
+struct MovePacket {	// server -> client
+	std::uint16_t id;
 	Direction dir;
 	Vec2 pos;
 };
@@ -59,11 +76,57 @@ struct InputPacket {	// client -> server
 	bool left, right, up, down;
 };
 
-struct RegisterPacket {
-	ObjectName objectname;
-	MapManage state;
+// Animation Remote Procedure Call
+struct AnimationRPC {	// server -> client
+	enum class Type {
+		IdleDown,
+		IdleLeft,
+		IdleLeftDown,
+		IdleLeftUp,
+		IdleRight,
+		IdleRightDown,
+		IdleRightUp,
+		IdleUp,
+		WalkDown,
+		WalkLeft,
+		WalkLeftDown,
+		WalkLeftUp,
+		WalkRight,
+		WalkRightDown,
+		WalkRightUp,
+		WalkUp,
+
+
+		// boss Anim
+		LJump,
+		LUpJump,
+		LDownJump,
+		LAttack,
+		RJump,
+		RUpJump,
+		RDownJump,
+		RAttack,
+
+		// Ingame Anim
+		Idle_Ingame,
+		LRun_Ingame,
+		RRun_Ingame,
+		Jump_Ingame,
+	};
+
+	std::uint16_t id;
+	Type anim;
+};
+
+struct DestroyPacket {	// server -> client
 	std::uint16_t id;
 };
+
+// struct TryGameStartPacket {};
+struct TryGameStartResultPacket {
+	bool result;
+};
+
 
 struct Packet {
 	PacketType type;
@@ -71,9 +134,12 @@ struct Packet {
 	union /*PacketData*/ {
 		LoginPacket lg;
 		LoginResultPacket lr;
+		RegisterPacket rg;
 		MovePacket mv;
 		InputPacket in;
-		RegisterPacket rs;
+		DestroyPacket ds;
+		TryGameStartResultPacket tg;
+		AnimationRPC ar;
 	};
 };
 

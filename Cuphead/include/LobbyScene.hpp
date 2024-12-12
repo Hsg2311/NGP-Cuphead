@@ -1,12 +1,12 @@
-#ifndef MENU_SCENE_HPP
-#define MENU_SCENE_HPP
+#ifndef LOBBYSCENE_HPP
+#define LOBBYSCENE_HPP
 
 #include "Scene.hpp"
 
-class MenuScene : public Scene {
+class LobbyScene : public Scene {
 public:
-	MenuScene( ) {}
-	virtual ~MenuScene( ) {}
+	LobbyScene( ) {}
+	virtual ~LobbyScene( ) {}
 
 	virtual void update( ) override { Scene::update( ); }
 	virtual void entry( ) override;
@@ -16,6 +16,7 @@ public:
 
 private:
 	void handleLoginResultPacket( const Packet& packet );
+	void handleTryGameStartResultPacket( const Packet& packet );
 };
 
-#endif // MENU_SCENE_HPP
+#endif // LOBBYSCENE_HPP

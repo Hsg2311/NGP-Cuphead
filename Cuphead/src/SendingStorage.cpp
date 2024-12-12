@@ -1,4 +1,3 @@
-
 #include "SendingStorage.hpp"
 
 #include <algorithm>
@@ -32,5 +31,3 @@ void SendingStorage::flush( char* destBuffer, std::uint16_t& bufferSize ) {
 	buffer_.fill( 0 );
 	bufferSize_ = 0;
 }
-
-

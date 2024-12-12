@@ -1,49 +1,74 @@
+
 #include "Player.hpp"
-#include "struct.hpp"
-#include "Timer.hpp"
-#include "InputDeviceHandler.hpp"
-#include "Texture.hpp"
 #include "ResourceHandler.hpp"
+#include "Camera.hpp"
+#include "InputDeviceHandler.hpp"
+#include "Timer.hpp"
+#include "protocol.hpp"
+#include "SendingStorage.hpp"
+
 #include "Projectile.hpp"
-#include "func.hpp"
+#include <ranges>
+#include <algorithm>
 
-Player::Player( ) {
-	createCollider( );
-	getCollider( )->setScale( Vec2{ 100.f, 100.f } );
+Player::Player(const std::vector<texInfo>& info): Object(), inputEnabled_(false) {
+	createAnimator();
 
-	auto tex = ResourceHandler::getInst( ).loadTexture( L"Player_Texture", L"/texture/idle/cuphead_idle.png" );
-	createAnimator( );
-	getAnimator( )->createAnimation( L"Player_Idle", tex, Vec2{ 0.f, 0.f },
-									Vec2{ 100.f, 155.f }, Vec2{ 100.f, 0.f }, 0.065f, 9 );
-	getAnimator( )->play( L"Player_Idle" );
+	
+
+	getAnimator()->play(info.front().resKey);
+
+	createCollider();
+	getCollider()->setScale(Vec2{ 100.f, 100.f });
 }
 
-Player::~Player( ) {}
-
-void Player::update( ) {
-	Vec2 objPos = getObjPos( );
-
-	if ( KEY_HOLD( InputData::LEFT ) ) {
-		objPos.x -= 200.f * fDT;
-	}
-	if ( KEY_HOLD( InputData::RIGHT ) ) {
-		objPos.x += 200.f * fDT;
-	}
-	if ( KEY_HOLD( InputData::UP) ) {
-		objPos.y -= 200.f * fDT;
-	}
-	if ( KEY_HOLD( InputData::DOWN) ) {
-		objPos.y += 200.f * fDT;
-	}
-	if ( KEY_TAP( InputData::Z ) ) {
-		createProjectile( );
+void Player::update() {
+	if (!inputEnabled_) {
+		return;
 	}
 
-	setObjPos( objPos );
+	bool bUp = false;
+	bool bDown = false;
+	bool bLeft = false;
+	bool bRight = false;
+
+
+	if (KEY_HOLD(InputData::LEFT)) {
+		bLeft = true;
+	}
+	if (KEY_HOLD(InputData::RIGHT)) {
+		bRight = true;
+	}
+
+	auto packet = Packet{
+		.type = PacketType::INPUT,
+		.in = {
+			.id = getID().value(),
+			.left = bLeft,
+			.right = bRight,
+			.up = bUp,
+			.down = bDown,
+		}
+	};
+
+	if (bUp || bDown || bRight || bLeft) {
+		SendingStorage::getInst().pushPacket(packet);
+	}
 }
 
-void Player::render( HDC hdc ) {
-	componentRender( hdc );
+void Player::render(HDC hdc) {
+	componentRender(hdc);
+}
+
+void Player::onCollision(Object* other) {
+}
+
+void Player::onCollisionEntry(Object* other) {
+	getCollider()->addCollisionCount();
+}
+
+void Player::onCollisionExit(Object* other) {
+	getCollider()->subCollisionCount();
 }
 
 void Player::createProjectile( ) {
@@ -59,13 +84,3 @@ void Player::createProjectile( ) {
 	createObject( GROUP_TYPE::PLAYER_PROJECTILE, projectile );
 };
 
-void Player::onCollision( Object* other ) {
-}
-
-void Player::onCollisionEntry( Object* other ) {
-	getCollider( )->addCollisionCount( );
-}
-
-void Player::onCollisionExit( Object* other ) {
-	getCollider( )->subCollisionCount( );
-}

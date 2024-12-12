@@ -1,18 +1,14 @@
-#ifndef __PLAYER_HPP
-#define __PLAYER_HPP
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
 #include "Object.hpp"
-#include "Texture.hpp"
 
 class Player : public Object {
 public:
-	Player(const std::vector<texInfo>& info);
+	Player();
 	virtual ~Player() {}
 
 	virtual void update() override;
-	virtual void render(HDC hdc) override;
-
-	void createProjectile();
 
 	virtual void onCollision(Object* other) override;
 	virtual void onCollisionEntry(Object* other) override;
@@ -21,12 +17,6 @@ public:
 	virtual Player* clone() override {
 		return new Player(*this);
 	}
-
-	void setInputEnabled(bool inputEnabled) { inputEnabled_ = inputEnabled; }
-
-private:
-	std::vector<Texture*> textures_;
-	bool inputEnabled_;
 };
 
-#endif // __PLAYER_HPP
+#endif // OVERWORLD_PLAYER_HPP

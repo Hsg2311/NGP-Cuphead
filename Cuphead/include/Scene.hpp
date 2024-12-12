@@ -26,6 +26,8 @@ public:
 	void componentUpdate( );
 	void render( HDC hdc );
 
+	virtual void handlePacket( const Packet& packet ) = 0;
+
 public:
 	virtual void entry( ) = 0;
 	virtual void exit( ) = 0;

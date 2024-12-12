@@ -9,13 +9,13 @@
 #include <ranges>
 #include <algorithm>
 
-OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info ) {
+OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info )
+	: Object(), inputEnabled_(false) {
 	createAnimator( );
 
 	std::ranges::for_each( info, [this]( const texInfo& elem ) {
 		auto tex = ResourceHandler::getInst( ).loadTexture( elem.resKey, std::wstring( L"/texture/idle/overworld/" + elem.fileName ) );
 		textures_.push_back( tex );
-
 
 		getAnimator( )->createAnimation( elem.resKey, tex, Vec2( 0.f, 0.f ),
 			elem.sliceSize, Vec2( elem.sliceSize.x, 0.f ), elem.duration, elem.frameCount, elem.offset );
@@ -28,6 +28,10 @@ OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info ) {
 }
 
 void OverworldPlayer::update( ) {
+	if ( !inputEnabled_ ) {
+		return;
+	}
+
 	bool bUp = false;
 	bool bDown = false;
 	bool bLeft = false;
@@ -49,7 +53,7 @@ void OverworldPlayer::update( ) {
 	auto packet = Packet{
 		.type = PacketType::INPUT,
 		.in = {
-			.id = getNetworkId( ),
+			.id = getID( ).value( ),
 			.left = bLeft,
 			.right = bRight,
 			.up = bUp,

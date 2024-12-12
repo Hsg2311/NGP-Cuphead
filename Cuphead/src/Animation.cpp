@@ -6,15 +6,10 @@
 void Animation::update( ) {
 	accTime_ += fDT;
 
-	if ( accTime_ >= animFrames_[ currFrame_ ].duration ) {
+	while ( accTime_ >= animFrames_[ currFrame_ ].duration ) {
 		accTime_ -= animFrames_[ currFrame_++ ].duration;
 		currFrame_ %= animFrames_.size( );
-		if (currFrame_ == 0) {
-			
-		}
 	}
-
-	
 }
 
 void Animation::render( HDC hdc, const Vec2& objPos ) {
@@ -48,4 +43,3 @@ void Animation::create( Texture* tex, Vec2 LT, Vec2 sliceSize,
 		animFrames_.emplace_back( frame );
 	}
 }
-

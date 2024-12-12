@@ -1,8 +1,7 @@
-#ifndef BOSS_HPP
-#define BOSS_HPP
+#ifndef SLIME_BOSS_HPP
+#define SLIME_BOSS_HPP
 
 #include "Object.hpp"
-#include "Texture.hpp"
 
 enum phase {
 	Phase1,
@@ -12,8 +11,6 @@ enum phase {
 
 enum patturn {
 	Intro,
-	LPhaseTurn,
-	RPhaseTurn,
 	LJump,
 	LUpJump,
 	LDownJump,
@@ -23,29 +20,17 @@ enum patturn {
 	RDownJump,
 	RAttack,
 
-	LJump_2,
-	LUpJump_2,
-	LDownJump_2,
-	LAttack_2,
-	RJump_2,
-	RUpJump_2,
-	RDownJump_2,
-	RAttack_2,
-
-	Intro_3,
-	LeftMove,
-	RightMove,
-	Attack
-
 };
 
-class Boss : public Object {
+class SlimeBoss : public Object {
 public:
-	Boss();
-	virtual ~Boss() {}
+	SlimeBoss();
+	virtual ~SlimeBoss() {}
+
+
 
 	virtual void update() override;
-	virtual void render(HDC hdc) override;
+	
 
 	virtual void onCollision(Object* other) override;
 	virtual void onCollisionEntry(Object* other) override;
@@ -54,25 +39,23 @@ public:
 	void PaturnUpdate();
 	void TimeCheck();
 
-	void PhaseTurn();
+	void SendAnimPacket(PacketType packet, AnimationRPC::Type type);
 
-
-	virtual Boss* clone() override {
-		return new Boss(*this);
+	virtual SlimeBoss* clone() override {
+		return new SlimeBoss(*this);
 	}
 
 private:
 
 
 	int count{};
-	int dir{1};
+	int dir{ 1 };
 	float Time{};
 	Vec2 jumpStartPos{};
 	Vec2 objPos{};
 	patturn Patturn;
 	phase Phase;
 
-	std::vector<Texture*> textures_;
 };
 
 #endif // BOSS_HPP

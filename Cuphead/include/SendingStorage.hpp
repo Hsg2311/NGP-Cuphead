@@ -1,4 +1,3 @@
-
 #ifndef SENDING_STORAGE_HPP
 #define SENDING_STORAGE_HPP
 
@@ -38,5 +37,3 @@ private:
 };
 
 #endif	// SENDING_STORAGE_HPP
-
-

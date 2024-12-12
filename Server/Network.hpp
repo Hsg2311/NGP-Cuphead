@@ -289,7 +289,8 @@ namespace network {
 
 #endif // NETWORK_HPP
 
-//enum class PacketType : std::uint16_t {
+//enum class 
+// : std::uint16_t {
 //	move,
 //	chat,
 //	join,

@@ -4,17 +4,6 @@
 #include "Object.hpp"
 #include "Texture.hpp"
 
-//enum class Direction {
-//	UP,
-//	DOWN,
-//	LEFT,
-//	RIGHT,
-//	LEFT_UP,
-//	RIGHT_UP,
-//	LEFT_DOWN,
-//	RIGHT_DOWN,
-//};
-
 class OverworldPlayer : public Object {
 public:
 	OverworldPlayer( const std::vector<texInfo>& info );
@@ -31,8 +20,11 @@ public:
 		return new OverworldPlayer( *this );
 	}
 
+	void setInputEnabled( bool inputEnabled ) { inputEnabled_ = inputEnabled; }
+
 private:
 	std::vector<Texture*> textures_;
+	bool inputEnabled_;
 };
 
 #endif // OVERWORLD_PLAYER_HPP
