@@ -24,6 +24,7 @@ public:
 		: objName_{ }
 		, objPos_ { }
 		, objScale_{ }
+		, direction_{ Direction::NONE }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
 		, alive_{ true }
@@ -33,6 +34,7 @@ public:
 		: objName_{ other.objName_ }
 		, objPos_{ other.objPos_ }
 		, objScale_{ other.objScale_ }
+		, direction_{ other.direction_ }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
 		, alive_{ true }
@@ -48,6 +50,7 @@ public:
 		: objName_{ std::move( other.objName_ ) }
 		, objPos_{ std::move( other.objPos_ ) }
 		, objScale_{ std::move( other.objScale_ ) }
+		, direction_{ std::exchange( other.direction_, Direction::NONE ) }
 		, collider_{ std::exchange( other.collider_, nullptr ) }
 		, animator_{ std::exchange( other.animator_, nullptr ) }
 		, alive_{ std::exchange( other.alive_, false ) }
@@ -68,15 +71,18 @@ public:
 	void setObjName( const std::wstring& objName ) { objName_ = objName; }
 	void setObjPos( const Vec2& objPos ) { objPos_ = objPos; }
 	void setObjScale( const Vec2& objScale ) { objScale_ = objScale; }
+	void setDirection( Direction direction ) { direction_ = direction; }
 	void setID( std::uint16_t id ) { networkId_ = id; }
 
 	const std::wstring& getObjName( ) const { return objName_; }
 	Vec2 getObjPos( ) const { return objPos_; }
 	Vec2 getObjScale( ) const { return objScale_; }
+	Direction getDirection( ) const { return direction_; }
 
 	Collider* getCollider( ) const { return collider_; }
 	Animator* getAnimator( ) const { return animator_; }
 
+	void setAlive( bool alive ) { alive_ = alive; }
 	bool isAlive( ) const { return alive_; }
 
 	const std::optional<std::uint16_t>& getID( ) const { return networkId_; }
@@ -148,6 +154,7 @@ private:
 	std::wstring objName_;
 	Vec2 objPos_;
 	Vec2 objScale_;
+	Direction direction_;
 
 	Collider* collider_;
 	Animator* animator_;

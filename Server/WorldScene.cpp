@@ -153,6 +153,17 @@ void WorldScene::handleInputPacket( const Packet& packet ) {
 		const auto slimeStageCollisionColor = RGB( 0, 255, 0 );
 		const auto sunflowerStageCollisionColor = RGB( 0, 0, 255 );
 
+
+		if (pixel == slimeStageCollisionColor) {
+			SendingStorage::getInst().pushPacket(Packet{
+				.type = PacketType::CHANGE_SCENE,
+				.cs = {
+					.scene = SCENE_TYPE::BOSS_SCENE
+				}
+				}
+			);
+		}
+
 		if ( pixel == WorldCollisionColor ) {
 			return;
 		}

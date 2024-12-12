@@ -16,7 +16,8 @@ public:
 
 private:
 	void handleLoginResultPacket( const Packet& packet );
-	void handleTryGameStartResultPacket( const Packet& packet );
+	void handleChangeScenePacket( const Packet& packet );
+	void handleLogoutPacket( const Packet& packet );
 };
 
 #endif // LOBBYSCENE_HPP

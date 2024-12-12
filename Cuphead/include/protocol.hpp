@@ -21,12 +21,16 @@ enum class PacketType {
 	LOGIN_RESULT,
 	LEAVE,
 
+	REPLICATION,
 	REGISTER,
 	DESTROY,
 	MOVE,
 	INPUT,
 	TRY_GAME_START,
-	TRY_GAME_START_RESULT
+	LOGOUT,
+	CHANGE_SCENE,
+	CHANGE_SCENE_ACK,
+	ANIMATION_RPC,
 };
 
 enum class Direction {
@@ -37,8 +41,8 @@ enum class Direction {
 };
 
 struct LoginPacket {	// client -> server
-	char id[16];
-	char pw[16];
+	char id[ 16 ];
+	char pw[ 16 ];
 };
 
 struct LoginResultPacket {	// server -> client
@@ -74,6 +78,7 @@ struct MovePacket {	// server -> client
 struct InputPacket {	// client -> server
 	std::uint16_t id;
 	bool left, right, up, down;
+	Direction dir;
 };
 
 // Animation Remote Procedure Call
@@ -95,7 +100,6 @@ struct AnimationRPC {	// server -> client
 		WalkRightDown,
 		WalkRightUp,
 		WalkUp,
-
 
 		// boss Anim
 		LJump,
@@ -125,10 +129,33 @@ struct DestroyPacket {	// server -> client
 };
 
 // struct TryGameStartPacket {};
-struct TryGameStartResultPacket {
-	bool result;
+
+struct ChangeScenePacket {
+	SCENE_TYPE scene;
 };
 
+struct ChangeSceneAckPacket {
+	bool imCuphead;
+};
+
+struct LeavePacket {
+	bool imCuphead;
+};
+
+struct LogoutPacket {
+	bool imCuphead;
+};
+
+struct ReplicationPacket {	// server -> client
+	std::uint16_t id;
+
+	/*
+	특정 타입
+	해당 타입을 초기화하는데 필요한 모든 인자
+	*/
+	GROUP_TYPE groupType;
+	Vec2 pos;
+};
 
 struct Packet {
 	PacketType type;
@@ -140,7 +167,11 @@ struct Packet {
 		MovePacket mv;
 		InputPacket in;
 		DestroyPacket ds;
-		TryGameStartResultPacket tg;
+		LeavePacket lv;
+		LogoutPacket lo;
+		ChangeScenePacket cs;
+		ChangeSceneAckPacket ca;
+		ReplicationPacket rp;
 		AnimationRPC ar;
 	};
 };

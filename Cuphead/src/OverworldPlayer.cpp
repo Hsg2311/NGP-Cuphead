@@ -58,17 +58,17 @@ void OverworldPlayer::update( ) {
 			.right = bRight,
 			.up = bUp,
 			.down = bDown,
+			.dir = getDirection()
 		}
 	};
 
-	if ( bUp || bDown || bRight || bLeft ) {
-		SendingStorage::getInst( ).pushPacket( packet );
-	}
+	SendingStorage::getInst( ).pushPacket( packet );
 }
 
 void OverworldPlayer::render( HDC hdc ) {
 	componentRender( hdc );
 }
+
 
 void OverworldPlayer::onCollision( Object* other ) {
 }

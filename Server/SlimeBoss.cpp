@@ -56,7 +56,6 @@ void SlimeBoss::PaturnUpdate()
 		break;
 	case LAttack:
 		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LAttack);
-	
 		break;
 
 	case RJump:

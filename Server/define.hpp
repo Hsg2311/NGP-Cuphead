@@ -36,6 +36,7 @@ enum class SCENE_TYPE {
 	MENU_SCENE,
 	LOBBY_SCENE,
 	WORLD_SCENE,
+	BOSS_SCENE,
 
 	EOE
 };
