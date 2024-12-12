@@ -77,6 +77,7 @@ public:
 	Collider* getCollider( ) const { return collider_; }
 	Animator* getAnimator( ) const { return animator_; }
 
+	void setAlive( bool alive ) { alive_ = alive; }
 	bool isAlive( ) const { return alive_; }
 
 	const std::optional<std::uint16_t>& getID( ) const { return networkId_; }

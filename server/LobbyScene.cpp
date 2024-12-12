@@ -10,7 +10,8 @@ inline constexpr const char* ID2 = "mugman";
 inline constexpr const char* PW2 = "3344";
 
 void LobbyScene::entry( ) {
-
+	hasCupheadChangedScene_ = false;
+	hasMugmanChangedScene_ = false;
 }
 
 void LobbyScene::handlePacket( const Packet& packet ) {
@@ -21,6 +22,14 @@ void LobbyScene::handlePacket( const Packet& packet ) {
 
 	case PacketType::TRY_GAME_START:
 		handleTryGameStartPacket( packet );
+		break;
+
+	case PacketType::LEAVE:
+		handleLeavePacket( packet );
+		break;
+
+	case PacketType::CHANGE_SCENE_ACK:
+		handleChangeSceneAckPacket( packet );
 		break;
 
 	default: break;
@@ -55,18 +64,38 @@ void LobbyScene::handleLoginPacket( const Packet& packet ) {
 }
 
 void LobbyScene::handleTryGameStartPacket( const Packet& packet ) {
-	auto packetToSend = Packet{
-		.type = PacketType::TRY_GAME_START_RESULT,
-		.tg = {
-			.result = gCupheadLogin && gMugmanLogin
-		}
-	};
-
-	SendingStorage::getInst( ).pushPacket( packetToSend );
-
 	if ( gCupheadLogin && gMugmanLogin ) {
+		SendingStorage::getInst( ).pushPacket( Packet{
+			.type = PacketType::CHANGE_SCENE,
+			.cs = {
+				.scene = SCENE_TYPE::WORLD_SCENE
+			}
+		} );
+	}
+}
+
+void LobbyScene::handleLeavePacket( const Packet& packet ) {
+	packet.lv.imCuphead ? gCupheadLogin = false : gMugmanLogin = false;
+
+	SendingStorage::getInst( ).pushPacket( Packet{
+		.type = PacketType::LOGOUT,
+		.lo = {
+			.imCuphead = packet.lv.imCuphead
+		}
+	} );
+}
+
+void LobbyScene::handleChangeSceneAckPacket( const Packet& packet ) {
+	if ( packet.ca.imCuphead ) {
+		hasCupheadChangedScene_ = true;
+	}
+	else {
+		hasMugmanChangedScene_ = true;
+	}
+
+	if ( hasCupheadChangedScene_ && hasMugmanChangedScene_ ) {
 		EventHandler::getInst( ).addEvent( Event{
-			.eventType = EVENT_TYPE::CHANGE_SCENE, 
+			.eventType = EVENT_TYPE::CHANGE_SCENE,
 			.wParam = static_cast<DWORD_PTR>( SCENE_TYPE::WORLD_SCENE )
 		} );
 	}

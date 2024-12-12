@@ -105,7 +105,7 @@ void Core::progress( ) {
 	Timer::getInst( ).update(true);
 	InputDeviceHandler::getInst( ).update( );
 
-	static constexpr float contextSwitchTimeEndurance = 5.f / 1000.f;
+	static constexpr float contextSwitchTimeEndurance = 15.f / 1000.f;
 
 	if ( Timer::getInst().getFDT() < 1.f / 30.f - contextSwitchTimeEndurance ) {
 		std::this_thread::sleep_for( Seconds( 1.f / 30.f - contextSwitchTimeEndurance - Timer::getInst( ).getFDT( )) );
@@ -160,7 +160,7 @@ void clientSend( network::TcpSocket& serverSock ) {
 		auto elapsedTime = std::chrono::duration_cast<Seconds>( tp - lastTp );
 		lastTp = tp;
 
-		static constexpr float contextSwitchTimeEndurance = 5.f / 1000.f;
+		static constexpr float contextSwitchTimeEndurance = 15.f / 1000.f;
 
 		if ( elapsedTime < Seconds( ( 1.f / 30.f ) - contextSwitchTimeEndurance ) ) {
 			std::this_thread::sleep_for( Seconds( ( 1.f / 30.f ) - elapsedTime.count() - contextSwitchTimeEndurance ) );
@@ -174,14 +174,15 @@ void clientSend( network::TcpSocket& serverSock ) {
 		serverSock.send( reinterpret_cast<char*>( &bufferSize ), sizeof( bufferSize ) );
 		serverSock.send( buffer.data( ), bufferSize );
 		//------------------------------------------------------------
-
-		SendingStorage::getInst( ).resetFlag( );
 	}
 
 	// leave packet 전송
 	// queue에 패킷이 남아있는 것은 무시
-	auto leavePacket = Packet {
-		.type = PacketType::LEAVE
+	auto leavePacket = Packet{
+		.type = PacketType::LEAVE,
+		.lv = {
+			.imCuphead = gImCuphead
+		}
 	};
 	auto packetSize = static_cast<std::uint16_t>( sizeof( Packet ) );
 	serverSock.send( reinterpret_cast<char*>( &packetSize ), sizeof( packetSize ) );

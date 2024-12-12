@@ -2,6 +2,7 @@
 #include "Background.hpp"
 #include "ClickableUI.hpp"
 #include "LogPacketQueue.hpp"
+#include "SendingStorage.hpp"
 
 /*
 클라랑 서버에 모두 bool 두 개 - cupheadLogin, mugmanLogin
@@ -58,8 +59,12 @@ void LobbyScene::handlePacket( const Packet& packet ) {
 		handleLoginResultPacket( packet );
 		break;
 
-	case PacketType::TRY_GAME_START_RESULT:
-		handleTryGameStartResultPacket( packet );
+	case PacketType::CHANGE_SCENE:
+		handleChangeScenePacket( packet );
+		break;
+
+	case PacketType::LOGOUT:
+		handleLogoutPacket( packet );
 		break;
 
 	default: break;
@@ -78,11 +83,13 @@ void LobbyScene::handleLoginResultPacket( const Packet& packet ) {
 	}
 }
 
-void LobbyScene::handleTryGameStartResultPacket( const Packet& packet ) {
-	if ( packet.tg.result ) {
-		EventHandler::getInst( ).addEvent( Event{
-			.eventType = EVENT_TYPE::CHANGE_SCENE,
-			.wParam = static_cast<DWORD_PTR>( SCENE_TYPE::WORLD_SCENE )
-		} );
-	}
+void LobbyScene::handleChangeScenePacket( const Packet& packet ) {
+	EventHandler::getInst( ).addEvent( Event{
+		.eventType = EVENT_TYPE::CHANGE_SCENE,
+		.wParam = static_cast<DWORD_PTR>( packet.cs.scene )
+	} );
+}
+
+void LobbyScene::handleLogoutPacket( const Packet& packet ) {
+	packet.lo.imCuphead ? gCupheadLogin = false : gMugmanLogin = false;
 }

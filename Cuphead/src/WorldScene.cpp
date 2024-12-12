@@ -2,8 +2,16 @@
 #include "Background.hpp"
 #include "OverworldPlayer.hpp"
 #include "PacketQueue.hpp"
+#include "SendingStorage.hpp"
 
 void WorldScene::entry( ) {
+	SendingStorage::getInst( ).pushPacket( Packet{
+		.type = PacketType::CHANGE_SCENE_ACK,
+		.ca = {
+			.imCuphead = gImCuphead
+		}
+	} );
+
 	auto background = new Background( L"World Background", L"overworld/world_map.png" );
 	background->setObjName( L"World Main Island" );
 	background->setObjPos( Vec2( 640.f, 340.f ) );
@@ -21,11 +29,28 @@ void WorldScene::handlePacket( const Packet& packet ) {
 		handleRegisterPacket( packet );
 		break;
 
+	case PacketType::LOGIN_RESULT:
+		handleLoginResultPacket( packet );
+		break;
+
 	case PacketType::DESTROY:
+		handleDestroyPacket( packet );
+		break;
+
+	case PacketType::LOGOUT:
+		handleLogoutPacket( packet );
 		break;
 
 	case PacketType::MOVE:
 		handleMovePacket( packet );
+		break;
+
+	case PacketType::CHANGE_SCENE:
+		handleChangeScenePacket( packet );
+		break;
+
+	case PacketType::REPLICATION:
+		handleReplicationPacket( packet );
 		break;
 
 	default: break;
@@ -172,6 +197,10 @@ void WorldScene::handleRegisterPacket( const Packet& packet ) {
 }
 
 void WorldScene::handleDestroyPacket( const Packet& packet ) {
+	auto obj = PacketQueue::getInst( ).getObject( packet.ds.id );
+	obj->setAlive( false );
+
+	PacketQueue::getInst( ).removeObject( obj );
 }
 
 void WorldScene::handleMovePacket( const Packet& packet ) {
@@ -204,4 +233,37 @@ void WorldScene::handleMovePacket( const Packet& packet ) {
 		obj->getAnimator( )->play( L"Walk_Left_Down" );
 		break;
 	}
+}
+
+void WorldScene::handleLogoutPacket( const Packet& packet ) {
+	packet.lo.imCuphead ? gCupheadLogin = false : gMugmanLogin = false;
+}
+
+void WorldScene::handleLoginResultPacket( const Packet& packet ) {
+	auto who = packet.lr.who;
+	if ( who == LoginResultPacket::Type::Cuphead ) {
+		gCupheadLogin = true;
+		gMugmanLogin = packet.lr.mugmanLogin;
+	}
+	else if ( who == LoginResultPacket::Type::Mugman ) {
+		gMugmanLogin = true;
+		gCupheadLogin = packet.lr.cupheadLogin;
+	}
+}
+
+void WorldScene::handleChangeScenePacket( const Packet& packet ) {
+	if ( packet.cs.scene != SCENE_TYPE::WORLD_SCENE ) {
+		EventHandler::getInst( ).addEvent( Event{
+			.eventType = EVENT_TYPE::CHANGE_SCENE,
+			.wParam = static_cast<DWORD_PTR>( packet.cs.scene )
+		} );
+	}
+}
+
+void WorldScene::handleReplicationPacket( const Packet& packet ) {
+	if ( PacketQueue::getInst( ).hasId( packet.rp.id ) ) {
+		return;
+	}
+
+	handleRegisterPacket( packet );
 }

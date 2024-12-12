@@ -25,6 +25,11 @@ public:
 		return networkIdToObject_[ id ];
 	}
 
+	void removeObject( Object* obj ) {
+		networkIdToObject_.erase( objectToNetworkId_[ obj ] );
+		objectToNetworkId_.erase( obj );
+	}
+
 private:
 	std::queue<Packet> packetQueue_;
 	std::mutex queueMtx_;
