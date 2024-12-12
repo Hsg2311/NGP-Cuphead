@@ -19,6 +19,10 @@ public:
 
 private:
 	void handleInputPacket( const Packet& packet );
+	void handleTryGameStartPacket( const Packet& packet );
+	void handleLeavePacket( const Packet& packet );
+	void handleLoginPacket( const Packet& packet );
+	void handleChangeSceneAckPacket( const Packet& packet );
 
 	Texture* tex_;
 };

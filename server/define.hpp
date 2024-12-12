@@ -32,6 +32,7 @@ enum class GROUP_TYPE {
 };
 
 enum class SCENE_TYPE {
+	TITLE_SCENE,
 	MENU_SCENE,
 	LOBBY_SCENE,
 	WORLD_SCENE,
