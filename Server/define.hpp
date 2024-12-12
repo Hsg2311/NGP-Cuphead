@@ -17,4 +17,34 @@ private:\
 	type( );\
 	~type( )
 
+enum class GROUP_TYPE {
+	DEFAULT,
+	BACKGROUND,
+	BACKGROUND_ENTITY,
+	CUPHEAD,
+	MUGMAN,
+	ENEMY,
+	PLAYER_PROJECTILE,
+	ENEMY_PROJECTILE,
+	UI,
+
+	EOE
+};
+
+enum class SCENE_TYPE {
+	MENU_SCENE,
+	LOBBY_SCENE,
+	WORLD_SCENE,
+
+	EOE
+};
+
+enum class EVENT_TYPE {
+	CREATE_OBJECT,
+	DESTROY_OBJECT,
+	CHANGE_SCENE,
+
+	EOE
+};
+
 #endif // DEFINE_HPP

@@ -8,6 +8,9 @@
 #include <mutex>
 #include <unordered_map>
 
+extern bool gCupheadLogin;
+extern bool gMugmanLogin;
+
 class Object;
 
 class LogPacketQueue {
