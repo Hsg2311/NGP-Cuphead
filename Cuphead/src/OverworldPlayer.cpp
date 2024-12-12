@@ -9,7 +9,8 @@
 #include <ranges>
 #include <algorithm>
 
-OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info ) {
+OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info )
+	: Object(), inputEnabled_(false) {
 	createAnimator( );
 
 	std::ranges::for_each( info, [this]( const texInfo& elem ) {
@@ -27,6 +28,10 @@ OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info ) {
 }
 
 void OverworldPlayer::update( ) {
+	if ( !inputEnabled_ ) {
+		return;
+	}
+
 	bool bUp = false;
 	bool bDown = false;
 	bool bLeft = false;

@@ -148,14 +148,27 @@ void WorldScene::handleRegisterPacket( const Packet& packet ) {
 		} );
 
 	auto player = new OverworldPlayer( info2 );
-	player->setObjName( L"Overworld Player" );
 	player->setObjPos( packet.rg.pos );
 	player->setID( packet.rg.id );
-	addObject( GROUP_TYPE::PLAYER, player );
+
+	if ( packet.rg.groupType == GROUP_TYPE::CUPHEAD ) {
+		if ( gImCuphead ) {
+			player->setInputEnabled( true );
+			Camera::getInst( ).setTarget( player );
+		}
+		player->setObjName( L"Cuphead Player" );
+		addObject( GROUP_TYPE::CUPHEAD, player );
+	}
+	else if ( packet.rg.groupType == GROUP_TYPE::MUGMAN ) {
+		if ( !gImCuphead ) {
+			player->setInputEnabled( true );
+			Camera::getInst( ).setTarget( player );
+		}
+		player->setObjName( L"Mugman Player" );
+		addObject( GROUP_TYPE::MUGMAN, player );
+	}
 
 	PacketQueue::getInst( ).addObject( player );
-
-	Camera::getInst( ).setTarget( player );
 }
 
 void WorldScene::handleDestroyPacket( const Packet& packet ) {
