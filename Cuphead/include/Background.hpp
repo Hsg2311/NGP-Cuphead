@@ -36,4 +36,21 @@ public:
 	}
 };
 
+class BackgroundCharacter : public Object {
+public:
+	BackgroundCharacter( const std::wstring& resKey, const std::wstring& fileName, bool isCuphead );
+	virtual ~BackgroundCharacter( ) {}
+
+	virtual void update( ) override {}
+	virtual void render( HDC hdc ) override;
+
+	virtual BackgroundCharacter* clone( ) override {
+		return new BackgroundCharacter{ *this };
+	}
+
+private:
+	Texture* texture_;
+	bool imCuphead_;
+};
+
 #endif // BACKGROUND_HPP

@@ -4,6 +4,7 @@
 #include "Core.hpp"
 #include "resource.h"
 #include "LogPacketQueue.hpp"
+#include "SendingStorage.hpp"
 
 INT_PTR CALLBACK DlgProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
 
@@ -85,9 +86,14 @@ void ClickableUI::mouseLbtnClicked( ) {
 		if ( LogPacketQueue::getInst( ).loginState( ) == LogPacketQueue::LoginState::SUCCESS ) {
 			EventHandler::getInst( ).addEvent( Event{
 				.eventType = EVENT_TYPE::CHANGE_SCENE,
-				.wParam = static_cast<DWORD_PTR>( SCENE_TYPE::WORLD_SCENE )
+				.wParam = static_cast<DWORD_PTR>( SCENE_TYPE::LOBBY_SCENE )
 			} );
 		}
+	}
+	else if ( getObjName( ) == L"Start Button" ) {
+		SendingStorage::getInst( ).pushPacket( Packet{
+			.type = PacketType::TRY_GAME_START
+		} );
 	}
 	else if ( getObjName( ) == L"Exit Button" ) {
 		PostQuitMessage( 0 );
@@ -107,6 +113,8 @@ INT_PTR CALLBACK DlgProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 		case IDOK1:
 			GetDlgItemTextA( hDlg, IDC_EDIT1, ID, 16 );
 			GetDlgItemTextA( hDlg, IDC_EDIT2, PW, 16 );
+
+			gImCuphead = strcmp( ID, "cuphead" ) == 0 && strcmp( PW, "1122" ) == 0;
 
 			LogPacketQueue::getInst( ).setLoginState( LogPacketQueue::LoginState::WAITING );
 			Core::getInst( ).sendLoginPacket( ID, PW );
