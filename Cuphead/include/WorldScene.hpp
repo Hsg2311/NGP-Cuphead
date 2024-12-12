@@ -22,6 +22,7 @@ private:
 	void handleLoginResultPacket( const Packet& packet );
 	void handleChangeScenePacket( const Packet& packet );
 	void handleReplicationPacket( const Packet& packet );
+	void handleAnimationRPCPacket( const Packet& packet );
 };
 
 #endif // WORLD_SCENE_HPP

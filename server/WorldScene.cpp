@@ -149,7 +149,9 @@ void WorldScene::handleInputPacket( const Packet& packet ) {
 			std::clamp( static_cast<int>( objPos.y ) + player->getImageHeight( ) / 2 - 815 + 340, 0, tex_->getHeight( ) - 1 )
 		);
 		
-		auto WorldCollisionColor = RGB( 255, 0, 0 );
+		const auto WorldCollisionColor = RGB( 255, 0, 0 );
+		const auto slimeStageCollisionColor = RGB( 0, 255, 0 );
+		const auto sunflowerStageCollisionColor = RGB( 0, 0, 255 );
 
 		if ( pixel == WorldCollisionColor ) {
 			return;
@@ -162,10 +164,46 @@ void WorldScene::handleInputPacket( const Packet& packet ) {
 		.type = PacketType::MOVE,
 		.mv = {
 			.id = packet.in.id,
-			.dir = dir,
+			.dir = ( dir == Direction::NONE ) ? packet.in.dir : dir,
 			.pos = objPos
 		}
 	} );
+
+	// Animation RPC
+	auto animRPCPacket = Packet{
+		.type = PacketType::ANIMATION_RPC,
+		.ar = {
+			.id = packet.in.id,
+		}
+	};
+
+	switch ( dir ) {
+	case Direction::NONE:
+		switch ( packet.in.dir ) {
+		case Direction::E: animRPCPacket.ar.anim = AnimationRPC::Type::IdleRight; break;
+		case Direction::W: animRPCPacket.ar.anim = AnimationRPC::Type::IdleLeft; break;
+		case Direction::S: animRPCPacket.ar.anim = AnimationRPC::Type::IdleDown; break;
+		case Direction::N: animRPCPacket.ar.anim = AnimationRPC::Type::IdleUp; break;
+		case Direction::NE: animRPCPacket.ar.anim = AnimationRPC::Type::IdleRightUp; break;
+		case Direction::NW: animRPCPacket.ar.anim = AnimationRPC::Type::IdleLeftUp; break;
+		case Direction::SE: animRPCPacket.ar.anim = AnimationRPC::Type::IdleRightDown; break;
+		case Direction::SW: animRPCPacket.ar.anim = AnimationRPC::Type::IdleLeftDown; break;
+		default: std::terminate( ); break;
+		}
+		break;
+
+	case Direction::E: animRPCPacket.ar.anim = AnimationRPC::Type::WalkRight; break;
+	case Direction::W: animRPCPacket.ar.anim = AnimationRPC::Type::WalkLeft; break;
+	case Direction::S: animRPCPacket.ar.anim = AnimationRPC::Type::WalkDown; break;
+	case Direction::N: animRPCPacket.ar.anim = AnimationRPC::Type::WalkUp; break;
+	case Direction::NE: animRPCPacket.ar.anim = AnimationRPC::Type::WalkRightUp; break;
+	case Direction::NW: animRPCPacket.ar.anim = AnimationRPC::Type::WalkLeftUp; break;
+	case Direction::SE: animRPCPacket.ar.anim = AnimationRPC::Type::WalkRightDown; break;
+	case Direction::SW: animRPCPacket.ar.anim = AnimationRPC::Type::WalkLeftDown; break;
+	default: std::terminate( ); break;
+	}
+
+	SendingStorage::getInst( ).pushPacket( animRPCPacket );
 }
 
 void WorldScene::handleTryGameStartPacket( const Packet& packet ) {

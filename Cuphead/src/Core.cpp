@@ -160,7 +160,7 @@ void clientSend( network::TcpSocket& serverSock ) {
 		auto elapsedTime = std::chrono::duration_cast<Seconds>( tp - lastTp );
 		lastTp = tp;
 
-		static constexpr float contextSwitchTimeEndurance = 15.f / 1000.f;
+		static constexpr float contextSwitchTimeEndurance = 25.f / 1000.f;
 
 		if ( elapsedTime < Seconds( ( 1.f / 30.f ) - contextSwitchTimeEndurance ) ) {
 			std::this_thread::sleep_for( Seconds( ( 1.f / 30.f ) - elapsedTime.count() - contextSwitchTimeEndurance ) );

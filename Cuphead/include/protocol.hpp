@@ -30,6 +30,7 @@ enum class PacketType {
 	LOGOUT,
 	CHANGE_SCENE,
 	CHANGE_SCENE_ACK,
+	ANIMATION_RPC,
 };
 
 enum class Direction {
@@ -77,12 +78,28 @@ struct MovePacket {	// server -> client
 struct InputPacket {	// client -> server
 	std::uint16_t id;
 	bool left, right, up, down;
+	Direction dir;
 };
 
 // Animation Remote Procedure Call
 struct AnimationRPC {	// server -> client
 	enum class Type {
-		IdleRight
+		IdleDown,
+		IdleLeft,
+		IdleLeftDown,
+		IdleLeftUp,
+		IdleRight,
+		IdleRightDown,
+		IdleRightUp,
+		IdleUp,
+		WalkDown,
+		WalkLeft,
+		WalkLeftDown,
+		WalkLeftUp,
+		WalkRight,
+		WalkRightDown,
+		WalkRightUp,
+		WalkUp,
 	};
 
 	std::uint16_t id;
@@ -137,6 +154,7 @@ struct Packet {
 		ChangeScenePacket cs;
 		ChangeSceneAckPacket ca;
 		ReplicationPacket rp;
+		AnimationRPC ar;
 	};
 };
 

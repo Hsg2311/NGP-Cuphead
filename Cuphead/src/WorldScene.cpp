@@ -53,6 +53,10 @@ void WorldScene::handlePacket( const Packet& packet ) {
 		handleReplicationPacket( packet );
 		break;
 
+	case PacketType::ANIMATION_RPC:
+		handleAnimationRPCPacket( packet );
+		break;
+
 	default: break;
 	}
 }
@@ -175,6 +179,7 @@ void WorldScene::handleRegisterPacket( const Packet& packet ) {
 	auto player = new OverworldPlayer( info2 );
 	player->setObjPos( packet.rg.pos );
 	player->setID( packet.rg.id );
+	player->setDirection( Direction::S );
 
 	if ( packet.rg.groupType == GROUP_TYPE::CUPHEAD ) {
 		if ( gImCuphead ) {
@@ -206,33 +211,7 @@ void WorldScene::handleDestroyPacket( const Packet& packet ) {
 void WorldScene::handleMovePacket( const Packet& packet ) {
 	auto obj = PacketQueue::getInst( ).getObject( packet.mv.id );
 	obj->setObjPos( packet.mv.pos );
-
-	switch ( packet.mv.dir ) {
-	case Direction::E:
-		obj->getAnimator( )->play( L"Walk_Right" );
-		break;
-	case Direction::W:
-		obj->getAnimator( )->play( L"Walk_Left" );
-		break;
-	case Direction::S:
-		obj->getAnimator( )->play( L"Walk_Down" );
-		break;
-	case Direction::N:
-		obj->getAnimator( )->play( L"Walk_Up" );
-		break;
-	case Direction::NE:
-		obj->getAnimator( )->play( L"Walk_Right_Up" );
-		break;
-	case Direction::NW:
-		obj->getAnimator( )->play( L"Walk_Left_Up" );
-		break;
-	case Direction::SE:
-		obj->getAnimator( )->play( L"Walk_Right_Down" );
-		break;
-	case Direction::SW:
-		obj->getAnimator( )->play( L"Walk_Left_Down" );
-		break;
-	}
+	obj->setDirection( packet.mv.dir );
 }
 
 void WorldScene::handleLogoutPacket( const Packet& packet ) {
@@ -266,4 +245,79 @@ void WorldScene::handleReplicationPacket( const Packet& packet ) {
 	}
 
 	handleRegisterPacket( packet );
+}
+
+void WorldScene::handleAnimationRPCPacket( const Packet& packet )
+{
+	auto obj = PacketQueue::getInst( ).getObject( packet.ar.id );
+
+	switch ( packet.ar.anim )
+	{
+	case AnimationRPC::Type::IdleDown:
+		obj->getAnimator( )->play( L"Idle_Down" );
+		break;
+
+	case AnimationRPC::Type::IdleLeft:
+		obj->getAnimator( )->play( L"Idle_Left" );
+		break;
+
+	case AnimationRPC::Type::IdleLeftDown:
+		obj->getAnimator( )->play( L"Idle_Left_Down" );
+		break;
+
+	case AnimationRPC::Type::IdleLeftUp:
+		obj->getAnimator( )->play( L"Idle_Left_Up" );
+		break;
+
+	case AnimationRPC::Type::IdleRight:
+		obj->getAnimator( )->play( L"Idle_Right" );
+		break;
+
+	case AnimationRPC::Type::IdleRightDown:
+		obj->getAnimator( )->play( L"Idle_Right_Down" );
+		break;
+
+	case AnimationRPC::Type::IdleRightUp:
+		obj->getAnimator( )->play( L"Idle_Right_Up" );
+		break;
+
+	case AnimationRPC::Type::IdleUp:
+		obj->getAnimator( )->play( L"Idle_Up" );
+		break;
+
+	case AnimationRPC::Type::WalkDown:
+		obj->getAnimator( )->play( L"Walk_Down" );
+		break;
+
+	case AnimationRPC::Type::WalkLeft:
+		obj->getAnimator( )->play( L"Walk_Left" );
+		break;
+
+	case AnimationRPC::Type::WalkLeftDown:
+		obj->getAnimator( )->play( L"Walk_Left_Down" );
+		break;
+
+	case AnimationRPC::Type::WalkLeftUp:
+		obj->getAnimator( )->play( L"Walk_Left_Up" );
+		break;
+
+	case AnimationRPC::Type::WalkRight:
+		obj->getAnimator( )->play( L"Walk_Right" );
+		break;
+
+	case AnimationRPC::Type::WalkRightDown:
+		obj->getAnimator( )->play( L"Walk_Right_Down" );
+		break;
+
+	case AnimationRPC::Type::WalkRightUp:
+		obj->getAnimator( )->play( L"Walk_Right_Up" );
+		break;
+
+	case AnimationRPC::Type::WalkUp:
+		obj->getAnimator( )->play( L"Walk_Up" );
+		break;
+
+	default:
+		break;
+	}
 }
