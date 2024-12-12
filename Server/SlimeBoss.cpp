@@ -6,7 +6,7 @@ SlimeBoss::SlimeBoss()
 	Phase = Phase1;
 	Patturn = LJump;
 
-	SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::LJump);
+	SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LJump);
 
 
 }
@@ -45,33 +45,33 @@ void SlimeBoss::PaturnUpdate()
 	//phase 1
 	switch (Patturn) {
 	case LJump:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::LJump);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LJump);
 		break;
 	case LUpJump:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::LUpJump);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LUpJump);
 		break;
 	case LDownJump:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::LDownJump);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LDownJump);
 	
 		break;
 	case LAttack:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::LAttack);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LAttack);
 	
 		break;
 
 	case RJump:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::RJump);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::RJump);
 		
 		break;
 	case RUpJump:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::RUpJump);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::RUpJump);
 		
 		break;
 	case RDownJump:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::RDownJump);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::RDownJump);
 		break;
 	case RAttack:
-		SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::RAttack);
+		SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::RAttack);
 			
 		break;
 	}
@@ -105,7 +105,7 @@ void SlimeBoss::TimeCheck()
 				jumpStartPos.x = Pos1.x;
 				dir *= -1;
 				count += 1;
-				SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::RUpJump);
+				SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::RUpJump);
 			}
 
 			setObjPos(Pos1);
@@ -137,7 +137,7 @@ void SlimeBoss::TimeCheck()
 				jumpStartPos.x = Pos2.x;
 				dir *= -1;
 				count += 1;
-				SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::RDownJump);
+				SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::RDownJump);
 			}
 
 			setObjPos(Pos2);;
@@ -191,7 +191,7 @@ void SlimeBoss::TimeCheck()
 				jumpStartPos.x = Pos1.x;
 				dir *= -1;
 				count += 1;
-				SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::LUpJump);
+				SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LUpJump);
 			}
 
 			setObjPos(Pos1);
@@ -219,7 +219,7 @@ void SlimeBoss::TimeCheck()
 				jumpStartPos.x = Pos2.x;
 				dir *= -1;
 				count += 1;
-				SendAnimPacket(PacketType::ANIMRPC, AnimationRPC::Type::LDownJump);
+				SendAnimPacket(PacketType::ANIMATION_RPC, AnimationRPC::Type::LDownJump);
 			}
 
 			setObjPos(Pos2);;

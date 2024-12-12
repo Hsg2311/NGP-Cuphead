@@ -17,6 +17,11 @@ public:
 private:
 	void handleLoginPacket( const Packet& packet );
 	void handleTryGameStartPacket( const Packet& packet );
+	void handleLeavePacket( const Packet& packet );
+	void handleChangeSceneAckPacket( const Packet& packet );
+
+	bool hasCupheadChangedScene_ = false;
+	bool hasMugmanChangedScene_ = false;
 };
 
 #endif // LOBBYSCENE_HPP

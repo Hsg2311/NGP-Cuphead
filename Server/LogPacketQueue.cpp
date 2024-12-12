@@ -13,8 +13,8 @@ void LogPacketQueue::pushPacket( const Packet& packet ) {
 }
 
 void LogPacketQueue::dispatch( ) {
+	std::lock_guard<std::mutex> lock( queueMtx_ );
 	while ( !logPacketQueue_.empty( ) ) {
-		std::lock_guard<std::mutex> lock( queueMtx_ );
 		Packet p = logPacketQueue_.front( );
 		logPacketQueue_.pop( );
 
