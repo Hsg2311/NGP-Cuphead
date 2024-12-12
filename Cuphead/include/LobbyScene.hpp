@@ -12,7 +12,11 @@ public:
 	virtual void entry( ) override;
 	virtual void exit( ) override { Scene::destroyObjGroupList( ); }
 
-	virtual void handlePacket( const Packet& packet ) override {}
+	virtual void handlePacket( const Packet& packet ) override;
+
+private:
+	void handleLoginResultPacket( const Packet& packet );
+	void handleTryGameStartResultPacket( const Packet& packet );
 };
 
 #endif // LOBBYSCENE_HPP

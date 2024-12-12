@@ -2,10 +2,7 @@
 #include "Background.hpp"
 #include "Camera.hpp"
 #include "ClickableUI.hpp"
-
-void MenuScene::update( ) {
-	Scene::update( );
-}
+#include "LogPacketQueue.hpp"
 
 void MenuScene::entry( ) {
 	auto background = new Background( L"Menu Background", L"menu/menu_background.png" );
@@ -35,6 +32,27 @@ void MenuScene::entry( ) {
 	Camera::getInst( ).setLookAt( pos );
 }
 
-void MenuScene::exit( ) {
-	Scene::destroyObjGroupList( );
+void MenuScene::handlePacket( const Packet& packet ) {
+	switch ( packet.type ) {
+	case PacketType::LOGIN_RESULT:
+		handleLoginResultPacket( packet );
+		break;
+
+	default: break;
+	}
+}
+
+void MenuScene::handleLoginResultPacket( const Packet& packet ) {
+	LogPacketQueue::getInst( ).setLoginState( packet.lr.result ?
+		LogPacketQueue::LoginState::SUCCESS : LogPacketQueue::LoginState::FAIL );
+
+	auto who = packet.lr.who;
+	if ( who == LoginResultPacket::Type::Cuphead ) {
+		gCupheadLogin = true;
+		gMugmanLogin = packet.lr.mugmanLogin;
+	}
+	else if ( who == LoginResultPacket::Type::Mugman ) {
+		gMugmanLogin = true;
+		gCupheadLogin = packet.lr.cupheadLogin;
+	}
 }

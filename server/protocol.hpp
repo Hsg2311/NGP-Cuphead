@@ -8,7 +8,11 @@
 
 constexpr short PORT = 9000;
 constexpr short BUFSIZE = 1024;
-static std::uint16_t sId = 0;
+
+extern bool gCupheadLogin;
+extern bool gMugmanLogin;
+
+extern bool gImCuphead;
 
 enum class PacketType {
 	NONE,
@@ -21,6 +25,8 @@ enum class PacketType {
 	DESTROY,
 	MOVE,
 	INPUT,
+	TRY_GAME_START,
+	TRY_GAME_START_RESULT
 };
 
 enum class Direction {
@@ -37,6 +43,15 @@ struct LoginPacket {	// client -> server
 
 struct LoginResultPacket {	// server -> client
 	bool result;
+	bool cupheadLogin;
+	bool mugmanLogin;
+
+	enum class Type {
+		None,
+		Cuphead,
+		Mugman
+	};
+	Type who;
 };
 
 struct RegisterPacket {	// server -> client
@@ -75,6 +90,12 @@ struct DestroyPacket {	// server -> client
 	std::uint16_t id;
 };
 
+// struct TryGameStartPacket {};
+struct TryGameStartResultPacket {
+	bool result;
+};
+
+
 struct Packet {
 	PacketType type;
 
@@ -85,6 +106,7 @@ struct Packet {
 		MovePacket mv;
 		InputPacket in;
 		DestroyPacket ds;
+		TryGameStartResultPacket tg;
 	};
 };
 

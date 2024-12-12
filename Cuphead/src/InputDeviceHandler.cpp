@@ -64,7 +64,7 @@ void InputDeviceHandler::update( ) {
 	HWND hWnd = GetFocus( );
 
 	// 포커싱된 윈도우가 내 프로그램 윈도우 중 하나라면 키 이벤트 동작
-	if ( hWnd ) {
+	if ( hWnd == Core::getInst().getHwnd() ) {
 		for ( UINT i = 0; i < static_cast<UINT>( InputData::EOE ); ++i ) {
 			if ( GetAsyncKeyState( g_arrVK[ i ] ) & 0x8000 ) {
 				if ( inputDataInfo_[ i ].isPressed ) {

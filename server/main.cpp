@@ -48,7 +48,7 @@ int main( ) {
 		auto serverSock = network::TcpSocket( );
 
 		// bind
-		auto sockAddr = network::SockAddr( INADDR_ANY, PORT );
+		auto sockAddr = network::SockAddr( "192.168.219.108"sv, PORT );
 		serverSock.bind( sockAddr );
 
 		// listen
@@ -200,12 +200,11 @@ void serverRecv( network::TcpSocket*& pClientSock ) {
 			if ( packet.type == PacketType::LOGIN ) {
 				LogPacketQueue::getInst( ).pushPacket( packet );
 			}
-			else if ( packet.type == PacketType::LEAVE ) {
-				exit = true;
-				break;
-			}
-			else if ( packet.type == PacketType::INPUT ) {
+			else {
 				PacketQueue::getInst( ).pushPacket( packet );
+				if ( packet.type == PacketType::LEAVE ) {
+					exit = true;
+				}
 			}
 		}
 
