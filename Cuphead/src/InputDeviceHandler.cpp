@@ -1,5 +1,5 @@
-#include "InputDeviceHandler.hpp"
 #include "Core.hpp"
+#include "InputDeviceHandler.hpp"
 
 int g_arrVK[ static_cast<UINT>( InputData::EOE ) ] = {
 	VK_LEFT,

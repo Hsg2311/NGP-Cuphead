@@ -3,7 +3,7 @@
 
 #include <cassert>
 #include <cmath>
-#include <Windows.h>
+#include "WinUT.hpp"
 
 struct Vec2 {
 	float x;

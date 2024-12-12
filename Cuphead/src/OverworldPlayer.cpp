@@ -3,6 +3,8 @@
 #include "Camera.hpp"
 #include "InputDeviceHandler.hpp"
 #include "Timer.hpp"
+#include "protocol.hpp"
+#include "SendingStorage.hpp"
 
 #include <ranges>
 #include <algorithm>
@@ -25,17 +27,6 @@ OverworldPlayer::OverworldPlayer( const std::vector<texInfo>& info ) {
 }
 
 void OverworldPlayer::update( ) {
-	auto objPos = getObjPos( );
-	auto lu = Vec2( -1.f, 1.f );
-	auto ru = Vec2( 1.f, 1.f );
-	auto ld = Vec2( -1.f, -1.f );
-	auto rd = Vec2( 1.f, -1.f );
-
-	lu.normalize( );
-	ru.normalize( );
-	ld.normalize( );
-	rd.normalize( );
-
 	bool bUp = false;
 	bool bDown = false;
 	bool bLeft = false;
@@ -53,86 +44,21 @@ void OverworldPlayer::update( ) {
 	if ( KEY_HOLD( InputData::RIGHT ) ) {
 		bRight = true;
 	}
-	if ( KEY_HOLD( InputData::LEFT ) && KEY_HOLD( InputData::UP ) ) {
-		bLeft = true;
-		bUp = true;
-	}
-	if ( KEY_HOLD( InputData::RIGHT ) && KEY_HOLD( InputData::UP ) ) {
-		bRight = true;
-		bUp = true;
-	}
-	if ( KEY_HOLD( InputData::LEFT ) && KEY_HOLD( InputData::DOWN ) ) {
-		bLeft = true;
-		bDown = true;
-	}
-	if ( KEY_HOLD( InputData::RIGHT ) && KEY_HOLD( InputData::DOWN ) ) {
-		bRight = true;
-		bDown = true;
-	}
 
-	if ( bUp && !bDown && !bLeft && !bRight ) {
-		getAnimator( )->play( L"Walk_Up" );
-		objPos.y -= 300.f * fDT;
-	}
-	if ( bDown && !bUp && !bLeft && !bRight ) {
-		getAnimator( )->play( L"Walk_Down" );
-		objPos.y += 300.f * fDT;
-	}
-	if ( bLeft && !bRight && !bUp && !bDown ) {
-		getAnimator( )->play( L"Walk_Left" );
-		objPos.x -= 300.f * fDT;
-	}
-	if ( bRight && !bLeft && !bUp && !bDown ) {
-		getAnimator( )->play( L"Walk_Right" );
-		objPos.x += 300.f * fDT;
-	}
-	if ( bLeft && bUp && !bDown && !bRight ) {
-		getAnimator( )->play( L"Walk_Left_Up" );
-		objPos.x -= 300.f * lu.x * fDT;
-		objPos.y -= 300.f * lu.y * fDT;
-	}
-	if ( bRight && bUp && !bDown && !bLeft ) {
-		getAnimator( )->play( L"Walk_Right_Up" );
-		objPos.x += 300.f * ru.x * fDT;
-		objPos.y -= 300.f * ru.y * fDT;
-	}
-	if ( bLeft && bDown && !bUp && !bRight ) {
-		getAnimator( )->play( L"Walk_Left_Down" );
-		objPos.x -= 300.f * ld.x * fDT;
-		objPos.y += 300.f * ld.y * fDT;
-	}
-	if ( bRight && bDown && !bUp && !bLeft ) {
-		getAnimator( )->play( L"Walk_Right_Down" );
-		objPos.x += 300.f * rd.x * fDT;
-		objPos.y += 300.f * rd.y * fDT;
-	}
+	auto packet = Packet{
+		.type = PacketType::INPUT,
+		.in = {
+			.id = getID( ).value( ),
+			.left = bLeft,
+			.right = bRight,
+			.up = bUp,
+			.down = bDown,
+		}
+	};
 
-	if ( KEY_AWAY( InputData::UP ) ) {
-		getAnimator( )->play( L"Idle_Up" );
+	if ( bUp || bDown || bRight || bLeft ) {
+		SendingStorage::getInst( ).pushPacket( packet );
 	}
-	if ( KEY_AWAY( InputData::DOWN ) ) {
-		getAnimator( )->play( L"Idle_Down" );
-	}
-	if ( KEY_AWAY( InputData::LEFT ) ) {
-		getAnimator( )->play( L"Idle_Left" );
-	}
-	if ( KEY_AWAY( InputData::RIGHT ) ) {
-		getAnimator( )->play( L"Idle_Right" );
-	}
-	if ( KEY_AWAY( InputData::LEFT ) && KEY_AWAY( InputData::UP ) ) {
-		getAnimator( )->play( L"Idle_Left_Up" );
-	}
-	if ( KEY_AWAY( InputData::RIGHT ) && KEY_AWAY( InputData::UP ) ) {
-		getAnimator( )->play( L"Idle_Right_Up" );
-	}
-	if ( KEY_AWAY( InputData::LEFT ) && KEY_AWAY( InputData::DOWN ) ) {
-		getAnimator( )->play( L"Idle_Left_Down" );
-	}
-	if ( KEY_AWAY( InputData::RIGHT ) && KEY_AWAY( InputData::DOWN ) ) {
-		getAnimator( )->play( L"Idle_Right_Down" );
-	}
-
-	setObjPos( objPos );
 }
 
 void OverworldPlayer::render( HDC hdc ) {

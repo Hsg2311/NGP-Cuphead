@@ -1,15 +1,15 @@
 #ifndef __TIMER_HPP
 #define __TIMER_HPP
 
+#include "WinUT.hpp"
 #include "define.hpp"
-#include <Windows.h>
 
 class Timer {
 	SINGLETON( Timer );
 
 public:
 	void init( );
-	void update( );
+	void update( bool isNewFrame );
 
 	float getFDT( ) const { return static_cast<float>( deltaTime_ ); }
 	double getDT( ) const { return deltaTime_; }

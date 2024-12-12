@@ -3,7 +3,7 @@
 
 #include "Object.hpp"
 #include "struct.hpp"
-#include <Windows.h>
+#include "WinUT.hpp"
 
 class Monster : public Object {
 public:

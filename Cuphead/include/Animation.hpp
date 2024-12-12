@@ -3,7 +3,7 @@
 
 #include "struct.hpp"
 #include <string>
-#include <Windows.h>
+#include "WinUT.hpp"
 #include <vector>
 
 class Texture;

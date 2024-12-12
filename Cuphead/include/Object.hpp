@@ -7,6 +7,7 @@
 #include "Camera.hpp"
 
 #include <string>
+#include <optional>
 
 struct texInfo {
 	std::wstring resKey;
@@ -25,7 +26,8 @@ public:
 		, objScale_{ }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
-		, alive_{ true } {}
+		, alive_{ true }
+		, networkId_{} {}
 
 	Object( const Object& other )
 		: objName_{ other.objName_ }
@@ -33,7 +35,8 @@ public:
 		, objScale_{ other.objScale_ }
 		, collider_{ nullptr }
 		, animator_{ nullptr }
-		, alive_{ true } {
+		, alive_{ true }
+		, networkId_() {
 		createCollider( );
 		getCollider( )->setOffset( other.getCollider( )->getOffset( ) );
 		getCollider( )->setScale( other.getCollider( )->getScale( ) );
@@ -45,9 +48,10 @@ public:
 		: objName_{ std::move( other.objName_ ) }
 		, objPos_{ std::move( other.objPos_ ) }
 		, objScale_{ std::move( other.objScale_ ) }
-		, collider_{ other.collider_ }
-		, animator_{ other.animator_ }
-		, alive_{ true } {
+		, collider_{ std::exchange( other.collider_, nullptr ) }
+		, animator_{ std::exchange( other.animator_, nullptr ) }
+		, alive_{ std::exchange( other.alive_, false ) }
+		, networkId_{ std::exchange(other.networkId_, std::nullopt) } {
 		other.collider_ = nullptr;
 		other.animator_ = nullptr;
 	}
@@ -64,6 +68,7 @@ public:
 	void setObjName( const std::wstring& objName ) { objName_ = objName; }
 	void setObjPos( const Vec2& objPos ) { objPos_ = objPos; }
 	void setObjScale( const Vec2& objScale ) { objScale_ = objScale; }
+	void setID( std::uint16_t id ) { networkId_ = id; }
 
 	const std::wstring& getObjName( ) const { return objName_; }
 	Vec2 getObjPos( ) const { return objPos_; }
@@ -73,6 +78,8 @@ public:
 	Animator* getAnimator( ) const { return animator_; }
 
 	bool isAlive( ) const { return alive_; }
+
+	const std::optional<std::uint16_t>& getID( ) const { return networkId_; }
 
 public:
 	void createCollider( ) { collider_ = new Collider{ }; }
@@ -146,6 +153,8 @@ private:
 	Animator* animator_;
 
 	bool alive_;
+
+	std::optional<std::uint16_t> networkId_;
 	
 	friend class EventHandler;
 };

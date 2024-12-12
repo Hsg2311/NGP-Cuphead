@@ -11,6 +11,8 @@ public:
 	virtual void update( ) override;
 	virtual void entry( ) override;
 	virtual void exit( ) override;
+
+	virtual void handlePacket( const Packet& packet ) override {}
 };
 
 #endif // MENU_SCENE_HPP

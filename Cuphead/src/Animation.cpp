@@ -6,7 +6,7 @@
 void Animation::update( ) {
 	accTime_ += fDT;
 
-	if ( accTime_ >= animFrames_[ currFrame_ ].duration ) {
+	while ( accTime_ >= animFrames_[ currFrame_ ].duration ) {
 		accTime_ -= animFrames_[ currFrame_++ ].duration;
 		currFrame_ %= animFrames_.size( );
 	}

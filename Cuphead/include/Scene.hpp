@@ -8,7 +8,7 @@
 #include <array>
 #include <string>
 #include <vector>
-#include <Windows.h>
+#include "WinUT.hpp"
 #include <ranges>
 #include <algorithm>
 
@@ -25,6 +25,8 @@ public:
 	virtual void update( );
 	void componentUpdate( );
 	void render( HDC hdc );
+
+	virtual void handlePacket( const Packet& packet ) = 0;
 
 public:
 	virtual void entry( ) = 0;
