@@ -247,27 +247,35 @@ void WorldScene::handleAnimationRPCPacket(const Packet& packet)
 	case AnimationRPC::Type::WalkDown:
 		obj->getAnimator()->play(L"walk_down");
 		break;
+
 	case AnimationRPC::Type::WalkLeft:
 		obj->getAnimator()->play(L"walk_left");
 		break;
+
 	case AnimationRPC::Type::WalkLeftDown:
 		obj->getAnimator()->play(L"walk_left_down");
 		break;
+
 	case AnimationRPC::Type::WalkLeftUp:
 		obj->getAnimator()->play(L"walk_left_up");
 		break;
+
 	case AnimationRPC::Type::WalkRight:
 		obj->getAnimator()->play(L"walk_right");
 		break;
+
 	case AnimationRPC::Type::WalkRightDown:
 		obj->getAnimator()->play(L"walk_right_down");
 		break;
+
 	case AnimationRPC::Type::WalkRightUp:
 		obj->getAnimator()->play(L"walk_right_up");
 		break;
+
 	case AnimationRPC::Type::WalkUp:
 		obj->getAnimator()->play(L"walk_up");
 		break;
+
 	default:
 		break;
 	}

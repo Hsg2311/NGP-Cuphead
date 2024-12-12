@@ -37,8 +37,8 @@ enum class Direction {
 };
 
 struct LoginPacket {	// client -> server
-	char id[ 16 ];
-	char pw[ 16 ];
+	char id[16];
+	char pw[16];
 };
 
 struct LoginResultPacket {	// server -> client

@@ -48,7 +48,7 @@ int main( ) {
 		auto serverSock = network::TcpSocket( );
 
 		// bind
-		auto sockAddr = network::SockAddr( "192.168.219.108"sv, PORT );
+		auto sockAddr = network::SockAddr( "220.94.221.208"sv, PORT );
 		serverSock.bind( sockAddr );
 
 		// listen

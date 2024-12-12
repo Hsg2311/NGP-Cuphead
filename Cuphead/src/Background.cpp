@@ -3,6 +3,7 @@
 #include "Camera.hpp"
 #include "ResourceHandler.hpp"
 
+
 Background::Background( const std::wstring& resKey, const std::wstring& fileName )
 	: texture_{ ResourceHandler::getInst( ).loadTexture( resKey, std::wstring( L"/texture/background/" + fileName ) ) } {}
 
