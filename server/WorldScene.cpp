@@ -5,27 +5,50 @@
 #include "SendingStorage.hpp"
 
 void WorldScene::entry( ) {
-	auto player = new OverworldPlayer( );
+	auto cuphead = new OverworldPlayer( );
 
-	if ( player->getID( ).has_value( ) ) {
-		player->setObjName( L"Overworld Player" );
-		player->setObjPos( Vec2( 800.f, 780.f ) );
-		addObject( GROUP_TYPE::PLAYER, player );
+	if ( cuphead->getID( ).has_value( ) ) {
+		cuphead->setObjName( L"Cuphead Player" );
+		cuphead->setObjPos( Vec2( 800.f, 780.f ) );
+		addObject( GROUP_TYPE::CUPHEAD, cuphead );
 
-		PacketQueue::getInst( ).addObject( player );
+		PacketQueue::getInst( ).addObject( cuphead );
 
 		SendingStorage::getInst( ).pushPacket( Packet{
 			.type = PacketType::REGISTER,
 			.rg = {
-				.id = player->getID( ).value( ),
-				.groupType = GROUP_TYPE::PLAYER,
-				.pos = player->getObjPos( )
+				.id = cuphead->getID( ).value( ),
+				.groupType = GROUP_TYPE::CUPHEAD,
+				.pos = cuphead->getObjPos( )
 			}
 		} );
 	}
 	else {
 		// Error: Failed to allocate network ID
-		delete player;
+		delete cuphead;
+	}
+
+	auto mugman = new OverworldPlayer( );
+
+	if ( mugman->getID( ).has_value( ) ) {
+		mugman->setObjName( L"Mugman Player" );
+		mugman->setObjPos( Vec2( 800.f, 780.f ) );
+		addObject( GROUP_TYPE::MUGMAN, mugman );
+
+		PacketQueue::getInst( ).addObject( mugman );
+
+		SendingStorage::getInst( ).pushPacket( Packet{
+			.type = PacketType::REGISTER,
+			.rg = {
+				.id = mugman->getID( ).value( ),
+				.groupType = GROUP_TYPE::MUGMAN,
+				.pos = mugman->getObjPos( )
+			}
+			} );
+	}
+	else {
+		// Error: Failed to allocate network ID
+		delete mugman;
 	}
 }
 

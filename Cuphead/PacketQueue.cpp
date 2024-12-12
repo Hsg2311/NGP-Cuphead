@@ -1,8 +1,6 @@
 #include "PacketQueue.hpp"
 #include "SceneHandler.hpp"
 
-void handleMovePacket( const Packet& packet );
-
 PacketQueue::PacketQueue( )
 	: packetQueue_( ), queueMtx_( ), networkIdToObject_( ), objectToNetworkId_( ) {}
 
