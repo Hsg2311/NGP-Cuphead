@@ -36,7 +36,7 @@ void SceneHandler::init( ) {
 	sceneList_[static_cast<UINT>(SCENE_TYPE::SlIME_SCENE)]->setSceneName(L"Slime Scene");
 
 	// 현재 Scene 설정
-	currScene_ = sceneList_[ static_cast<UINT>( SCENE_TYPE::SlIME_SCENE) ];
-	currSceneType_ = SCENE_TYPE::SlIME_SCENE;
+	currScene_ = sceneList_[ static_cast<UINT>( SCENE_TYPE::TITLE_SCENE) ];
+	currSceneType_ = SCENE_TYPE::TITLE_SCENE;
 	currScene_->entry( );
 }

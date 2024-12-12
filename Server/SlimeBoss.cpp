@@ -275,8 +275,6 @@ void SlimeBoss::TimeCheck()
 
 }
 
-
-
 void SlimeBoss::SendAnimPacket(PacketType packet, AnimationRPC::Type type) {
 	SendingStorage::getInst().pushPacket(Packet{
 		.type = packet,

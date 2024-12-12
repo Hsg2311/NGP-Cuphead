@@ -108,10 +108,12 @@ struct AnimationRPC {	// server -> client
 		RAttack,
 
 		// Ingame Anim
-		Idle_Ingame,
+		LIdle_Ingame,
+		RIdle_Ingame,
 		LRun_Ingame,
 		RRun_Ingame,
-		Jump_Ingame,
+		LJump_Ingame,
+		RJump_Ingame
 	};
 
 	std::uint16_t id;

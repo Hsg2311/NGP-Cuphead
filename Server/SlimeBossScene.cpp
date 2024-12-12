@@ -10,7 +10,7 @@ void SlimeBossScene::entry() {
 	auto slimeboss = new SlimeBoss();
 	if (slimeboss->getID().has_value()) {
 		slimeboss->setObjName(L"Slime Boss ");
-		slimeboss->setObjPos(Vec2(600.f, 600.f));
+		slimeboss->setObjPos(Vec2(640.f, 360.f));
 		addObject(GROUP_TYPE::ENEMY, slimeboss);
 
 		PacketQueue::getInst().addObject(slimeboss);

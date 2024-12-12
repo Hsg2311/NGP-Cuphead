@@ -8,7 +8,7 @@
 void SlimeScene::entry() {
 	auto background = new Background(L"Slime Background", L"smile_boss/slime_background.png");
 	background->setObjName(L"Slime Background");
-	background->setObjPos(Vec2(640.f, 340.f));
+	background->setObjPos(Vec2(640.f, 360.f));
 	addObject(GROUP_TYPE::BACKGROUND, background);
 }
 
@@ -47,26 +47,31 @@ void SlimeScene::handleRegisterPacket(const Packet& packet) {
 		});
 	info2.push_back(texInfo{
 		.resKey = L"L_Idle",
+		.fileName = L"Lcuphead_idle.png",
+		.sliceSize = Vec2(100.f, 155.f),
+		.duration = 0.11f,
+		.frameCount = 9
+		});
+	info2.push_back(texInfo{
+		.resKey = L"R_Idle",
 		.fileName = L"cuphead_idle.png",
 		.sliceSize = Vec2(100.f, 155.f),
 		.duration = 0.11f,
 		.frameCount = 9
 		});
-
 	info2.push_back(texInfo{
 		.resKey = L"L_Jump",
-		.fileName = L"cuphead_idle.png",
-		.sliceSize = Vec2(100.f, 155.f),
+		.fileName = L"Ljump.png",
+		.sliceSize = Vec2(110.f, 110.f),
 		.duration = 0.11f,
-		.frameCount = 9
+		.frameCount = 8
 		});
-
 	info2.push_back(texInfo{
 		.resKey = L"R_Jump",
-		.fileName = L"cuphead_idle.png",
-		.sliceSize = Vec2(100.f, 155.f),
+		.fileName = L"Rjump.png",
+		.sliceSize = Vec2(110.f, 110.f),
 		.duration = 0.11f,
-		.frameCount = 9
+		.frameCount = 8
 		});
 
 
@@ -143,6 +148,10 @@ void SlimeScene::handleAnimationRPCPacket(const Packet& packet)
 		break;
 
 	case AnimationRPC::Type::RAttack:
+		obj->getAnimator()->play(L"RAttack");
+		break;
+
+	case AnimationRPC::Type::LIdle_Ingame:
 		obj->getAnimator()->play(L"RAttack");
 		break;
 

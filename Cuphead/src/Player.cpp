@@ -14,8 +14,6 @@
 Player::Player(const std::vector<texInfo>& info): Object(), inputEnabled_(false) {
 	createAnimator();
 
-	
-
 	getAnimator()->play(info.front().resKey);
 
 	createCollider();
