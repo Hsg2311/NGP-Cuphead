@@ -54,6 +54,7 @@ Core::~Core( ) {
 
 	sendThread_.join( );
 	while ( !sentLeave ) {}
+	std::this_thread::sleep_for( 200ms );
 	serverSock_.close( );
 	recvThread_.join( );
 
@@ -68,7 +69,7 @@ int Core::init( HWND hWnd, POINT resolution ) {
 
 	serverSock_ = network::TcpSocket( );
 
-	auto serverAddr = network::SockAddr( "192.168.219.108"sv, PORT );
+	auto serverAddr = network::SockAddr( "192.168.219.103"sv, PORT );
 	serverSock_.connect( serverAddr );
 
 	hWnd_ = hWnd;
@@ -151,7 +152,7 @@ void Core::sendLoginPacket( const char id[ 16 ], const char pw[ 16 ] ) {
 void clientSend( network::TcpSocket& serverSock ) {
 	static auto lastTp = Clock::now( );
 
-	while ( clientRun ) {
+	while ( clientRun || SendingStorage::getInst( ).getFlag( ) ) {
 		if ( !SendingStorage::getInst( ).getFlag( ) ) {
 			continue;
 		}
@@ -171,8 +172,8 @@ void clientSend( network::TcpSocket& serverSock ) {
 		SendingStorage::getInst( ).flush( buffer.data( ), bufferSize );
 
 		// send ------------------------------------------------------
-		serverSock.send( reinterpret_cast<char*>( &bufferSize ), sizeof( bufferSize ) );
-		serverSock.send( buffer.data( ), bufferSize );
+		serverSock.sendUc( reinterpret_cast<char*>( &bufferSize ), sizeof( bufferSize ) );
+		serverSock.sendUc( buffer.data( ), bufferSize );
 		//------------------------------------------------------------
 	}
 
@@ -185,8 +186,8 @@ void clientSend( network::TcpSocket& serverSock ) {
 		}
 	};
 	auto packetSize = static_cast<std::uint16_t>( sizeof( Packet ) );
-	serverSock.send( reinterpret_cast<char*>( &packetSize ), sizeof( packetSize ) );
-	serverSock.send( reinterpret_cast<char*>( &leavePacket ), packetSize );
+	serverSock.sendUc( reinterpret_cast<char*>( &packetSize ), sizeof( packetSize ) );
+	serverSock.sendUc( reinterpret_cast<char*>( &leavePacket ), packetSize );
 
 	sentLeave = true;
 }

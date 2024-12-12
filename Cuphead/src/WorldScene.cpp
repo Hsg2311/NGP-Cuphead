@@ -209,9 +209,11 @@ void WorldScene::handleDestroyPacket( const Packet& packet ) {
 }
 
 void WorldScene::handleMovePacket( const Packet& packet ) {
-	auto obj = PacketQueue::getInst( ).getObject( packet.mv.id );
-	obj->setObjPos( packet.mv.pos );
-	obj->setDirection( packet.mv.dir );
+	if ( PacketQueue::getInst( ).hasId( packet.mv.id ) ) {
+		auto obj = PacketQueue::getInst( ).getObject( packet.mv.id );
+		obj->setObjPos( packet.mv.pos );
+		obj->setDirection( packet.mv.dir );
+	}
 }
 
 void WorldScene::handleLogoutPacket( const Packet& packet ) {
@@ -247,8 +249,11 @@ void WorldScene::handleReplicationPacket( const Packet& packet ) {
 	handleRegisterPacket( packet );
 }
 
-void WorldScene::handleAnimationRPCPacket( const Packet& packet )
-{
+void WorldScene::handleAnimationRPCPacket( const Packet& packet ) {
+	if ( !PacketQueue::getInst( ).hasId( packet.ar.id ) ) {
+		return;
+	}
+
 	auto obj = PacketQueue::getInst( ).getObject( packet.ar.id );
 
 	switch ( packet.ar.anim )
