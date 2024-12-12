@@ -2,12 +2,6 @@
 #include "SendingStorage.hpp"
 #include "SceneHandler.hpp"
 
-char ID[ 16 ] = "test ID";
-char PW[ 16 ] = "test PW";
-
-bool gCupheadLogin = false;
-bool gMugmanLogin = false;
-
 LogPacketQueue::LogPacketQueue( )
 	: logPacketQueue_( ), queueMtx_( ), loginState_( LoginState::NONE ) {}
 
