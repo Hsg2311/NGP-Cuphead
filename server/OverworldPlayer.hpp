@@ -17,6 +17,10 @@ public:
 	virtual OverworldPlayer* clone( ) override { 
 		return new OverworldPlayer( *this );
 	}
+
+	int getImageWidth( ) const { return 60; }
+	int getImageHeight( ) const { return 45; }
+
 };
 
 #endif // OVERWORLD_PLAYER_HPP

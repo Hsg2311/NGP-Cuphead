@@ -65,8 +65,6 @@ int main( ) {
 		SceneHandler::getInst( ).init( );
 		PathHandler::getInst( ).init( );
 
-		auto tex = ResourceHandler::getInst( ).loadTexture( L"Pixel Map", L"pixel_map.png" );
-
 		static auto lastTp = Clock::now( );
 
 		// update

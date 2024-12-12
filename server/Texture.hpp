@@ -34,8 +34,11 @@ public:
 							xSrc, ySrc, nSrcWidth, nSrcHeight, alpha );
 	}
 
-	int getWidth( ) { return texImage_.GetWidth( ); }
-	int getHeight( ) { return texImage_.GetHeight( ); }
+	int getWidth( ) const { return texImage_.GetWidth( ); }
+	int getHeight( ) const { return texImage_.GetHeight( ); }
+	COLORREF getPixel( int x, int y ) const {
+		return texImage_.GetPixel( x, y );
+	}
 
 private:
 	CImage texImage_;
